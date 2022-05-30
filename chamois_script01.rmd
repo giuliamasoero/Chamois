@@ -1,0 +1,485 @@
+Chamois project
+
+```{r}
+rm(list = ls())
+
+#load the data
+data <- read.csv("data/data.csv")
+clim <- read.csv("data/swiss_weather.csv")
+
+#load the packages
+library(dplyr)
+library(climwin)
+library(tidyr)
+library(ggplot2)
+library(effects)
+
+
+#explore
+boxplot(data$day ~ data$year)
+
+#create a nice formats for the date
+data$date_ymd <- paste(data$year, data$month, data$day) #create a new column with YMD
+data$date_ymd <- as.POSIXct(data$date_ymd, format= "%Y %m %d", tz="") #fix the format of the date in biol data
+clim$date_ymd <- as.POSIXct(clim$date, format= "%Y/%m/%d", tz="")#fix the format of the date in clim data
+
+
+data <- data %>%
+  select(-c("X.1"))
+
+
+#join the two datasets just for your own pleasure to have everything in the same data set
+alldata <- left_join(data, clim, by= "date_ymd")
+
+#get only data with 1.5 years old individuals
+data <-data %>%
+  filter (data$age == "1.5")
+#creating the model for weight
+
+data <- data %>% drop_na() #Drop rows containing missing values.
+
+#explore the data
+names(data)
+
+ggplot(data, aes(x = year, y=weight)) + #change over the year graph
+  geom_point() +
+  geom_smooth(method = lm, color = "red", se = TRUE) 
+
+ggplot(data, aes(x = year, y = weight)) + #graph with fitted line
+  geom_point() +
+  geom_smooth(method = "lm") +
+  scale_x_continuous(breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
+  xlab("Year") +
+  ylab ("Weight of Alpine chamois (kg)") +
+  theme_bw()
+
+graph <- scale_x_continuous(breaks = seq(1992, 2018, 5))
+graph
+
+linear_model <- lm(weight~year, data = data) #making the linear model
+
+anova(linear_model)
+
+summary(linear_model)
+
+
+ggplot(data, aes(x=year, y=weight, color=sex)) + #difference in sex graph
+  geom_point(size=1) +
+  xlab("Year")+
+  ylab("Weight")+
+  geom_smooth(method='loess',  se=TRUE)+
+  theme_bw()
+
+ggplot(data, aes(x = altitude, y = weight, color = sex)) +
+  geom_point() +
+  geom_smooth(method='loess',  se=TRUE)
+
+summary(data)
+
+
+#create model with ABSOLUTE time window with snow & temperature for 1 year before
+absolute_juvenile <- slidingwin (baseline = lm(data$weight ~ sex + altitude, data = data),
+                                 xvar = list(Temp = clim$Temp),
+                                 type = "absolute",
+                                 refday = c(24,9),
+                                 range = c(150, 0),
+                                 stat = "mean",
+                                 cdate = clim$date_ymd,
+                                 bdate = data$date_ymd,
+                                 func = c("lin", "quad"),cmissing = FALSE, cinterval = "day")
+
+save(absolute_juvenile, file = "output/absolute_juvenile.rda")
+load("output/absolute_juvenile.rda")
+
+absolute_juvenile$combos #provides a summary of all tested climate window hypotheses, with the key statistics from the best model included
+
+
+# View output for func = "quad" and mean temperature
+
+head(absolute_juvenile[[2]]$Dataset)     #we can look at the full dataset of all fitted climate windows.
+# in this list the models are sorted by ???AICc, such that the best supported model is on top. 
+
+# The best time window is between day 108 and 66 - AIC= -297.7070
+summary(absolute_juvenile[[2]]$BestModel) #the results from the best supported model for each hypothesis
+
+head (absolute_juvenile[[2]]$BestModel) #Finally, the object BestModel stores the values of the climate signal 
+# that was best supported by the data and the row numbers correspond 
+#to the original row numbers of the Biol dataset.
+
+#The best supported climate variable can be attached to the original dataset for further analyses
+data$signal <- absolute_juvenile[[2]]$BestModel$clim
+
+#plot results from best model
+plotall(dataset = absolute_juvenile[[2]]$Dataset,
+        bestmodel = absolute_juvenile[[2]]$BestModel,
+        bestmodeldata = absolute_juvenile[[2]]$BestModelData)
+
+#extracting best window
+data$temp.absolute_juvenile<- absolute_juvenile[[2]]$BestModelData$climate
+
+# Plotting some of your results
+## http://www.cookbook-r.com/Graphs/Scatterplots_(ggplot2)/
+
+
+ggplot(data, aes(x=year, y=temp.absolute_juvenile)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method= "lm") + # Add linear regression line (by default includes 95% confidence region) 
+  scale_x_continuous(breaks= c(1992, 1997, 2002, 2007, 2013, 2018))+
+  xlab("Year") +
+  ylab ("Mean temperature of the best climatic window for Juvenille stage (�C)") +
+  theme(panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(),
+panel.background = element_blank(),
+axis.title = element_text(size = 15),
+axis.text = element_text(size = 20),
+axis.line = element_line(size = 1, linetype = "solid",
+                         colour = "black"))
+
+
+ggplot(data, aes(x=year, y=temp.absolute_kid)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method= "lm") + # Add linear regression line (by default includes 95% confidence region) 
+  scale_x_continuous(breaks= c(1992, 1997, 2002, 2007, 2013, 2018))+
+  xlab("Year") +
+  ylab ("Mean temperature of the best climatic window for Juvenille stage (�C)") +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_text(size = 15),
+        axis.text = element_text(size = 20),
+        axis.line = element_line(size = 1, linetype = "solid",
+                                 colour = "black"))
+  
+
+
+ggplot(data, aes(x = year, y = weight)) + #graph with fitted line
+  geom_point() +
+  geom_smooth(method = "lm") +
+  scale_x_continuous(breaks= c(1992, 1997, 2002, 2007, 2013, 2018)) +
+  xlab("Year") +
+  ylab ("Weight of Alpine chamois (kg)") +
+  theme_bw()
+
+ggplot(data, aes(x=year, y=temp.absolute_kid)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method=lm)   # Add linear regression line (by default includes 95% confidence region) 
+
+ 
+
+ggplot(data, aes(x=temp.absolute_juvenile, y=weight)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method='loess')   # Add linear regression line (by default includes 95% confidence region)         
+
+# Running the best model in R
+
+m_j <- lm(data$weight ~ sex + altitude + temp.absolute_juvenile + I(temp.absolute_juvenile^2), data = data)
+
+summary(m_j)
+
+plot(allEffects(m_j))
+
+#Performing randomization to identify likelihood of of signals occurring by chance
+
+randomized_juvenile<-randwin(repeats = 10, 
+                     baseline = lm(data$weight ~ sex + altitude, data = data),
+                     xvar = list(Temp=clim$Temp),
+                     type = "absolute",
+                     refday = c(24,9),
+                     range = c(150, 0),
+                     stat = "mean",
+                     cdate = clim$date_ymd,
+                     bdate = data$date_ymd,
+                     func = c("lin", "quad"),cmissing = FALSE, cinterval = "day",
+                     window= "sliding")
+
+pvalue(datasetrand = randomized_juvenile[[1]], dataset = absolute_juvenile[[1]]$Dataset, metric = "C", sample.size = 27) # the p-value is 0.0008406281
+save(randomized_juvenile, file = "output/rand_juv.rda")
+load("output/rand_juv.rda")
+
+
+
+
+
+
+#create model with ABSOLUTE time window temperature for 1 year before till 1st of June
+absolute_kid <- slidingwin (baseline = lm(data$weight ~ sex + altitude, data = data),
+                        xvar = list(Temp = clim$Temp),
+                        type = "absolute",
+                        refday = c(24,9),
+                        range = c(480, 365),
+                        stat = "mean",
+                        cdate = clim$date_ymd,
+                        bdate = data$date_ymd,
+                        func = c("lin", "quad"),cmissing = FALSE, cinterval = "day")
+absolute_kid$combos #provides a summary of all tested climate window hypotheses, with the key statistics from the best model included
+
+save(absolute_kid, file = "output/absolute_kid.rda")
+load("output/absolute_kid.rda")
+
+# View output for func = "quad" and mean temperature
+
+head(absolute_kid[[2]]$Dataset)     #we can look at the full dataset of all fitted climate windows.
+# in this list the models are sorted by ???AICc, such that the best supported model is on top. 
+
+# The best time window is between day 504 and 450 - AIC= -320.1128
+summary(absolute_kid[[2]]$BestModel) #the results from the best supported model for each hypothesis
+
+head (absolute_kid[[2]]$BestModel) #Finally, the object BestModel stores the values of the climate signal 
+# that was best supported by the data and the row numbers correspond 
+#to the original row numbers of the Biol dataset.
+
+#The best supported climate variable can be attached to the original dataset for further analyses
+data$signal <- absolute_kid[[2]]$BestModel$clim
+
+#plot results from best model
+plotall(dataset = absolute_kid[[2]]$Dataset,
+        bestmodel = absolute_kid[[2]]$BestModel,
+        bestmodeldata = absolute_kid[[2]]$BestModelData)
+
+#extracting best window
+data$temp.absolute_kid<- absolute_kid[[2]]$BestModelData$climate
+
+
+# Plotting some of your results
+## http://www.cookbook-r.com/Graphs/Scatterplots_(ggplot2)/
+
+
+ggplot(data, aes(x=year, y=temp.absolute_kid)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method=lm)   # Add linear regression line (by default includes 95% confidence region)  
+
+ggplot(data, aes(x=temp.absolute_kid, y=weight)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method='loess')   # Add linear regression line (by default includes 95% confidence region)         
+
+# Running the best model in R
+
+m_k <- lm(data$weight ~ sex + altitude + temp.absolute_kid + I(temp.absolute_kid^2), data = data)
+
+summary(m_k)
+
+plot(allEffects(m_k))
+
+data$altitude_scale <- scale(data$altitude)
+data$temp.absolute_juvenile_scale<-scale(data$temp.absolute_juvenile)
+data$temp.absolute_kid_scale<-scale(data$temp.absolute_kid)
+data$temp.absolute_gestation_scale<-scale(data$temp.absolute_gestation)
+
+
+
+
+# Comparing absoulte_juvenile and absolute_kid
+
+# Is the effect of temperature the same whatesoever the eleavation / testing for interaction (*) between altitude and temp
+m2.1 <- lm(data$weight ~ sex + scale(altitude)* (scale(temp.absolute_juvenile) + I(scale(temp.absolute_juvenile)^2) + scale(temp.absolute_kid) + I(scale(temp.absolute_kid)^2)), data = data)
+summary(m2.1)
+
+plot(allEffects(m2.1))
+
+# Do we have interactive effects of temp as kid and juvenile
+m2.2 <- lm(data$weight ~ sex + scale(altitude) + scale(temp.absolute_juvenile) * scale(temp.absolute_kid) + I(scale(temp.absolute_juvenile)^2) + I(scale(temp.absolute_kid)^2), data = data)
+
+
+summary(m2.2)
+
+plot(allEffects(m2.2))
+
+#scaling is centering (subtracting the mean and reducing (dividing by standard deviation))
+non.scaled <- data$temp.absolute_juvenile
+mean(non.scaled); sd(non.scaled)
+
+scaled <- scale(data$temp.absolute_juvenile)
+mean(scaled); sd(scaled)
+
+par(mfrow = c(1,2))
+hist(non.scaled); hist(scaled) 
+
+#Performing randamization to identify likelyhood of of dignals occuring by chance
+
+randomized_kid<-randwin(repeats = 10, 
+                     baseline = lm(data$weight ~ sex + altitude, data = data),
+                     xvar = list(Temp=clim$Temp),
+                     type = "absolute",
+                     refday = c(24,9),
+                     range = c(480, 365),
+                     stat = "mean",
+                     cdate = clim$date_ymd,
+                     bdate = data$date_ymd,
+                     func = c("lin", "quad"),cmissing = FALSE, cinterval = "day",
+                     window= "sliding")
+
+pvalue(datasetrand = randomized_kid[[1]], dataset = absolute_kid[[1]]$Dataset, metric = "C", sample.size = 27) #0.0006408258
+
+save(randomized_kid, file = "output/rand_kid.rda")
+load("output/rand_kid.rda")
+
+
+
+
+
+
+#create model with ABSOLUTE time window with temperature for gestation period for the period 1 Dec(-2) - 31May(-1)
+absolute_gestation <- slidingwin (baseline = lm(data$weight ~ sex + altitude, data = data),
+                            xvar = list(Temp = clim$Temp),
+                            type = "absolute",
+                            refday = c(24,9),
+                            range = c(661, 481),
+                            stat = "mean",
+                            cdate = clim$date_ymd,
+                            bdate = data$date_ymd,
+                            func = c("lin", "quad"),cmissing = FALSE, cinterval = "day")
+
+absolute_gestation$combos #provides a summary of all tested climate window hypotheses, with the key statistics from the best model included
+
+save(absolute_gestation, file = "output/absolute_gestation.rda")
+load("output/absolute_gestation.rda")
+
+# View output for func = "quad" and mean temperature
+
+head(absolute_gestation[[2]]$Dataset)     #we can look at the full dataset of all fitted climate windows.
+# in this list the models are sorted by ???AICc, such that the best supported model is on top. 
+
+# The best time window is between day 756 and 756- AIC= --186.7308
+summary(absolute_gestation[[2]]$BestModel) #the results from the best supported model for each hypothesis
+
+head (absolute_gestation[[2]]$BestModel) #Finally, the object BestModel stores the values of the climate signal 
+# that was best supported by the data and the row numbers correspond 
+#to the original row numbers of the Biol dataset.
+
+#The best supported climate variable can be attached to the original dataset for further analyses
+data$signal <- absolute_gestation[[2]]$BestModel$clim
+
+#plot results from best model
+plotall(dataset = absolute_gestation[[2]]$Dataset,
+        bestmodel = absolute_gestation[[2]]$BestModel,
+        bestmodeldata = absolute_gestation[[2]]$BestModelData)
+#Warning message:
+#In plotwin(dataset = dataset, cw = cwa) :
+ # Top window has a weight greater than 0.95. Plotting single best window only.
+
+#extracting best window
+data$temp.absolute_gestation<- absolute_gestation[[2]]$BestModelData$climate
+
+# Plotting some of your results
+## http://www.cookbook-r.com/Graphs/Scatterplots_(ggplot2)/
+
+
+ggplot(data, aes(x=year, y=temp.absolute_gestation)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method=lm)   # Add linear regression line (by default includes 95% confidence region)  
+
+ggplot(data, aes(x=temp.absolute_gestation, y=weight)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method='loess')   # Add linear regression line (by default includes 95% confidence region)         
+
+# Running the best model in R
+
+m_g <- lm(data$weight ~ sex + altitude + temp.absolute_gestation + I(temp.absolute_gestation^2), data = data)
+
+summary(m_g)
+
+plot(allEffects(m_g))
+
+#model for all three stages
+
+# Comparing absoulte_juvenile, absolute_kid and absolute_gestation
+
+data$altitude_scale <- scale(data$altitude)
+data$temp.absolute_juvenile_scale<-scale(data$temp.absolute_juvenile)
+data$temp.absolute_kid_scale<-scale(data$temp.absolute_kid)
+data$temp.absolute_gestation_scale<-scale(data$temp.absolute_gestation)
+
+
+# Is the effect of temperature the same whatesoever the eleavation / testing for interaction (*) between altitude and temp
+m3 <- lm(data$weight ~ sex + scale(altitude)* (scale(temp.absolute_juvenile) + I(scale(temp.absolute_juvenile)^2) + scale(temp.absolute_kid) + I(scale(temp.absolute_kid)^2) + scale(temp.absolute_gestation) + I(scale(temp.absolute_gestation)^2)), data = data)
+
+summary(m3)
+
+plot(allEffects(m3))
+
+m3_scale<- lm(data$weight ~ sex + (data$altitude_scale) * (data$temp.absolute_juvenile_scale) +
+I((data$temp.absolute_juvenile_scale)^2) + (data$temp.absolute_kid_scale) +
+I((data$temp.absolute_kid_scale)^2) + (data$temp.absolute_gestation_scale) +
+I((data$temp.absolute_gestation_scale)^2), data = data)
+
+
+# Do we have interactive effects of temp as kid, juvenile and during gestation
+m3.1 <- m3.1 <- lm(data$weight ~ sex + scale(altitude) + scale(temp.absolute_juvenile) * scale(temp.absolute_kid) * scale(temp.absolute_gestation) + I(scale(temp.absolute_juvenile)^2) + I(scale(temp.absolute_kid)^2 + I(scale(temp.absolute_gestation)^2)), data = data)
+
+
+summary(m3.1)
+
+plot(allEffects(m3.1))
+
+m_result1 <- (lm (data$weight ~ sex + altitude_scale + 
+temp.absolute_juvenile_scale * temp.absolute_kid_scale * temp.absolute_gestation_scale +
+I(temp.absolute_juvenile_scale)^2 + I(temp.absolute_kid_scale)^2 +
+I(temp.absolute_gestation_scale)^2,
+data = data)
+
+
+
+
+
+
+#Performing randomization to identify likelihood of of signals occuring by chance
+
+randomized_gestation<-randwin(repeats = 10, # nolint
+                                         baseline = lm(data$weight ~ sex + altitude, data = data),
+                                         xvar = list(Temp=clim$Temp),
+                                          type = "absolute",
+                                          refday = c(24,9),
+                                          range = c(661, 481),
+                                          stat = "mean",
+                                          cdate = clim$date_ymd,
+                                           bdate = data$date_ymd,
+                                            func = c("lin", "quad"),cmissing = FALSE, cinterval = "day",
+                                             window= "sliding")
+
+pvalue(datasetrand = randomized_gestation[[1]], dataset = absolute_gestation[[2]]$Dataset, metric = "C", sample.size = 27)#0.0008195284
+
+
+#combining all three models together - scaled
+m_results <- (lm (weight ~ sex + altitude_scale + temp.absolute_juvenile_scale + temp.absolute_kid_scale +
+                    temp.absolute_gestation_scale + +I(temp.absolute_juvenile_scale^2) + I(temp.absolute_kid_scale^2) + I(temp.absolute_gestation_scale^2), data = data))
+
+summary(m_results)
+
+plot(allEffects(m_results))   
+
+
+
+#combining all three models together - non scaled
+m_results2 <- (lm (weight ~ sex + altitude + temp.absolute_juvenile + temp.absolute_kid +
+                    temp.absolute_gestation + +I(temp.absolute_juvenile^2) + I(temp.absolute_kid^2) + I(temp.absolute_gestation^2), data = data))
+
+summary(m_results2)
+
+plot(allEffects(m_results2)) 
+
+
+
+
+
+
+#combining all three models together - scaled
+m_results <- (lm (weight ~ sex + altitude_scale + temp.absolute_juvenile_scale + temp.absolute_kid_scale + I(temp.absolute_juvenile_scale^2) + I(temp.absolute_kid_scale^2), data = data))
+
+summary(m_results)
+
+plot(allEffects(m_results))   
+
+
+
+#combining all three models together - non scaled
+m_results2 <- (lm (weight ~ sex + altitude + temp.absolute_juvenile + temp.absolute_kid + I(temp.absolute_juvenile^2) + I(temp.absolute_kid^2), data = data))
+
+summary(m_results2)
+
+plot(allEffects(m_results2)) 
+
+
+
+
+```
+

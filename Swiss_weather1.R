@@ -1,10 +1,8 @@
 rm(list = ls())
-#set directory
-setwd("C:/Acer (D)/universitet/year 4/honours project/materials")
 
 #load the data
-data <- read.csv("C:\\Acer (D)\\universitet\\year 4\\honours project\\materials\\data.csv")
-clim <- read.csv("C:\\Acer (D)\\universitet\\year 4\\honours project\\materials\\swiss_weather.csv")
+data <- read.csv("data/data.csv")
+clim <- read.csv("data/swiss_weather.csv")
 
 #load the packages
 library(dplyr)
@@ -18,9 +16,9 @@ library(effects)
 boxplot(data$day ~ data$year)
 
 #create a nice formats for the date
-data$dateYMD <- paste(data$year, data$month, data$day) #create a new column with YMD
-data$dateYMD <- as.POSIXct(data$dateYMD, format= "%Y %m %d", tz="") #fix the format of the date in biol data
-clim$dateYMD <- as.POSIXct(clim$date, format= "%Y/%m/%d", tz="")#fix the format of the date in clim data
+data$date_ymd <- paste(data$year, data$month, data$day) #create a new column with YMD
+data$date_ymd <- as.POSIXct(data$date_ymd, format= "%Y %m %d", tz="") #fix the format of the date in biol data
+clim$date_ymd <- as.POSIXct(clim$date, format= "%Y/%m/%d", tz="")#fix the format of the date in clim data
 
 
 data <- data %>%
@@ -28,7 +26,7 @@ data <- data %>%
 
 
 #join the two datasets just for your own pleasure to have everything in the same data set
-alldata <- left_join(data, clim, by= "dateYMD")
+alldata <- left_join(data, clim, by= "date_ymd")
 
 #get only data with 1.5 years old individuals
 data <-data %>%
@@ -83,12 +81,12 @@ absolute_juvenile <- slidingwin (baseline = lm(data$weight ~ sex + altitude, dat
                                  refday = c(24,9),
                                  range = c(150, 0),
                                  stat = "mean",
-                                 cdate = clim$dateYMD,
-                                 bdate = data$dateYMD,
+                                 cdate = clim$date_ymd,
+                                 bdate = data$date_ymd,
                                  func = c("lin", "quad"),cmissing = FALSE, cinterval = "day")
 
-save(absolute_juvenile, file = "absolute_juvenile.rda")
-load("absolute_juvenile.rda")
+save(absolute_juvenile, file = "output/absolute_juvenile.rda")
+load("output/absolute_juvenile.rda")
 
 absolute_juvenile$combos #provides a summary of all tested climate window hypotheses, with the key statistics from the best model included
 
@@ -186,14 +184,14 @@ randomized_juvenile<-randwin(repeats = 10,
                      refday = c(24,9),
                      range = c(150, 0),
                      stat = "mean",
-                     cdate = clim$dateYMD,
-                     bdate = data$dateYMD,
+                     cdate = clim$date_ymd,
+                     bdate = data$date_ymd,
                      func = c("lin", "quad"),cmissing = FALSE, cinterval = "day",
                      window= "sliding")
 
 pvalue(datasetrand = randomized_juvenile[[1]], dataset = absolute_juvenile[[1]]$Dataset, metric = "C", sample.size = 27) # the p-value is 0.0008406281
-save(randomized_juvenile, file = "rand_juv.rda")
-load("rand_juv.rda")
+save(randomized_juvenile, file = "output/rand_juv.rda")
+load("output/rand_juv.rda")
 
 
 
@@ -207,13 +205,13 @@ absolute_kid <- slidingwin (baseline = lm(data$weight ~ sex + altitude, data = d
                         refday = c(24,9),
                         range = c(480, 365),
                         stat = "mean",
-                        cdate = clim$dateYMD,
-                        bdate = data$dateYMD,
+                        cdate = clim$date_ymd,
+                        bdate = data$date_ymd,
                         func = c("lin", "quad"),cmissing = FALSE, cinterval = "day")
 absolute_kid$combos #provides a summary of all tested climate window hypotheses, with the key statistics from the best model included
 
-save(absolute_kid, file = "absolute_kid.rda")
-load("absolute_kid.rda")
+save(absolute_kid, file = "output/absolute_kid.rda")
+load("output/absolute_kid.rda")
 
 # View output for func = "quad" and mean temperature
 
@@ -302,15 +300,15 @@ randomized_kid<-randwin(repeats = 10,
                      refday = c(24,9),
                      range = c(480, 365),
                      stat = "mean",
-                     cdate = clim$dateYMD,
-                     bdate = data$dateYMD,
+                     cdate = clim$date_ymd,
+                     bdate = data$date_ymd,
                      func = c("lin", "quad"),cmissing = FALSE, cinterval = "day",
                      window= "sliding")
 
 pvalue(datasetrand = randomized_kid[[1]], dataset = absolute_kid[[1]]$Dataset, metric = "C", sample.size = 27) #0.0006408258
 
-save(randomized_kid, file = "rand_kid.rda")
-load("rand_kid.rda")
+save(randomized_kid, file = "output/rand_kid.rda")
+load("output/rand_kid.rda")
 
 
 
@@ -324,14 +322,14 @@ absolute_gestation <- slidingwin (baseline = lm(data$weight ~ sex + altitude, da
                             refday = c(24,9),
                             range = c(661, 481),
                             stat = "mean",
-                            cdate = clim$dateYMD,
-                            bdate = data$dateYMD,
+                            cdate = clim$date_ymd,
+                            bdate = data$date_ymd,
                             func = c("lin", "quad"),cmissing = FALSE, cinterval = "day")
 
 absolute_gestation$combos #provides a summary of all tested climate window hypotheses, with the key statistics from the best model included
 
-save(absolute_gestation, file = "absolute_gestation.rda")
-load("absolute_gestation.rda")
+save(absolute_gestation, file = "output/absolute_gestation.rda")
+load("output/absolute_gestation.rda")
 
 # View output for func = "quad" and mean temperature
 
@@ -423,8 +421,8 @@ randomized_gestation<-randwin(repeats = 10,
                                           refday = c(24,9),
                                           range = c(661, 481),
                                           stat = "mean",
-                                          cdate = clim$dateYMD,
-                                           bdate = data$dateYMD,
+                                          cdate = clim$date_ymd,
+                                           bdate = data$date_ymd,
                                             func = c("lin", "quad"),cmissing = FALSE, cinterval = "day",
                                              window= "sliding")
 
