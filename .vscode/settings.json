@@ -2,6 +2,7 @@
     "cSpell.words": [
         "absoulte",
         "alldata",
+        "ange",
         "bdate",
         "bestmodel",
         "bestmodeldata",
@@ -19,6 +20,7 @@
         "likelyhood",
         "linetype",
         "mfrow",
+        "nolint",
         "occuring",
         "plotall",
         "plotwin",
@@ -26,6 +28,7 @@
         "randwin",
         "refday",
         "slidingwin",
+        "snakecase",
         "tidyr",
         "whatesoever",
         "xlab",
