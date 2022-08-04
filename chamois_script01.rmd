@@ -53,12 +53,12 @@ summary(ch_biom)
 
 ```{r basemod}
 ch_basemod <- lm(weight ~
-  sex + altitude,
+  year + sex + altitude,
 data = ch_biom
 )
 
 ch_basemod_lmer <- lme4::lmer(weight ~
-  sex + altitude +
+  year + sex + altitude +
   (1 | year_f) + (1 | district_capture),
 control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+06)),
 REML = TRUE,
@@ -318,6 +318,7 @@ par(mfrow = c(1, 2))
 hist(non_scd)
 hist(scaled)
 ```
+
 ```{r kid random, eval = F}
 # Performing randamization to identify
 # likelyhood of of dignals occuring by chance
@@ -683,7 +684,7 @@ data = ch_biom
 )
 summary(ch_basemod2)
 
-absolute_all2 <- slidingwin(
+absolute_all_w_t_503_449 <- slidingwin(
   baseline = ch_basemod2,
   xvar = list(Temp = clim$Temp),
   type = "absolute",
@@ -697,15 +698,16 @@ absolute_all2 <- slidingwin(
   cinterval = "day"
 )
 
-save(absolute_all2, file = "output/absolute_all2.rda")
+save(absolute_all_w_t_503_449, file = "output/absolute_all_w_t_503_449.rda")
 ```
 
 
 ```{r}
 load(file = "output/absolute_all.rda")
+load(file = "output/absolute_all_w_t_503_449.rda")
 absolute_all$combos
 
-absolute_all2$combos
+absolute_all_w_t_503_449$combos
 # provides a summary of all tested climate window hypotheses,
 # with the key statistics from the best model included
 
@@ -714,16 +716,20 @@ absolute_all2$combos
 
 head(absolute_all[[2]]$Dataset)
 
-head(subset(absolute_all[[2]]$Dataset, WindowClose < 300))
+head(subset(absolute_all[[2]]$Dataset, WindowClose < 100))
+head(absolute_all_w_t_503_449[[2]]$Dataset)
+head(subset(absolute_all_w_t_503_449[[2]]$Dataset, WindowClose < 100))
+head(subset(absolute_all_w_t_503_449[[1]]$Dataset, WindowClose < 100))
+
 # we can look at the full dataset of all fitted climate windows.
 # in this list the models are sorted by deltaAICc,
 # such that the best supported model is on top.
 
 # The best time window is between day 756 and 756- AIC= --186.7308
-summary(absolute_all[[2]]$BestModel)
+summary(absolute_all_w_t_503_449[[2]]$BestModel)
 # the results from the best supported model for each hypothesis
 
-head(absolute_all[[2]]$BestModel)
+head(absolute_all_w_t_503_449[[2]]$BestModel)
 # Finally, the object BestModel stores the values of the climate signal
 # that was best supported by the data and the row numbers correspond
 # to the original row numbers of the Biol dataset.
@@ -732,6 +738,7 @@ head(absolute_all[[2]]$BestModel)
 # to the original dataset for further analyses
 ch_biom$signal <- absolute_all[[2]]$BestModel$clim
 
+
 # plot results from best model
 plotall(
   dataset = absolute_all[[2]]$Dataset,
@@ -739,10 +746,19 @@ plotall(
   bestmodeldata = absolute_all[[2]]$BestModelData
 )
 
+# plot results from best model
+plotall(
+  dataset = absolute_all_w_t_503_449[[2]]$Dataset,
+  bestmodel = absolute_all_w_t_503_449[[2]]$BestModel,
+  bestmodeldata = absolute_all_w_t_503_449[[2]]$BestModelData
+)
 
-plotwin(dataset = absolute_all[[2]]$Dataset)
 
+plotwin(dataset = absolute_all_w_t_503_449[[2]]$Dataset)
 plotdelta(dataset = absolute_all[[2]]$Dataset)
+plotdelta(dataset = absolute_all[[1]]$Dataset)
+plotdelta(dataset = absolute_all_w_t_503_449[[2]]$Dataset)
+plotdelta(dataset = absolute_all_w_t_503_449[[1]]$Dataset)
 
 # Warning message:
 # In plotwin(dataset = ch_biomset, cw = cwa) :
@@ -794,4 +810,27 @@ summary(model_yr)
 par(mfrow = c(1, 2))
 visreg::visreg(model_yr, "year", by = "sex")
 par(mfrow = c(1, 1))
+
+
+
+
+ggplot(ch_biom, aes(x = year, y = t_503_449)) +
+  geom_point(shape = 1) +
+  # Use hollow circles
+  geom_smooth(method = "lm") +
+  # Add linear regression line (by default includes 95% confidence region)
+  scale_x_continuous(breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
+  xlab("Year") +
+  ylab("Mean temperature of the best climatic window for NEW stage (°C)") +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 20),
+    axis.line = element_line(
+      size = 1, linetype = "solid",
+      colour = "black"
+    )
+  )
 ```
