@@ -8,7 +8,7 @@ author:
             affiliation: 
           - name: Pierre Bize
             affiliation: Swiss Ornithological Institute, CH-6204 Sempach, Switzerland
-date: "Last compiled on 05 September 2022"
+date: "Last compiled on 06 September 2022"
 output:
   html_document:
     code_folding: hide
@@ -66,27 +66,25 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] sjPlot_2.8.10    lmerTest_3.1-3   lme4_1.1-30      effects_4.2-1    carData_3.0-5    tidyr_1.2.0      climwin_1.2.3   
-##  [8] Matrix_1.4-1     gridExtra_2.3    ggplot2_3.3.6    snakecase_0.11.0 dplyr_1.0.9     
+##  [1] sjPlot_2.8.10    lmerTest_3.1-3   lme4_1.1-30      effects_4.2-1    carData_3.0-5    tidyr_1.2.0      climwin_1.2.3    Matrix_1.4-1    
+##  [9] gridExtra_2.3    ggplot2_3.3.6    snakecase_0.11.0 dplyr_1.0.9     
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] nlme_3.1-157        visreg_2.7.0        lubridate_1.8.0     insight_0.17.1      RColorBrewer_1.1-3  evd_2.3-6          
-##   [7] numDeriv_2016.8-1.1 backports_1.4.1     tools_4.2.1         bslib_0.3.1         utf8_1.2.2          R6_2.5.1           
-##  [13] sjlabelled_1.2.0    vipor_0.4.5         DBI_1.1.3           mgcv_1.8-40         colorspace_2.0-3    nnet_7.3-17        
-##  [19] withr_2.5.0         tidyselect_1.1.2    emmeans_1.8.0       compiler_4.2.1      performance_0.9.1   cli_3.3.0          
-##  [25] bayestestR_0.12.1   labeling_0.4.2      sass_0.4.1          scales_1.2.0        mvtnorm_1.1-3       systemfonts_1.0.4  
-##  [31] stringr_1.4.0       httpgd_1.3.0        digest_0.6.29       minqa_1.2.4         rmarkdown_2.14      pkgconfig_2.0.3    
-##  [37] htmltools_0.5.2     MuMIn_1.46.0        fastmap_1.1.0       highr_0.9           htmlwidgets_1.5.4   rlang_1.0.2        
-##  [43] jquerylib_0.1.4     farver_2.1.0        generics_0.1.2      jsonlite_1.8.0      magrittr_2.0.3      parameters_0.18.1  
-##  [49] Rcpp_1.0.9          ggbeeswarm_0.6.0    munsell_0.5.0       fansi_1.0.3         lifecycle_1.0.1     stringi_1.7.6      
-##  [55] yaml_2.3.5          MASS_7.3-57         plyr_1.8.7          grid_4.2.1          sjmisc_2.8.9        crayon_1.5.1       
-##  [61] ppcor_1.1           lattice_0.20-45     ggeffects_1.1.2     splines_4.2.1       sjstats_0.18.1      ggiraphExtra_0.3.0 
-##  [67] knitr_1.39          pillar_1.7.0        uuid_1.1-0          boot_1.3-28         estimability_1.4.1  effectsize_0.7.0   
-##  [73] reshape2_1.4.4      stats4_4.2.1        glue_1.6.2          ggiraph_0.8.3       beepr_1.3           evaluate_0.15      
-##  [79] mycor_0.1.1         mitools_2.4         modelr_0.1.8        vctrs_0.4.1         nloptr_2.0.3        gtable_0.3.0       
-##  [85] purrr_0.3.4         datawizard_0.4.1    reshape_0.8.9       assertthat_0.2.1    xfun_0.31           broom_0.8.0        
-##  [91] xtable_1.8-4        survey_4.1-1        coda_0.19-4         later_1.3.0         survival_3.3-1      audio_0.1-10       
-##  [97] RcppRoll_0.3.0      tibble_3.1.7        beeswarm_0.4.0      ellipsis_0.3.2
+##   [1] nlme_3.1-157        visreg_2.7.0        lubridate_1.8.0     insight_0.17.1      RColorBrewer_1.1-3  evd_2.3-6           numDeriv_2016.8-1.1
+##   [8] backports_1.4.1     tools_4.2.1         bslib_0.3.1         utf8_1.2.2          R6_2.5.1            sjlabelled_1.2.0    vipor_0.4.5        
+##  [15] DBI_1.1.3           mgcv_1.8-40         colorspace_2.0-3    nnet_7.3-17         withr_2.5.0         tidyselect_1.1.2    emmeans_1.8.0      
+##  [22] compiler_4.2.1      performance_0.9.1   cli_3.3.0           bayestestR_0.12.1   labeling_0.4.2      sass_0.4.1          scales_1.2.0       
+##  [29] mvtnorm_1.1-3       systemfonts_1.0.4   stringr_1.4.0       httpgd_1.3.0        digest_0.6.29       minqa_1.2.4         rmarkdown_2.14     
+##  [36] pkgconfig_2.0.3     htmltools_0.5.2     MuMIn_1.46.0        fastmap_1.1.0       highr_0.9           htmlwidgets_1.5.4   rlang_1.0.2        
+##  [43] jquerylib_0.1.4     farver_2.1.0        generics_0.1.2      jsonlite_1.8.0      magrittr_2.0.3      parameters_0.18.1   Rcpp_1.0.9         
+##  [50] ggbeeswarm_0.6.0    munsell_0.5.0       fansi_1.0.3         lifecycle_1.0.1     stringi_1.7.6       yaml_2.3.5          MASS_7.3-57        
+##  [57] plyr_1.8.7          grid_4.2.1          sjmisc_2.8.9        crayon_1.5.1        ppcor_1.1           lattice_0.20-45     ggeffects_1.1.2    
+##  [64] splines_4.2.1       sjstats_0.18.1      ggiraphExtra_0.3.0  knitr_1.39          pillar_1.7.0        uuid_1.1-0          boot_1.3-28        
+##  [71] estimability_1.4.1  effectsize_0.7.0    reshape2_1.4.4      stats4_4.2.1        glue_1.6.2          ggiraph_0.8.3       beepr_1.3          
+##  [78] evaluate_0.15       mycor_0.1.1         mitools_2.4         modelr_0.1.8        vctrs_0.4.1         nloptr_2.0.3        gtable_0.3.0       
+##  [85] purrr_0.3.4         datawizard_0.4.1    reshape_0.8.9       assertthat_0.2.1    xfun_0.31           broom_0.8.0         xtable_1.8-4       
+##  [92] survey_4.1-1        coda_0.19-4         later_1.3.0         survival_3.3-1      audio_0.1-10        RcppRoll_0.3.0      tibble_3.1.7       
+##  [99] beeswarm_0.4.0      ellipsis_0.3.2
 ```
 
 ## The datasets
@@ -123,25 +121,16 @@ ch_biom15 <- ch_biom15 %>%
     drop_na() %>%
     filter(age == "1.5")
 
-hist(ch_biom15$altitude)
+boxplot(ch_biom15$weight ~ ch_biom15$year)
 ```
 
 ![](chamois_script01_all_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
-```r
-boxplot(ch_biom15$weight ~ ch_biom15$year)
-```
 
-![](chamois_script01_all_files/figure-html/unnamed-chunk-2-2.png)<!-- -->
+# Statistical Analysis
 
-```r
-boxplot(ch_biom15$altitude ~ ch_biom15$year)
-```
-
-![](chamois_script01_all_files/figure-html/unnamed-chunk-2-3.png)<!-- -->
-
-
-# Statistical Analsis
+As the use of arbitrary climate periods do not always explain the biological response in the best way possible (van de Pol et al. 2016), we investigated the variation weight of 1.5-year-old individuals in relation to the variation of mean ambient temperature using the R package climwin, and the function slidingwin which detects the exact time window when a biological variable is most strongly affected by climate (Bailey and van de Pol 2016). 
+The overall approach for the climwin analysis is to compare the support by the data for competing hypotheses and to formalize them into regression models (van de Pol et al., 2016). Competing models are based upon a baseline model (without the addition of weather effects) and ranked using the ΔAICc, or the difference in terms of the Akaike Information Criterion values calculated for a small sample size between the baseline model and the model of interest. The model with the best support from the data has the lowest ΔAICc among competing models. The baseline model was a linear model with the body mass of the juvenile chamois in relation to sex and elevation. The function slidingwin creates a candidate set of competing models testing windows of different lengths for the weather variable of interest, in this study the mean daily ambient temperature (℃). Non-linear effects of temperature on body weight were taken into account by checking for both linear and quadratic trends. As most of the chamois was shot during a two-week period at the end of September we chose an absolute time window for the analyses instead of an individual specific time window. As reference day we chose the last date of the shooting period (September 24th) and we looked for windows between September 24th and 661 days before (December 1st of 2 years before) to include the three critical periods of a young chamois life: gestation, lactation and juvenile.  
 
 ## Selection of the base model
 
@@ -225,18 +214,7 @@ head(ch_mass_sw[[2]]$Dataset, 10)
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["deltaAICc"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[2],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["ModelBeta"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Std.Error"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ModelBetaQ"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Std.ErrorQ"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ModelBetaC"],"name":[8],"type":["lgl"],"align":["right"]},{"label":["ModelInt"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Function"],"name":[10],"type":["chr"],"align":["left"]},{"label":["Furthest"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["Closest"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["Statistics"],"name":[13],"type":["chr"],"align":["left"]},{"label":["Type"],"name":[14],"type":["chr"],"align":["left"]},{"label":["K"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["ModWeight"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["sample.size"],"name":[17],"type":["int"],"align":["right"]},{"label":["Reference.day"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["Reference.month"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["Randomised"],"name":[20],"type":["chr"],"align":["left"]}],"data":[{"1":"-325.3275","2":"503","3":"449","4":"-8.526073","5":"0.06945118","6":"0.2059814","7":"9.132948e-05","8":"NA","9":"99.40562","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.19730404","17":"27","18":"24","19":"9","20":"no","_rn_":"126811"},{"1":"-324.3307","2":"504","3":"449","4":"-8.531009","5":"0.06945764","6":"0.2066512","7":"9.134003e-05","8":"NA","9":"99.20689","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.11986598","17":"27","18":"24","19":"9","20":"no","_rn_":"127316"},{"1":"-324.1087","2":"503","3":"450","4":"-8.433980","5":"0.06946480","6":"0.2040657","7":"9.133873e-05","8":"NA","9":"98.31144","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.10727304","17":"27","18":"24","19":"9","20":"no","_rn_":"126810"},{"1":"-323.9020","2":"503","3":"451","4":"-8.289906","5":"0.06947091","6":"0.2008679","7":"9.133960e-05","8":"NA","9":"96.69394","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.09674092","17":"27","18":"24","19":"9","20":"no","_rn_":"126809"},{"1":"-322.4771","2":"500","3":"451","4":"-8.012148","5":"0.06947658","6":"0.1919002","7":"9.134618e-05","8":"NA","9":"94.80927","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.04744406","17":"27","18":"24","19":"9","20":"no","_rn_":"125300"},{"1":"-322.4249","2":"502","3":"449","4":"-8.362830","5":"0.06946858","6":"0.2011678","7":"9.135045e-05","8":"NA","9":"98.10043","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.04622274","17":"27","18":"24","19":"9","20":"no","_rn_":"126307"},{"1":"-322.3136","2":"504","3":"450","4":"-8.415984","5":"0.06947628","6":"0.2041668","7":"9.135570e-05","8":"NA","9":"97.88342","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.04372079","17":"27","18":"24","19":"9","20":"no","_rn_":"127315"},{"1":"-321.9411","2":"504","3":"451","4":"-8.276014","5":"0.06948357","6":"0.2010699","7":"9.135782e-05","8":"NA","9":"96.30829","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.03629161","17":"27","18":"24","19":"9","20":"no","_rn_":"127314"},{"1":"-321.6449","2":"502","3":"450","4":"-8.280076","5":"0.06947898","6":"0.1994706","7":"9.135620e-05","8":"NA","9":"97.10428","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.03129540","17":"27","18":"24","19":"9","20":"no","_rn_":"126306"},{"1":"-321.6095","2":"500","3":"450","4":"-8.142425","5":"0.06947810","6":"0.1947678","7":"9.135374e-05","8":"NA","9":"96.28649","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.03074654","17":"27","18":"24","19":"9","20":"no","_rn_":"125301"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-A series of plot (should I keep?)
 
-```r
-# plot results from best model
-plotall(
-    dataset = ch_mass_sw[[2]]$Dataset,
-    bestmodel = ch_mass_sw[[2]]$BestModel,
-    bestmodeldata = ch_mass_sw[[2]]$BestModelData
-)
-```
-
-![](chamois_script01_all_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 The deltaAIC plot for linear and quadratic:
 
@@ -244,13 +222,13 @@ The deltaAIC plot for linear and quadratic:
 plotdelta(dataset = ch_mass_sw[[1]]$Dataset)
 ```
 
-![](chamois_script01_all_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](chamois_script01_all_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 ```r
 plotdelta(dataset = ch_mass_sw[[2]]$Dataset)
 ```
 
-![](chamois_script01_all_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
+![](chamois_script01_all_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
 
 The windows for linear and quadratic:
 
@@ -258,13 +236,13 @@ The windows for linear and quadratic:
 plotwin(dataset = ch_mass_sw[[1]]$Dataset)
 ```
 
-![](chamois_script01_all_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](chamois_script01_all_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 ```r
 plotwin(dataset = ch_mass_sw[[2]]$Dataset)
 ```
 
-![](chamois_script01_all_files/figure-html/unnamed-chunk-8-2.png)<!-- -->
+![](chamois_script01_all_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
 
 
 I can add the new variable to the dataset and obtain the dates for the window:
@@ -494,6 +472,48 @@ grid.arrange(
 ![Fig. 1 SOMETHING](chamois_script01_all_files/figure-html/Fig. 1-1.png)
 
 
+### Randwin
+
+Using randwin to randomize the identity of the chamois (XXX ???) we are able to check if the window that wos found before is actually important, or the relationship was just random.
+
+
+```r
+# Performing randamization to identify
+# likelyhood of of dignals occuring by chance
+
+ch_mass_rand <- randwin(
+    repeats = 1000,
+    baseline = ch_basemod,
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day",
+    window = "sliding"
+)
+save(ch_mass_rand, file = "output/ch_mass_rand.rda")
+```
+
+
+```r
+load("output/ch_mass_rand10.rda")
+
+pvalue(
+    datasetrand = ch_mass_rand10[[1]],
+    dataset = ch_mass_sw[[1]]$Dataset, metric = "C", sample.size = 27
+)
+pvalue(
+    datasetrand = ch_mass_rand10[[2]],
+    dataset = ch_mass_sw[[2]]$Dataset, metric = "C", sample.size = 27
+)
+```
+
+
 ### Testing for other windows
 
 We build a model based the same base model selected before but with the addition of the climatic variable for the considered window. 
@@ -561,110 +581,22 @@ head(ch_mass_sw_2[[2]]$Dataset)
 </div>
 
 ```r
-# we can look at the full dataset of all fitted climate windows.
-# in this list the models are sorted by deltaAICc,
-# such that the best supported model is on top.
-
-
-names(ch_mass_sw_2[[2]]$BestModel)
-```
-
-```
-##  [1] "coefficients"  "residuals"     "effects"       "rank"          "fitted.values" "assign"        "qr"            "df.residual"  
-##  [9] "contrasts"     "xlevels"       "call"          "terms"         "model"
-```
-
-```r
-# Finally, the object BestModel stores the values of the climate signal
-# that was best supported by the data and the row numbers correspond
-# to the original row numbers of the Biol dataset.
-
-
-# plot results from best model
-plotall(
-    dataset = ch_mass_sw_2[[1]]$Dataset,
-    bestmodel = ch_mass_sw_2[[1]]$BestModel,
-    bestmodeldata = ch_mass_sw_2[[1]]$BestModelData
-)
-```
-
-```
-## Warning in plotwin(dataset = dataset, cw = cwa): Top window has a weight greater than 0.95. Plotting single best window only.
+plotwin(dataset = ch_mass_sw_2[[2]]$Dataset)
 ```
 
 ![](chamois_script01_all_files/figure-html/comparing-1.png)<!-- -->
 
 ```r
-# plot results from best model
-plotall(
-    dataset = ch_mass_sw_2[[2]]$Dataset,
-    bestmodel = ch_mass_sw_2[[2]]$BestModel,
-    bestmodeldata = ch_mass_sw_2[[2]]$BestModelData
-)
+plotdelta(dataset = ch_mass_sw_2[[1]]$Dataset)
 ```
 
 ![](chamois_script01_all_files/figure-html/comparing-2.png)<!-- -->
 
 ```r
-plotwin(dataset = ch_mass_sw_2[[2]]$Dataset)
-```
-
-![](chamois_script01_all_files/figure-html/comparing-3.png)<!-- -->
-
-```r
-plotdelta(dataset = ch_mass_sw_2[[1]]$Dataset)
-```
-
-![](chamois_script01_all_files/figure-html/comparing-4.png)<!-- -->
-
-```r
 plotdelta(dataset = ch_mass_sw_2[[2]]$Dataset)
 ```
 
-![](chamois_script01_all_files/figure-html/comparing-5.png)<!-- -->
-
-
-### Randwin
-
-Using randwin to randomize the identity of the chamois (XXX ???) we are able to check if the window that wos found before is actually important, or the relationship was just random.
-
-
-```r
-# Performing randamization to identify
-# likelyhood of of dignals occuring by chance
-
-ch_mass_rand <- randwin(
-    repeats = 1000,
-    baseline = ch_basemod,
-    xvar = list(Temp = clim$Temp),
-    type = "absolute",
-    refday = c(24, 9),
-    range = c(661, 0),
-    stat = "mean",
-    cdate = clim$date_ymd,
-    bdate = ch_biom15$date_ymd,
-    func = c("lin", "quad"),
-    cmissing = FALSE,
-    cinterval = "day",
-    window = "sliding"
-)
-save(ch_mass_rand, file = "output/ch_mass_rand.rda")
-```
-
-
-```r
-load("output/ch_mass_rand.rda")
-
-pvalue(
-    datasetrand = ch_mass_rand[[1]],
-    dataset = ch_mass_rand[[1]]$Dataset, metric = "C", sample.size = 27
-) # 0.0006408258
-
-pvalue(
-    datasetrand = ch_mass_rand[[2]],
-    dataset = ch_mass_rand[[2]]$Dataset, metric = "C", sample.size = 27
-)
-```
+![](chamois_script01_all_files/figure-html/comparing-3.png)<!-- -->
 
 
 

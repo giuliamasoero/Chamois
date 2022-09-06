@@ -147,15 +147,7 @@ The 10 best quadratic models sorted by deltaAICc:
 ```{r}
 head(ch_mass_sw[[2]]$Dataset, 10)
 ```
-A series of plot (should I keep?)
-```{r}
-# plot results from best model
-plotall(
-    dataset = ch_mass_sw[[2]]$Dataset,
-    bestmodel = ch_mass_sw[[2]]$BestModel,
-    bestmodeldata = ch_mass_sw[[2]]$BestModelData
-)
-```
+
 
 The deltaAIC plot for linear and quadratic:
 ```{r}
@@ -392,31 +384,6 @@ ch_mass_sw_2$combos
 head(ch_mass_sw_2[[1]]$Dataset)
 head(ch_mass_sw_2[[2]]$Dataset)
 
-
-# we can look at the full dataset of all fitted climate windows.
-# in this list the models are sorted by deltaAICc,
-# such that the best supported model is on top.
-
-
-names(ch_mass_sw_2[[2]]$BestModel)
-# Finally, the object BestModel stores the values of the climate signal
-# that was best supported by the data and the row numbers correspond
-# to the original row numbers of the Biol dataset.
-
-
-# plot results from best model
-plotall(
-    dataset = ch_mass_sw_2[[1]]$Dataset,
-    bestmodel = ch_mass_sw_2[[1]]$BestModel,
-    bestmodeldata = ch_mass_sw_2[[1]]$BestModelData
-)
-
-# plot results from best model
-plotall(
-    dataset = ch_mass_sw_2[[2]]$Dataset,
-    bestmodel = ch_mass_sw_2[[2]]$BestModel,
-    bestmodeldata = ch_mass_sw_2[[2]]$BestModelData
-)
 
 
 plotwin(dataset = ch_mass_sw_2[[2]]$Dataset)
