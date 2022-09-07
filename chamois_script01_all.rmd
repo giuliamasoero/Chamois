@@ -215,7 +215,7 @@ plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    xlab("Mean temperature (°C) between May 9th and July 2nd") +
+    xlab("Mean temperature (°C; May 9th - July 2nd)") +
     #    scale_x_continuous(
     #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
     #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
@@ -273,8 +273,8 @@ eff_data <- data.frame(effects::effect("sex",
 ))
 par_col_af <- "darkorange3"
 par_col_am <- "steelblue"
-plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, color = sex)) +
-    geom_boxplot() +
+plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
+    geom_boxplot(outlier.shape = NA, alpha = 0.5) +
     xlab("Sex") +
     theme(
         legend.position = "none",
@@ -285,14 +285,16 @@ plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, color = sex)) +
     ) +
     ggbeeswarm::geom_quasirandom(
         data = ch_biom15,
-        aes(x = sex, y = weight),
+        aes(x = sex, y = weight, colour = "black"),
         size = 1, shape = 16, alpha = 0.1
     ) +
     ylab("") +
-    scale_color_manual(values = c(par_col_af, par_col_am)) +
+    scale_fill_manual(values = c(par_col_af, par_col_am)) +
+    scale_color_manual(values = "black") +
     scale_y_continuous(limits = c(4.6, 30), breaks = seq(0, 35, 5)) +
     scale_x_discrete(labels = c("F", "M")) +
-    annotate("text", x = 0.5, y = 30, label = "(c)")
+    annotate("text", x = 0.5, y = 30, label = "(c)") +
+    geom_boxplot(outlier.shape = NA, alpha = 0.1)
 ```
 
 
@@ -327,7 +329,7 @@ ch_mass_rand <- randwin(
     cinterval = "day",
     window = "sliding"
 )
-save(ch_mass_rand, file = "output/ch_mass_rand.rda")
+save(ch_mass_rand10, file = "output/ch_mass_rand10.rda")
 ```
 
 ```{r alls random p, eval = F}
@@ -454,7 +456,7 @@ plot_yr_temp <- ggplot(data_temp, aes(x = year_temp, y = temp_503_449)) +
     geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
     scale_x_continuous(limits = c(1991, 2019), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
     xlab("") +
-    ylab("Mean temperature (°C) between May 9th and July 2nd") +
+    ylab("Mean temperature (°C; May 9th - July 2nd)") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
