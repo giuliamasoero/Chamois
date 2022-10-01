@@ -314,8 +314,8 @@ Using randwin to randomize the identity of the chamois (XXX ???) we are able to 
 # Performing randamization to identify
 # likelyhood of of dignals occuring by chance
 
-ch_mass_rand <- randwin(
-    repeats = 1000,
+ch_mass_rand100 <- randwin(
+    repeats = 100,
     baseline = ch_basemod,
     xvar = list(Temp = clim$Temp),
     type = "absolute",
@@ -329,18 +329,18 @@ ch_mass_rand <- randwin(
     cinterval = "day",
     window = "sliding"
 )
-save(ch_mass_rand10, file = "output/ch_mass_rand10.rda")
+save(ch_mass_rand100, file = "output/ch_mass_rand100.rda")
 ```
 
-```{r alls random p, eval = F}
+```{r alls random p}
 load("output/ch_mass_rand10.rda")
 
 pvalue(
-    datasetrand = ch_mass_rand10[[1]],
+    datasetrand = ch_mass_rand100[[1]],
     dataset = ch_mass_sw[[1]]$Dataset, metric = "C", sample.size = 27
 )
 pvalue(
-    datasetrand = ch_mass_rand10[[2]],
+    datasetrand = ch_mass_rand100[[2]],
     dataset = ch_mass_sw[[2]]$Dataset, metric = "C", sample.size = 27
 )
 ```
