@@ -8,7 +8,7 @@ author:
             affiliation: 
           - name: Pierre Bize
             affiliation: Swiss Ornithological Institute, CH-6204 Sempach, Switzerland
-date: "Last compiled on 01 October 2022"
+date: "Last compiled on 25 November 2022"
 output:
   html_document:
     code_folding: hide
@@ -53,10 +53,9 @@ sessionInfo()
 ```
 ## R version 4.2.1 (2022-06-23)
 ## Platform: aarch64-apple-darwin20 (64-bit)
-## Running under: macOS Monterey 12.5.1
+## Running under: macOS Ventura 13.0.1
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRblas.0.dylib
 ## LAPACK: /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
@@ -66,22 +65,17 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] sjPlot_2.8.10    lmerTest_3.1-3   lme4_1.1-30      effects_4.2-1    carData_3.0-5    tidyr_1.2.0      climwin_1.2.3    Matrix_1.4-1     gridExtra_2.3    ggplot2_3.3.6   
-## [11] snakecase_0.11.0 dplyr_1.0.9     
+##  [1] sjPlot_2.8.11    lmerTest_3.1-3   lme4_1.1-30      effects_4.2-2    carData_3.0-5    tidyr_1.2.1      climwin_1.2.3    Matrix_1.5-1     gridExtra_2.3    ggplot2_3.3.6    snakecase_0.11.0 dplyr_1.0.10    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-157        lubridate_1.8.0     insight_0.17.1      evd_2.3-6           numDeriv_2016.8-1.1 bslib_0.3.1         tools_4.2.1         backports_1.4.1    
-##  [9] utf8_1.2.2          R6_2.5.1            sjlabelled_1.2.0    vipor_0.4.5         mgcv_1.8-40         DBI_1.1.3           colorspace_2.0-3    nnet_7.3-17        
-## [17] withr_2.5.0         tidyselect_1.1.2    emmeans_1.8.0       compiler_4.2.1      performance_0.9.1   cli_3.3.0           sass_0.4.1          labeling_0.4.2     
-## [25] bayestestR_0.12.1   scales_1.2.0        mvtnorm_1.1-3       systemfonts_1.0.4   stringr_1.4.0       httpgd_1.3.0        digest_0.6.29       minqa_1.2.4        
-## [33] rmarkdown_2.14      pkgconfig_2.0.3     htmltools_0.5.2     MuMIn_1.46.0        highr_0.9           fastmap_1.1.0       rlang_1.0.2         jquerylib_0.1.4    
-## [41] farver_2.1.0        generics_0.1.2      jsonlite_1.8.0      magrittr_2.0.3      parameters_0.18.1   Rcpp_1.0.9          ggbeeswarm_0.6.0    munsell_0.5.0      
-## [49] fansi_1.0.3         lifecycle_1.0.1     stringi_1.7.6       yaml_2.3.5          MASS_7.3-57         plyr_1.8.7          grid_4.2.1          sjmisc_2.8.9       
-## [57] crayon_1.5.1        lattice_0.20-45     ggeffects_1.1.2     splines_4.2.1       sjstats_0.18.1      knitr_1.39          pillar_1.7.0        boot_1.3-28        
-## [65] estimability_1.4.1  effectsize_0.7.0    stats4_4.2.1        glue_1.6.2          evaluate_0.15       mitools_2.4         modelr_0.1.8        vctrs_0.4.1        
-## [73] nloptr_2.0.3        gtable_0.3.0        purrr_0.3.4         reshape_0.8.9       assertthat_0.2.1    datawizard_0.4.1    xfun_0.31           xtable_1.8-4       
-## [81] broom_0.8.0         survey_4.1-1        coda_0.19-4         later_1.3.0         survival_3.3-1      RcppRoll_0.3.0      tibble_3.1.7        beeswarm_0.4.0     
-## [89] ellipsis_0.3.2
+##  [1] nlme_3.1-160        lubridate_1.8.0     insight_0.18.5      evd_2.3-6.1         numDeriv_2016.8-1.1 backports_1.4.1     tools_4.2.1         bslib_0.4.0         utf8_1.2.2          R6_2.5.1            sjlabelled_1.2.0    vipor_0.4.5        
+## [13] DBI_1.1.3           colorspace_2.0-3    nnet_7.3-18         withr_2.5.0         tidyselect_1.2.0    emmeans_1.8.1-1     compiler_4.2.1      performance_0.10.0  cli_3.4.1           labeling_0.4.2      bayestestR_0.13.0   sass_0.4.2         
+## [25] scales_1.2.1        mvtnorm_1.1-3       systemfonts_1.0.4   stringr_1.4.1       httpgd_1.3.0        digest_0.6.29       minqa_1.2.4         rmarkdown_2.17      pkgconfig_2.0.3     htmltools_0.5.3     MuMIn_1.47.1        fastmap_1.1.0      
+## [37] highr_0.9           rlang_1.0.6         jquerylib_0.1.4     farver_2.1.1        generics_0.1.3      jsonlite_1.8.2      magrittr_2.0.3      parameters_0.19.0   Rcpp_1.0.9          ggbeeswarm_0.6.0    munsell_0.5.0       fansi_1.0.3        
+## [49] lifecycle_1.0.3     stringi_1.7.8       yaml_2.3.5          MASS_7.3-58.1       plyr_1.8.7          grid_4.2.1          sjmisc_2.8.9        lattice_0.20-45     ggeffects_1.1.3     splines_4.2.1       sjstats_0.18.1      knitr_1.40         
+## [61] pillar_1.8.1        boot_1.3-28         estimability_1.4.1  effectsize_0.8.0    stats4_4.2.1        glue_1.6.2          evaluate_0.17       mitools_2.4         modelr_0.1.9        vctrs_0.4.2         nloptr_2.0.3        gtable_0.3.1       
+## [73] purrr_0.3.5         reshape_0.8.9       assertthat_0.2.1    datawizard_0.6.2    cachem_1.0.6        xfun_0.33           broom_1.0.1         xtable_1.8-4        survey_4.1-1        coda_0.19-4         later_1.3.0         survival_3.4-0     
+## [85] RcppRoll_0.3.0      tibble_3.1.8        beeswarm_0.4.0      ellipsis_0.3.2
 ```
 
 ## The datasets
@@ -268,7 +262,7 @@ Summary and figure for our updated model:
 
 ```r
 ch_final <- lm(weight ~
-    sex + altitude + temp_503_449 + I(temp_503_449^2),
+    sex + altitude + poly(temp_503_449, 2),
 data = ch_biom15
 )
 ```
@@ -305,9 +299,9 @@ sjPlot::tab_model(ch_final,
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">99.4056</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">6.3050</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">15.7662</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">11.8526</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.1538</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">77.0758</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
@@ -325,16 +319,16 @@ sjPlot::tab_model(ch_final,
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">temp 503 449</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">&#45;8.5261</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.6389</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">&#45;13.3458</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">temp 503 449 [1st degree]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">&#45;34.3481</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.5860</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">&#45;13.2823</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">temp 503 449^2</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.2060</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.0162</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">temp 503 449 [2nd degree]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">32.9850</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.5870</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">12.7502</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
@@ -366,7 +360,7 @@ emmeans::emmeans(ch_final, "sex")
 
 
 ```r
-eff_data <- data.frame(effects::effect("temp_503_449",
+eff_data <- data.frame(effects::effect("poly(temp_503_449,2)",
     ch_final,
     partial.residuals = T
 ))
@@ -395,7 +389,7 @@ plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
         aes(x = temp_503_449, y = weight),
         size = 1, shape = 16, alpha = 0.1
     ) +
-    ylab("") +
+    ylab("Body mass (kg)") +
     scale_y_continuous(limits = c(4.6, 30), breaks = seq(0, 35, 5)) +
     annotate("text", x = 17, y = 30, label = "(a)")
 
@@ -412,6 +406,7 @@ plot_alt <- ggplot(eff_data, aes(x = altitude, y = fit)) +
         linetype = 0, alpha = .4
     ) +
     xlab("Altitude (m a.s.l)") +
+    ylab("") +
     scale_x_continuous(limits = c(250, 2600), breaks = seq(250, 2750, 500)) +
     theme(
         legend.position = "none",
@@ -425,7 +420,6 @@ plot_alt <- ggplot(eff_data, aes(x = altitude, y = fit)) +
         aes(x = altitude, y = weight),
         size = 1, shape = 16, alpha = 0.1
     ) +
-    ylab("Body mass (kg)") +
     scale_y_continuous(limits = c(4.6, 30), breaks = seq(0, 35, 5)) +
     annotate("text", x = 250, y = 30, label = "(b)")
 
@@ -464,7 +458,7 @@ plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
 ```r
 grid.arrange(
     plot_temp, plot_alt, plot_sex,
-    nrow = 3
+    nrow = 1
 )
 ```
 
@@ -500,7 +494,7 @@ save(ch_mass_rand100, file = "output/ch_mass_rand100.rda")
 
 
 ```r
-load("output/ch_mass_rand10.rda")
+load("output/ch_mass_rand100.rda")
 
 pvalue(
     datasetrand = ch_mass_rand100[[1]],
