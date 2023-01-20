@@ -1,0 +1,609 @@
+---
+title:"Why are chamois shrinking in the Alps: Investigating the effects of climate on the phenotype of chamois"
+subtitle: "Supplementary Material"
+author: 
+          - name: Giulia Masoero
+            affiliation: Department of Biology, University of Ottawa, Canada
+          - name: Kristina Georgieva Gencheva
+            affiliation: 
+          - name: Pierre Bize
+            affiliation: Swiss Ornithological Institute, CH-6204 Sempach, Switzerland
+date: "Last compiled on `r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+    number_sections: yes
+    df_print: paged
+    theme: cerulean
+    collapsed: no
+    keep_md: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '4'
+editor_options: 
+  chunk_output_type: console
+---
+
+Supplementary materials and codes for the manuscript.
+
+
+# Libraries and datasets
+```{r lib_data}
+# load the packages
+library(dplyr)
+library(snakecase)
+library(climwin)
+library(tidyr)
+library(ggplot2)
+library(effects)
+library(lme4)
+library(lmerTest)
+```
+
+R session information is printed here for repeatability.
+```{r session information}
+sessionInfo()
+```
+
+## The datasets
+The data analysed in this study are the records of the Ticino hunting bags from 1992 to 2018. In Ticino, hunting starts at the beginning of September and the harvest plan is mostly completed within three weeks.
+
+Data were collected from the Alps in Ticino, the southernmost canton of Switzerland, over an area of 2700 km2 with an altitude varying from 250 to 2700 m asl. The climate in the mountain range is Alpine, with temperatures varying from mean temperatures of -12℃ in winter to mean temperatures of 15.5 ℃ in summer. The hottest and the sunniest month of the year is July with an average maximum temperature of 25℃, measured in the biggest city in the canton Lugano (World Weather & Climate Information, 2021). 
+
+Overall, 34 017 animals were legally shot during the hunting period ranging from an age of 0.5 to 22.5 years old. All animals were sexed, aged and weighted (eviscerated). Both males and females have horns all year-round, even though female ones tend to be shorter. For the estimation of the age of the shot chamois, measurement of the teeth and the growth rings of their horns were used (Schroder and Elsner-Schack 1985).
+
+```{r}
+# load the data
+ch_biom <- read.csv("data/data.csv", stringsAsFactors = T, na = c("", "NA"))
+clim <- read.csv("data/swiss_weather.csv", stringsAsFactors = T, na = c("", "NA"))
+
+colnames(ch_biom) <- snakecase::to_snake_case(colnames(ch_biom))
+
+# fixing some variables
+ch_biom$date_ymd <- as.Date(paste(ch_biom$year, ch_biom$month, ch_biom$day), "%Y %m %d")
+clim$date_ymd <- as.Date(clim$date, "%Y/%m/%d")
+ch_biom$year_f <- as.factor(ch_biom$year)
+```
+
+### Subset
+
+ Due to the nature of the dataset, only information on individuals shot in September was available, so for the purpose of this study, only a 1.5-year-old animals were considered (7127 individuals, 3257 females and 3870 males). As chamois are usually weaned at 3 to 6 months of age (Scornavacca et al. 2018), a 1.5-year-old individual has been feeding on their own for nearly a year, is fully grown but still very vulnerable to external abiotic and biotic threats due to the decrease in maternal care and increase in active grazing behaviour. 
+
+```{r}
+# get only data with 1.5 years old individuals
+ch_biom15 <- ch_biom[, c("no", "year", "year_f", "date_ymd", "altitude", "age", "sex", "weight", "district_capture")]
+
+ch_biom15 <- ch_biom15 %>%
+    drop_na() %>%
+    filter(age == "1.5")
+
+boxplot(ch_biom15$weight ~ ch_biom15$year)
+
+ch_biom15$altitude_sc <- scale(ch_biom15$altitude)
+ch_biom15$year_sc <- scale(ch_biom15$year)
+```
+
+
+# Statistical Analysis
+
+As the use of arbitrary climate periods do not always explain the biological response in the best way possible (van de Pol et al. 2016), we investigated the variation weight of 1.5-year-old individuals in relation to the variation of mean ambient temperature using the R package climwin, and the function slidingwin which detects the exact time window when a biological variable is most strongly affected by climate (Bailey and van de Pol 2016). 
+The overall approach for the climwin analysis is to compare the support by the data for competing hypotheses and to formalize them into regression models (van de Pol et al., 2016). Competing models are based upon a baseline model (without the addition of weather effects) and ranked using the ΔAICc, or the difference in terms of the Akaike Information Criterion values calculated for a small sample size between the baseline model and the model of interest. The model with the best support from the data has the lowest ΔAICc among competing models. The baseline model was a linear model with the body mass of the juvenile chamois in relation to sex and elevation. The function slidingwin creates a candidate set of competing models testing windows of different lengths for the weather variable of interest, in this study the mean daily ambient temperature (℃). Non-linear effects of temperature on body weight were taken into account by checking for both linear and quadratic trends. As most of the chamois was shot during a two-week period at the end of September we chose an absolute time window for the analyses instead of an individual specific time window. As reference day we chose the last date of the shooting period (September 24th) and we looked for windows between September 24th and 661 days before (December 1st of 2 years before) to include the three critical periods of a young chamois life: gestation, lactation and juvenile.  
+
+## Selection of the base model
+
+```{r basemod}
+ch_basemod <- lm(weight ~
+    sex + altitude_sc,
+data = ch_biom15
+)
+
+ch_basemod_yr <- lm(weight ~
+    sex + altitude_sc + year_sc,
+data = ch_biom15
+)
+
+ch_basemod_lmer <- lme4::lmer(weight ~
+    sex + altitude_sc + year_sc + (1 | year_f),
+control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+data = ch_biom15
+)
+```
+
+
+## Climwin analysis
+
+### Slidingwin
+Using the function slidingwin allows to search for the best climatic window 
+
+```{r all climmod, eval = F}
+# create model with ABSOLUTE time window with temperature for ALWAYS period
+# for the period 1 Dec(-2) - 31May(-1)
+ch_mass_sw <- slidingwin(
+    baseline = ch_basemod,
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw, file = "output/ch_mass_sw_sc.rda")
+
+ch_mass_sw_yr <- slidingwin(
+    baseline = ch_basemod_yr,
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw_yr, file = "output/ch_mass_sw_yr_sc.rda")
+
+ch_mass_sw_lmer <- slidingwin(
+    baseline = ch_basemod_lmer,
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw_lmer, file = "output/ch_mass_sw_lmer.rda")
+```
+
+
+#### Investigating the models
+
+```{r comparing mo2}
+load(file = "output/ch_mass_sw.rda")
+load(file = "output/ch_mass_sw_yr_sc.rda")
+load(file = "output/ch_mass_sw_lmer.rda")
+```
+__The best linear and quadratic windows__
+
+For the sex + altitude model
+```{r}
+ch_mass_sw$combos
+```
+For the sex + altitude + year model 
+```{r}
+ch_mass_sw_yr$combos
+```
+For the sex + altitude model with year as random
+```{r}
+ch_mass_sw_lmer$combos
+```
+
+The window for the linear effect is the same for all models, whereas the window for the quadratic effect changes quite a lot!
+Windows are also in very different moments of the growth of young chamois!
+
+
+
+The 10 best linear models sorted by deltaAICc:
+```{r}
+head(ch_mass_sw[[1]]$Dataset, 10)
+```
+
+
+
+The deltaAIC plot for linear and quadratic (same order as before):
+```{r}
+
+plotdelta(dataset = ch_mass_sw[[1]]$Dataset)
+plotdelta(dataset = ch_mass_sw[[2]]$Dataset)
+
+
+plotdelta(dataset = ch_mass_sw_yr[[1]]$Dataset)
+plotdelta(dataset = ch_mass_sw_yr[[1]]$Dataset)
+
+plotdelta(dataset = ch_mass_sw_lmer[[1]]$Dataset)
+plotdelta(dataset = ch_mass_sw_lmer[[2]]$Dataset)
+```
+
+__Choosing the simplest model__
+
+I can add the new variable to the dataset and obtain the dates for the window:
+```{r temp variable}
+# The best supported climate variable can be attached
+# to the original dataset for further analyses
+ch_biom15$temp_503_449 <- ch_mass_sw[[2]]$BestModelData$climate
+```
+Dates of this window
+```{r}
+as.Date("2022/09/24", format = "%Y/%m/%d") - 503
+as.Date("2022/09/24", format = "%Y/%m/%d") - 449
+```
+
+
+### Testing for other windows
+
+We build a model based the same base model selected before but with the addition of the climatic variable for the considered window. 
+
+We are now able to look for other temporal windows that might be of importance for the chamois growth, but controlling for correlation with the temporal window already in the model.
+
+```{r eval = F}
+
+ch_mass_sw_lm2 <- slidingwin(
+    baseline = lm(weight ~
+        sex + altitude_sc +
+        temp_503_449,
+    data = ch_biom15
+    ),
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw_lm2, file = "output/ch_mass_sw_lm2.rda")
+```
+
+## results of this second slidingwin 
+
+```{r}
+
+ch_mass_sw_lm2$combos
+plotdelta(dataset = ch_mass_sw_lm2[[2]]$Dataset)
+
+
+ch_biom15$temp_145_65 <- ch_mass_sw_lm2[[2]]$BestModelData$climate
+```
+Dates of this window
+```{r}
+as.Date("2022/09/24", format = "%Y/%m/%d") - 145
+as.Date("2022/09/24", format = "%Y/%m/%d") - 65
+```
+
+## Summary of the model with 2 temperature windows
+
+```{r}
+ch_final <- lm(weight ~
+    sex + altitude +
+    poly((temp_503_449), 2) + poly((temp_145_65), 2),
+data = ch_biom15
+)
+summary(ch_final)
+```
+
+
+```{r}
+library(sjPlot)
+
+sjPlot::tab_model(ch_final,
+    file = "Tables/wicm_models.doc",
+    string.est = "Estimate",
+    string.se = "SE",
+    show.ci = F,
+    show.se = T,
+    show.stat = T,
+    show.df = F,
+    digits = 3,
+    digits.rsq = 2
+)
+```
+Climatic model results
+```{r model}
+
+ch_final <- lm(weight ~
+    sex + altitude +
+    poly(temp_503_449, 2) + poly(temp_145_65, 2),
+data = ch_biom15
+)
+summary(ch_final)
+```
+
+Sex difference estimated by the model:
+```{r}
+emmeans::emmeans(ch_final, "sex")
+```
+
+Are the two variables correlated?
+```{r corr}
+cor.test(ch_biom15$temp_503_449, ch_biom15$temp_145_65)
+plot(ch_biom15$temp_503_449, ch_biom15$temp_145_65)
+```
+
+Figure
+```{r all climmod2 fig}
+
+eff_data <- data.frame(effects::effect("poly(temp_503_449, 2)",
+    ch_final,
+    partial.residuals = T
+))
+
+plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
+    geom_line() +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = .4
+    ) +
+    # xlab("Mean temperature (°C; 23.6 - 8.7)") +
+    #    scale_x_continuous(
+    #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
+    #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
+    #        limits = c(year_sc$year_sc[1], year_sc$year_sc[23])
+    #    ) +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = temp_503_449, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    ylab("Body mass (kg)") +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(16.5, 22.5), breaks = seq(16.5, 22.5, 2)) +
+    annotate("text", x = 16.5, y = 27, label = "(a)")
+
+
+
+eff_data <- data.frame(effects::effect("poly(temp_145_65, 2)",
+    ch_final,
+    partial.residuals = T
+))
+
+plot_temp2 <- ggplot(eff_data, aes(x = temp_145_65, y = fit)) +
+    geom_line() +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = .4
+    ) +
+    # xlab("Mean temperature (°C; 23.6 - 8.7)") +
+    #    scale_x_continuous(
+    #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
+    #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
+    #        limits = c(year_sc$year_sc[1], year_sc$year_sc[23])
+    #    ) +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = temp_145_65, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    ylab("Body mass (kg)") +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(17.5, 22.5), breaks = seq(17.5, 22.5, 1)) +
+    annotate("text", x = 17.5, y = 27, label = "(b)")
+
+
+eff_data <- data.frame(effects::effect("altitude",
+    ch_final,
+    partial.residuals = T
+))
+
+plot_alt <- ggplot(eff_data, aes(x = altitude, y = fit)) +
+    geom_line() +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = .4
+    ) +
+    xlab("Altitude (m a.s.l)") +
+    ylab("") +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(200, 2600), breaks = seq(200, 2600, 600)) +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = altitude, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    annotate("text", x = 300, y = 27, label = "(c)")
+
+
+eff_data <- data.frame(effects::effect("sex",
+    ch_final,
+    partial.residuals = T
+))
+par_col_af <- "darkorange3"
+par_col_am <- "steelblue"
+plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
+    geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+    xlab("Sex") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    ggbeeswarm::geom_quasirandom(
+        data = ch_biom15,
+        aes(x = sex, y = weight, colour = "black"),
+        size = 1, shape = 16, alpha = 0.07
+    ) +
+    ylab("") +
+    scale_fill_manual(values = c(par_col_af, par_col_am)) +
+    scale_color_manual(values = "black") +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    scale_x_discrete(labels = c("F", "M")) +
+    annotate("text", x = 0.6, y = 27, label = "(d)") +
+    geom_boxplot(outlier.shape = NA, alpha = 0.2)
+```
+
+
+```{r Fig. 1, warning = F, dev = c("png","tiff"), fig.height = 3, fig.width = 10, fig.cap = "Fig. 1 SOMETHING"}
+grid.arrange(
+    plot_temp, plot_temp2, plot_alt, plot_sex,
+    nrow = 1
+)
+```
+
+
+### Randwin
+
+Using randwin to randomize the identity of the chamois (XXX ???) we are able to check if the window that wos found before is actually important, or the relationship was just random.
+
+```{r alls random, eval = F}
+# Performing randamization to identify
+# likelyhood of of dignals occuring by chance
+
+ch_mass_rand100 <- randwin(
+    repeats = 100,
+    baseline = ch_basemod,
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day",
+    window = "sliding"
+)
+save(ch_mass_rand100, file = "output/ch_mass_rand100.rda")
+```
+
+```{r alls random p}
+load("output/ch_mass_rand100.rda")
+
+pvalue(
+    datasetrand = ch_mass_rand100[[1]],
+    dataset = ch_mass_sw[[1]]$Dataset, metric = "C", sample.size = 27
+)
+pvalue(
+    datasetrand = ch_mass_rand100[[2]],
+    dataset = ch_mass_sw[[2]]$Dataset, metric = "C", sample.size = 27
+)
+```
+
+
+## Long term trends
+
+```{r}
+data_temp <- subset(ch_biom15, !duplicated(year))
+temp_lm <- lm(temp_503_449 ~ year, data_temp)
+temp2_lm <- lm(temp_145_65 ~ year, data_temp)
+weight_lm <- lm(weight ~ year, ch_biom15)
+```
+
+Decrease in weight (kg):
+```{r}
+(weight_lm$coeff[1] + 2018 * weight_lm$coeff[2]) - (weight_lm$coeff[1] + 1992 * weight_lm$coeff[2])
+```
+
+Increase in temperature (°C):
+```{r}
+(temp_lm$coeff[1] + 2018 * temp_lm$coeff[2]) - (temp_lm$coeff[1] + 1992 * temp_lm$coeff[2])
+```
+
+Increase in temperature (°C):
+```{r}
+(temp2_lm$coeff[1] + 2018 * temp2_lm$coeff[2]) - (temp2_lm$coeff[1] + 1992 * temp2_lm$coeff[2])
+```
+
+
+```{r}
+library(sjPlot)
+
+sjPlot::tab_model(temp_lm,
+    file = "Tables/model_temp_503_449s.doc",
+    string.est = "Estimate",
+    string.se = "SE",
+    show.ci = F,
+    show.se = T,
+    show.stat = T,
+    show.df = F,
+    digits = 4,
+    digits.rsq = 4
+)
+```
+
+
+```{r}
+library(sjPlot)
+
+sjPlot::tab_model(weight_lm,
+    file = "Tables/model_weight.doc",
+    string.est = "Estimate",
+    string.se = "SE",
+    show.ci = F,
+    show.se = T,
+    show.stat = T,
+    show.df = F,
+    digits = 4,
+    digits.rsq = 4
+)
+```
+
+```{r}
+data_temp$year_temp <- data_temp$year - 1
+plot_yr_temp <- ggplot(data_temp, aes(x = year_temp, y = temp_503_449)) +
+    geom_point(size = 1, shape = 16, alpha = 0.7) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
+    scale_x_continuous(limits = c(1991, 2019), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
+    xlab("") +
+    ylab("Mean temperature (°C; May 9th - July 2nd)") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    annotate("text", x = 1991, y = 22.156, label = "(a)")
+
+plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
+    geom_point(size = 1, shape = 16, alpha = 0.1) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
+    scale_x_continuous(limits = c(1991, 2019), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
+    xlab("Year") +
+    ylab("Body mass of juvenile Alpine Chamois (kg)") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    annotate("text", x = 1991, y = 30, label = "(b)")
+```
+
+
+
+```{r Fig. 2, warning = F, dev = c("png","tiff"), fig.height = 8, fig.width = 4, fig.cap = "Fig. 2 - SOMETHING"}
+grid.arrange(
+    plot_yr_temp, plot_yr_bm,
+    nrow = 2
+)
+```
+

@@ -8,7 +8,7 @@ author:
             affiliation: 
           - name: Pierre Bize
             affiliation: Swiss Ornithological Institute, CH-6204 Sempach, Switzerland
-date: "Last compiled on 25 November 2022"
+date: "Last compiled on 17 January 2023"
 output:
   html_document:
     code_folding: hide
@@ -51,9 +51,9 @@ sessionInfo()
 ```
 
 ```
-## R version 4.2.1 (2022-06-23)
+## R version 4.2.2 (2022-10-31)
 ## Platform: aarch64-apple-darwin20 (64-bit)
-## Running under: macOS Ventura 13.0.1
+## Running under: macOS Ventura 13.1
 ## 
 ## Matrix products: default
 ## LAPACK: /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRlapack.dylib
@@ -68,14 +68,15 @@ sessionInfo()
 ##  [1] sjPlot_2.8.11    lmerTest_3.1-3   lme4_1.1-30      effects_4.2-2    carData_3.0-5    tidyr_1.2.1      climwin_1.2.3    Matrix_1.5-1     gridExtra_2.3    ggplot2_3.3.6    snakecase_0.11.0 dplyr_1.0.10    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-160        lubridate_1.8.0     insight_0.18.5      evd_2.3-6.1         numDeriv_2016.8-1.1 backports_1.4.1     tools_4.2.1         bslib_0.4.0         utf8_1.2.2          R6_2.5.1            sjlabelled_1.2.0    vipor_0.4.5        
-## [13] DBI_1.1.3           colorspace_2.0-3    nnet_7.3-18         withr_2.5.0         tidyselect_1.2.0    emmeans_1.8.1-1     compiler_4.2.1      performance_0.10.0  cli_3.4.1           labeling_0.4.2      bayestestR_0.13.0   sass_0.4.2         
-## [25] scales_1.2.1        mvtnorm_1.1-3       systemfonts_1.0.4   stringr_1.4.1       httpgd_1.3.0        digest_0.6.29       minqa_1.2.4         rmarkdown_2.17      pkgconfig_2.0.3     htmltools_0.5.3     MuMIn_1.47.1        fastmap_1.1.0      
-## [37] highr_0.9           rlang_1.0.6         jquerylib_0.1.4     farver_2.1.1        generics_0.1.3      jsonlite_1.8.2      magrittr_2.0.3      parameters_0.19.0   Rcpp_1.0.9          ggbeeswarm_0.6.0    munsell_0.5.0       fansi_1.0.3        
-## [49] lifecycle_1.0.3     stringi_1.7.8       yaml_2.3.5          MASS_7.3-58.1       plyr_1.8.7          grid_4.2.1          sjmisc_2.8.9        lattice_0.20-45     ggeffects_1.1.3     splines_4.2.1       sjstats_0.18.1      knitr_1.40         
-## [61] pillar_1.8.1        boot_1.3-28         estimability_1.4.1  effectsize_0.8.0    stats4_4.2.1        glue_1.6.2          evaluate_0.17       mitools_2.4         modelr_0.1.9        vctrs_0.4.2         nloptr_2.0.3        gtable_0.3.1       
-## [73] purrr_0.3.5         reshape_0.8.9       assertthat_0.2.1    datawizard_0.6.2    cachem_1.0.6        xfun_0.33           broom_1.0.1         xtable_1.8-4        survey_4.1-1        coda_0.19-4         later_1.3.0         survival_3.4-0     
-## [85] RcppRoll_0.3.0      tibble_3.1.8        beeswarm_0.4.0      ellipsis_0.3.2
+##  [1] nlme_3.1-160        visreg_2.7.0        lubridate_1.8.0     insight_0.18.8      evd_2.3-6.1         numDeriv_2016.8-1.1 backports_1.4.1     tools_4.2.2         bslib_0.4.0         utf8_1.2.2         
+## [11] R6_2.5.1            sjlabelled_1.2.0    vipor_0.4.5         mgcv_1.8-41         DBI_1.1.3           colorspace_2.0-3    nnet_7.3-18         withr_2.5.0         tidyselect_1.2.0    emmeans_1.8.1-1    
+## [21] compiler_4.2.2      performance_0.10.0  cli_3.4.1           labeling_0.4.2      bayestestR_0.13.0   sass_0.4.2          scales_1.2.1        mvtnorm_1.1-3       systemfonts_1.0.4   stringr_1.5.0      
+## [31] httpgd_1.3.0        digest_0.6.29       minqa_1.2.4         rmarkdown_2.17      pkgconfig_2.0.3     htmltools_0.5.3     MuMIn_1.47.1        fastmap_1.1.0       highr_0.9           rlang_1.0.6        
+## [41] jquerylib_0.1.4     farver_2.1.1        generics_0.1.3      jsonlite_1.8.2      magrittr_2.0.3      parameters_0.19.0   Rcpp_1.0.9          ggbeeswarm_0.6.0    munsell_0.5.0       fansi_1.0.3        
+## [51] lifecycle_1.0.3     stringi_1.7.8       yaml_2.3.5          MASS_7.3-58.1       plyr_1.8.7          grid_4.2.2          sjmisc_2.8.9        lattice_0.20-45     ggeffects_1.1.3     splines_4.2.2      
+## [61] sjstats_0.18.1      knitr_1.40          pillar_1.8.1        boot_1.3-28         estimability_1.4.1  effectsize_0.8.0    stats4_4.2.2        glue_1.6.2          evaluate_0.17       mitools_2.4        
+## [71] modelr_0.1.9        vctrs_0.4.2         nloptr_2.0.3        gtable_0.3.1        purrr_0.3.5         datawizard_0.6.2    reshape_0.8.9       assertthat_0.2.1    cachem_1.0.6        xfun_0.33          
+## [81] broom_1.0.1         xtable_1.8-4        survey_4.1-1        coda_0.19-4         later_1.3.0         survival_3.4-0      RcppRoll_0.3.0      tibble_3.1.8        beeswarm_0.4.0      ellipsis_0.3.2
 ```
 
 ## The datasets
@@ -117,6 +118,11 @@ boxplot(ch_biom15$weight ~ ch_biom15$year)
 
 ![](chamois_script01_all_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
+```r
+ch_biom15$altitude_sc <- scale(ch_biom15$altitude)
+ch_biom15$year_sc <- scale(ch_biom15$year)
+```
+
 
 # Statistical Analysis
 
@@ -128,7 +134,18 @@ The overall approach for the climwin analysis is to compare the support by the d
 
 ```r
 ch_basemod <- lm(weight ~
-    sex + altitude,
+    sex + altitude_sc,
+data = ch_biom15
+)
+
+ch_basemod_yr <- lm(weight ~
+    sex + altitude_sc + year,
+data = ch_biom15
+)
+
+ch_basemod_lmer <- lme4::lmer(weight ~
+    sex + altitude_sc + year_sc + (1 | year_f),
+control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
 data = ch_biom15
 )
 ```
@@ -156,11 +173,59 @@ ch_mass_sw <- slidingwin(
     cmissing = FALSE,
     cinterval = "day"
 )
+save(ch_mass_sw, file = "output/ch_mass_sw_sc.rda")
 
-save(ch_mass_sw, file = "output/ch_mass_sw.rda")
+ch_mass_sw_yr <- slidingwin(
+    baseline = ch_basemod_yr,
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw_yr, file = "output/ch_mass_sw_yr_sc.rda")
+
+ch_mass_sw_lmer <- slidingwin(
+    baseline = ch_basemod_lmer,
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw_lmer, file = "output/ch_mass_sw_lmer.rda")
 
 beepr::beep("treasure")
 ```
+
+
+17.421= x: 18
+
+
+
+
+NOTES
+
+
+I want to try to see with the model that is running now if there are other climatic windows affecting the body mass.
+
+
+
+
+
+Coping with a changing climate: exploring bird responses using long-term studies
+The fast growth in human population and activities over the past century has led to fast changes in the global climate system. These global climatic changes are predicted to be even stronger during the 21st century and become one of the major threats to living organisms. Long-term studies in wild bird populations can help us investigate the effect of weather on population size and individual behaviour and morphology. 
+
 
 
 #### Investigating the models
@@ -168,8 +233,12 @@ beepr::beep("treasure")
 
 ```r
 load(file = "output/ch_mass_sw.rda")
+load(file = "output/ch_mass_sw_yr_sc.rda")
+load(file = "output/ch_mass_sw_lmer.rda")
 ```
-The best linear and quadratic windows:
+__The best linear and quadratic windows__
+
+For the sex + altitude model
 
 ```r
 ch_mass_sw$combos
@@ -180,7 +249,33 @@ ch_mass_sw$combos
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["response"],"name":[1],"type":["chr"],"align":["left"]},{"label":["climate"],"name":[2],"type":["fct"],"align":["left"]},{"label":["type"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stat"],"name":[4],"type":["fct"],"align":["left"]},{"label":["func"],"name":[5],"type":["fct"],"align":["left"]},{"label":["DeltaAICc"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[7],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"lin","6":"-262.02","7":"93","8":"78","_rn_":"1"},{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"quad","6":"-325.33","7":"503","8":"449","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-The quadratic model seems to receive better support.
+For the sex + altitude + year model 
+
+```r
+ch_mass_sw_yr$combos
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["response"],"name":[1],"type":["chr"],"align":["left"]},{"label":["climate"],"name":[2],"type":["fct"],"align":["left"]},{"label":["type"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stat"],"name":[4],"type":["fct"],"align":["left"]},{"label":["func"],"name":[5],"type":["fct"],"align":["left"]},{"label":["DeltaAICc"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[7],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"lin","6":"-95.53","7":"93","8":"78","_rn_":"1"},{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"quad","6":"-138.66","7":"202","8":"167","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+For the sex + altitude model with year as random
+
+```r
+ch_mass_sw_lmer$combos
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["response"],"name":[1],"type":["chr"],"align":["left"]},{"label":["climate"],"name":[2],"type":["fct"],"align":["left"]},{"label":["type"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stat"],"name":[4],"type":["fct"],"align":["left"]},{"label":["func"],"name":[5],"type":["fct"],"align":["left"]},{"label":["DeltaAICc"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[7],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"lin","6":"-7.01","7":"93","8":"78","_rn_":"1"},{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"quad","6":"-4.16","7":"197","8":"162","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+The window for the linear effect is the same for all models, whereas the window for the quadratic effect changes quite a lot!
+Windows are also in very different moments of the growth of young chamois!
+
+
 
 The 10 best linear models sorted by deltaAICc:
 
@@ -206,6 +301,16 @@ head(ch_mass_sw[[2]]$Dataset, 10)
   </script>
 </div>
 
+```r
+head(ch_mass_sw_lmer[[2]]$Dataset, 10)
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["deltaAICc"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[2],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["ModelBeta"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Std.Error"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ModelBetaQ"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Std.ErrorQ"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ModelBetaC"],"name":[8],"type":["lgl"],"align":["right"]},{"label":["ModelInt"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Function"],"name":[10],"type":["chr"],"align":["left"]},{"label":["Furthest"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["Closest"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["Statistics"],"name":[13],"type":["chr"],"align":["left"]},{"label":["Type"],"name":[14],"type":["chr"],"align":["left"]},{"label":["K"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["ModWeight"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["sample.size"],"name":[17],"type":["int"],"align":["right"]},{"label":["Reference.day"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["Reference.month"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["Randomised"],"name":[20],"type":["chr"],"align":["left"]}],"data":[{"1":"-4.164624","2":"197","3":"162","4":"-4.426008","5":"0.06872991","6":"0.2198315","7":"0.03389060","8":"NA","9":"36.06300","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001770354","17":"27","18":"24","19":"9","20":"no","_rn_":"19539"},{"1":"-4.049678","2":"199","3":"162","4":"-4.800117","5":"0.06873231","6":"0.2406550","7":"0.03389406","8":"NA","9":"37.70169","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001671474","17":"27","18":"24","19":"9","20":"no","_rn_":"19938"},{"1":"-4.031874","2":"198","3":"162","4":"-4.588755","5":"0.06873144","6":"0.2287504","7":"0.03389246","8":"NA","9":"36.79016","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001656661","17":"27","18":"24","19":"9","20":"no","_rn_":"19738"},{"1":"-3.943327","2":"199","3":"163","4":"-4.511304","5":"0.06873222","6":"0.2279184","7":"0.03389360","8":"NA","9":"36.09599","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001584915","17":"27","18":"24","19":"9","20":"no","_rn_":"19937"},{"1":"-3.883506","2":"200","3":"163","4":"-4.668184","5":"0.06873391","6":"0.2374601","7":"0.03389435","8":"NA","9":"36.70784","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001538211","17":"27","18":"24","19":"9","20":"no","_rn_":"20138"},{"1":"-3.854535","2":"197","3":"161","4":"-4.677412","5":"0.06873293","6":"0.2306537","7":"0.03389147","8":"NA","9":"37.50159","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001516090","17":"27","18":"24","19":"9","20":"no","_rn_":"19540"},{"1":"-3.811257","2":"200","3":"162","4":"-4.926529","5":"0.06873491","6":"0.2486379","7":"0.03389465","8":"NA","9":"38.16543","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001483636","17":"27","18":"24","19":"9","20":"no","_rn_":"20139"},{"1":"-3.764582","2":"198","3":"163","4":"-4.276947","5":"0.06873215","6":"0.2148497","7":"0.03389199","8":"NA","9":"35.07165","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001449412","17":"27","18":"24","19":"9","20":"no","_rn_":"19737"},{"1":"-3.626191","2":"197","3":"163","4":"-4.063315","5":"0.06873200","6":"0.2034732","7":"0.03389028","8":"NA","9":"34.08374","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001352511","17":"27","18":"24","19":"9","20":"no","_rn_":"19538"},{"1":"-3.362361","2":"198","3":"161","4":"-4.748604","5":"0.06873626","6":"0.2351500","7":"0.03389340","8":"NA","9":"37.76008","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0001185361","17":"27","18":"24","19":"9","20":"no","_rn_":"19739"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
 
 The deltaAIC plot for linear and quadratic:
 
@@ -213,27 +318,38 @@ The deltaAIC plot for linear and quadratic:
 plotdelta(dataset = ch_mass_sw[[1]]$Dataset)
 ```
 
-![](chamois_script01_all_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](chamois_script01_all_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ```r
 plotdelta(dataset = ch_mass_sw[[2]]$Dataset)
 ```
 
-![](chamois_script01_all_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
-
-The windows for linear and quadratic:
+![](chamois_script01_all_files/figure-html/unnamed-chunk-8-2.png)<!-- -->
 
 ```r
-plotwin(dataset = ch_mass_sw[[1]]$Dataset)
+plotdelta(dataset = ch_mass_sw_yr[[1]]$Dataset)
 ```
 
-![](chamois_script01_all_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](chamois_script01_all_files/figure-html/unnamed-chunk-8-3.png)<!-- -->
 
 ```r
-plotwin(dataset = ch_mass_sw[[2]]$Dataset)
+plotdelta(dataset = ch_mass_sw_yr[[1]]$Dataset)
 ```
 
-![](chamois_script01_all_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
+![](chamois_script01_all_files/figure-html/unnamed-chunk-8-4.png)<!-- -->
+
+```r
+plotdelta(dataset = ch_mass_sw_lmer[[1]]$Dataset)
+```
+
+![](chamois_script01_all_files/figure-html/unnamed-chunk-8-5.png)<!-- -->
+
+```r
+plotdelta(dataset = ch_mass_sw_lmer[[2]]$Dataset)
+```
+
+![](chamois_script01_all_files/figure-html/unnamed-chunk-8-6.png)<!-- -->
+
 
 
 I can add the new variable to the dataset and obtain the dates for the window:
@@ -242,6 +358,9 @@ I can add the new variable to the dataset and obtain the dates for the window:
 # The best supported climate variable can be attached
 # to the original dataset for further analyses
 ch_biom15$temp_503_449 <- ch_mass_sw[[2]]$BestModelData$climate
+
+ch_biom15$temp_93_78 <- ch_mass_sw_lmer[[1]]$BestModelData$climate
+
 
 as.Date("2022/09/24", format = "%Y/%m/%d") - 503
 ```
@@ -258,6 +377,38 @@ as.Date("2022/09/24", format = "%Y/%m/%d") - 449
 ## [1] "2021-07-02"
 ```
 
+```r
+as.Date("2022/09/24", format = "%Y/%m/%d") - 93
+```
+
+```
+## [1] "2022-06-23"
+```
+
+```r
+as.Date("2022/09/24", format = "%Y/%m/%d") - 78
+```
+
+```
+## [1] "2022-07-08"
+```
+
+```r
+as.Date("2022/09/24", format = "%Y/%m/%d") - 197
+```
+
+```
+## [1] "2022-03-11"
+```
+
+```r
+as.Date("2022/09/24", format = "%Y/%m/%d") - 162
+```
+
+```
+## [1] "2022-04-15"
+```
+
 Summary and figure for our updated model:
 
 ```r
@@ -265,6 +416,116 @@ ch_final <- lm(weight ~
     sex + altitude + poly(temp_503_449, 2),
 data = ch_biom15
 )
+
+summary(ch_final)
+```
+
+```
+## 
+## Call:
+## lm(formula = weight ~ sex + altitude + poly(temp_503_449, 2), 
+##     data = ch_biom15)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.9864 -1.8197  0.0229  1.7639 12.2317 
+## 
+## Coefficients:
+##                          Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)             1.185e+01  1.538e-01  77.076  < 2e-16 ***
+## sexm                    5.212e-01  6.945e-02   7.504 7.13e-14 ***
+## altitude                1.296e-03  9.133e-05  14.193  < 2e-16 ***
+## poly(temp_503_449, 2)1 -3.435e+01  2.586e+00 -13.282  < 2e-16 ***
+## poly(temp_503_449, 2)2  3.298e+01  2.587e+00  12.750  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.586 on 5630 degrees of freedom
+## Multiple R-squared:  0.09729,	Adjusted R-squared:  0.09665 
+## F-statistic: 151.7 on 4 and 5630 DF,  p-value: < 2.2e-16
+```
+
+```r
+visreg::visreg(ch_final)
+```
+
+![](chamois_script01_all_files/figure-html/all climmod2-1.png)<!-- -->![](chamois_script01_all_files/figure-html/all climmod2-2.png)<!-- -->![](chamois_script01_all_files/figure-html/all climmod2-3.png)<!-- -->
+
+```r
+ch_climmod_lmer <- lmer(weight ~
+    sex + altitude_sc + year_sc +
+    temp_93_78 +
+    (1 | year_f),
+control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+data = ch_biom15
+)
+summary(ch_climmod_lmer)
+```
+
+```
+## Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+## Formula: weight ~ sex + altitude_sc + year_sc + temp_93_78 + (1 | year_f)
+##    Data: ch_biom15
+## Control: lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07))
+## 
+## REML criterion at convergence: 26549.1
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.0407 -0.6945  0.0029  0.6777  4.8314 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  year_f   (Intercept) 0.1772   0.421   
+##  Residual             6.4437   2.538   
+## Number of obs: 5635, groups:  year_f, 27
+## 
+## Fixed effects:
+##               Estimate Std. Error         df t value Pr(>|t|)    
+## (Intercept)   19.32722    1.27862   25.51670  15.116 3.04e-14 ***
+## sexm           0.48914    0.06874 5629.24345   7.116 1.25e-12 ***
+## altitude_sc    0.48812    0.03388 5614.58589  14.406  < 2e-16 ***
+## year_sc       -0.43765    0.08268   29.89412  -5.293 1.03e-05 ***
+## temp_93_78    -0.23708    0.05861   25.15617  -4.045 0.000437 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Correlation of Fixed Effects:
+##             (Intr) sexm   alttd_ yer_sc
+## sexm        -0.030                     
+## altitude_sc  0.005 -0.040              
+## year_sc      0.437  0.024  0.002       
+## temp_93_78  -0.997  0.000 -0.003 -0.435
+```
+
+```r
+visreg::visreg(ch_climmod_lmer)
+```
+
+![](chamois_script01_all_files/figure-html/all climmod2-4.png)<!-- -->![](chamois_script01_all_files/figure-html/all climmod2-5.png)<!-- -->![](chamois_script01_all_files/figure-html/all climmod2-6.png)<!-- -->![](chamois_script01_all_files/figure-html/all climmod2-7.png)<!-- -->
+
+
+```r
+ch_mass_sw_lmer2 <- slidingwin(
+    baseline = lme4::lmer(weight ~
+        sex + altitude_sc + year_sc +
+        temp_93_78 +
+        (1 | year_f),
+    control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+    data = ch_biom15
+    ),
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw_lmer2, file = "output/ch_mass_sw_lmer2.rda")
 ```
 
 
@@ -280,8 +541,8 @@ sjPlot::tab_model(ch_final,
     show.se = T,
     show.stat = T,
     show.df = F,
-    digits = 4,
-    digits.rsq = 4
+    digits = 3,
+    digits.rsq = 2
 )
 ```
 
@@ -299,37 +560,37 @@ sjPlot::tab_model(ch_final,
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">11.8526</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.1538</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">77.0758</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">11.853</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.154</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">77.076</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">sex [m]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.5212</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.0695</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">7.5045</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.521</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.069</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">7.504</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">altitude</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.0013</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.0001</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">14.1934</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.001</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.000</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">14.193</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">temp 503 449 [1st degree]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">&#45;34.3481</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.5860</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">&#45;13.2823</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">&#45;34.348</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.586</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">&#45;13.282</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">temp 503 449 [2nd degree]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">32.9850</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.5870</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">12.7502</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">32.985</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.587</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">12.750</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
@@ -338,7 +599,7 @@ sjPlot::tab_model(ch_final,
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">R<sup>2</sup> / R<sup>2</sup> adjusted</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="4">0.0973 / 0.0966</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="4">0.10 / 0.10</td>
 </tr>
 
 </table>
@@ -346,32 +607,61 @@ sjPlot::tab_model(ch_final,
 Sex difference estimated by the model:
 
 ```r
-emmeans::emmeans(ch_final, "sex")
+emmeans::emmeans(ch_climmod_lmer, "sex")
 ```
 
 ```
-##  sex emmean     SE   df lower.CL upper.CL
-##  f     13.6 0.0559 5630     13.5     13.8
-##  m     14.2 0.0517 5630     14.1     14.3
+## Note: D.f. calculations have been disabled because the number of observations exceeds 3000.
+## To enable adjustments, add the argument 'pbkrtest.limit = 5635' (or larger)
+## [or, globally, 'set emm_options(pbkrtest.limit = 5635)' or larger];
+## but be warned that this may result in large computation time and memory use.
+```
+
+```
+## Note: D.f. calculations have been disabled because the number of observations exceeds 3000.
+## To enable adjustments, add the argument 'lmerTest.limit = 5635' (or larger)
+## [or, globally, 'set emm_options(lmerTest.limit = 5635)' or larger];
+## but be warned that this may result in large computation time and memory use.
+```
+
+```
+##  sex emmean    SE  df asymp.LCL asymp.UCL
+##  f     14.1 0.103 Inf      13.9      14.3
+##  m     14.6 0.100 Inf      14.4      14.8
 ## 
+## Degrees-of-freedom method: asymptotic 
 ## Confidence level used: 0.95
 ```
 
 
 
 ```r
-eff_data <- data.frame(effects::effect("poly(temp_503_449,2)",
-    ch_final,
+ch_final <- lm(weight ~
+    sex + scale(altitude) + poly((temp_503_449), 2),
+data = ch_biom15
+)
+
+ch_climmod_lmer <- lmer(weight ~
+    sex + altitude + year +
+    temp_93_78 +
+    (1 | year_f),
+control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+data = ch_biom15
+)
+
+
+eff_data <- data.frame(effects::effect("temp_93_78",
+    ch_climmod_lmer,
     partial.residuals = T
 ))
 
-plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
+plot_temp <- ggplot(eff_data, aes(x = temp_93_78, y = fit)) +
     geom_line() +
     geom_ribbon(
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    xlab("Mean temperature (°C; May 9th - July 2nd)") +
+    xlab("Mean temperature (°C; 23.6 - 8.7)") +
     #    scale_x_continuous(
     #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
     #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
@@ -386,16 +676,17 @@ plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
     ) +
     geom_point(
         data = ch_biom15,
-        aes(x = temp_503_449, y = weight),
+        aes(x = temp_93_78, y = weight),
         size = 1, shape = 16, alpha = 0.1
     ) +
     ylab("Body mass (kg)") +
-    scale_y_continuous(limits = c(4.6, 30), breaks = seq(0, 35, 5)) +
-    annotate("text", x = 17, y = 30, label = "(a)")
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(16, 25), breaks = seq(16, 25, 3)) +
+    annotate("text", x = 16.5, y = 27, label = "(a)")
 
 
 eff_data <- data.frame(effects::effect("altitude",
-    ch_final,
+    ch_climmod_lmer,
     partial.residuals = T
 ))
 
@@ -407,7 +698,8 @@ plot_alt <- ggplot(eff_data, aes(x = altitude, y = fit)) +
     ) +
     xlab("Altitude (m a.s.l)") +
     ylab("") +
-    scale_x_continuous(limits = c(250, 2600), breaks = seq(250, 2750, 500)) +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(200, 2600), breaks = seq(200, 2600, 600)) +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -420,13 +712,49 @@ plot_alt <- ggplot(eff_data, aes(x = altitude, y = fit)) +
         aes(x = altitude, y = weight),
         size = 1, shape = 16, alpha = 0.1
     ) +
-    scale_y_continuous(limits = c(4.6, 30), breaks = seq(0, 35, 5)) +
-    annotate("text", x = 250, y = 30, label = "(b)")
+    annotate("text", x = 300, y = 27, label = "(b)")
+
+eff_data <- data.frame(effects::effect("year",
+    ch_climmod_lmer,
+    partial.residuals = TRUE
+))
+
+plot_yr <- ggplot(eff_data, aes(x = year, y = fit)) +
+    geom_line() +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = .4
+    ) +
+    xlab("Year") +
+    ylab("") +
+    scale_x_continuous(limits = c(1992, 2018), breaks = seq(1992, 2018, 6)) +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = year, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    annotate("text", x = 1993, y = 27, label = "(c)")
+
 
 eff_data <- data.frame(effects::effect("sex",
     ch_final,
     partial.residuals = T
 ))
+```
+
+```
+## Warning in Analyze.model(focal.predictors, mod, xlevels, default.levels, : the predictor scale(altitude) is a one-column matrix that was converted to a vector
+```
+
+```r
 par_col_af <- "darkorange3"
 par_col_am <- "steelblue"
 plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
@@ -442,22 +770,22 @@ plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
     ggbeeswarm::geom_quasirandom(
         data = ch_biom15,
         aes(x = sex, y = weight, colour = "black"),
-        size = 1, shape = 16, alpha = 0.1
+        size = 1, shape = 16, alpha = 0.07
     ) +
     ylab("") +
     scale_fill_manual(values = c(par_col_af, par_col_am)) +
     scale_color_manual(values = "black") +
-    scale_y_continuous(limits = c(4.6, 30), breaks = seq(0, 35, 5)) +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
     scale_x_discrete(labels = c("F", "M")) +
-    annotate("text", x = 0.5, y = 30, label = "(c)") +
-    geom_boxplot(outlier.shape = NA, alpha = 0.1)
+    annotate("text", x = 0.6, y = 27, label = "(d)") +
+    geom_boxplot(outlier.shape = NA, alpha = 0.2)
 ```
 
 
 
 ```r
 grid.arrange(
-    plot_temp, plot_alt, plot_sex,
+    plot_temp, plot_alt, plot_yr, plot_sex,
     nrow = 1
 )
 ```
@@ -526,8 +854,19 @@ We are now able to look for other temporal windows that might be of importance f
 
 
 ```r
+ch_basemod_lmer <- lme4::lmer(weight ~
+    sex + altitude_sc + scale(year) +
+    temp_93_78 +
+    (1 | year_f),
+control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+data = ch_biom15
+)
+summary(ch_basemod_lmer)
+
+visreg::visreg(ch_basemod_lmer)
+
 ch_mass_sw_2 <- slidingwin(
-    baseline = ch_final,
+    baseline = ch_basemod_lmer,
     xvar = list(Temp = clim$Temp),
     type = "absolute",
     refday = c(24, 9),
@@ -557,7 +896,7 @@ ch_mass_sw_2$combos
 
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["response"],"name":[1],"type":["chr"],"align":["left"]},{"label":["climate"],"name":[2],"type":["fct"],"align":["left"]},{"label":["type"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stat"],"name":[4],"type":["fct"],"align":["left"]},{"label":["func"],"name":[5],"type":["fct"],"align":["left"]},{"label":["DeltaAICc"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[7],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"lin","6":"-90.09","7":"187","8":"186","_rn_":"1"},{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"quad","6":"-124.87","7":"289","8":"281","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["response"],"name":[1],"type":["chr"],"align":["left"]},{"label":["climate"],"name":[2],"type":["fct"],"align":["left"]},{"label":["type"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stat"],"name":[4],"type":["fct"],"align":["left"]},{"label":["func"],"name":[5],"type":["fct"],"align":["left"]},{"label":["DeltaAICc"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[7],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"lin","6":"-2.44","7":"429","8":"425","_rn_":"1"},{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"quad","6":"-2.26","7":"431","8":"31","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 
@@ -570,7 +909,7 @@ head(ch_mass_sw_2[[1]]$Dataset)
 
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["deltaAICc"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[2],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["ModelBeta"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Std.Error"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ModelBetaQ"],"name":[6],"type":["lgl"],"align":["right"]},{"label":["ModelBetaC"],"name":[7],"type":["lgl"],"align":["right"]},{"label":["ModelInt"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Function"],"name":[9],"type":["chr"],"align":["left"]},{"label":["Furthest"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["Closest"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["Statistics"],"name":[12],"type":["chr"],"align":["left"]},{"label":["Type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["K"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["ModWeight"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["sample.size"],"name":[16],"type":["int"],"align":["right"]},{"label":["Reference.day"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["Reference.month"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["Randomised"],"name":[19],"type":["chr"],"align":["left"]}],"data":[{"1":"-90.08688","2":"187","3":"186","4":"0.1577973","5":"0.06889317","6":"NA","7":"NA","8":"83.54775","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"9.798954e-01","16":"27","17":"24","18":"9","19":"no","_rn_":"17580"},{"1":"-80.97216","2":"187","3":"187","4":"0.1245552","5":"0.06894850","6":"NA","7":"NA","8":"85.22363","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"1.027883e-02","16":"27","17":"24","18":"9","19":"no","_rn_":"17579"},{"1":"-80.22031","2":"188","3":"186","4":"0.1556428","5":"0.06895444","6":"NA","7":"NA","8":"83.12207","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"7.057994e-03","16":"27","17":"24","18":"9","19":"no","_rn_":"17769"},{"1":"-78.22361","2":"186","3":"186","4":"0.1604678","5":"0.06896608","6":"NA","7":"NA","8":"85.42416","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"2.600778e-03","16":"27","17":"24","18":"9","19":"no","_rn_":"17392"},{"1":"-70.99579","2":"188","3":"185","4":"0.1678514","5":"0.06901210","6":"NA","7":"NA","8":"88.21804","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"7.008138e-05","16":"27","17":"24","18":"9","19":"no","_rn_":"17770"},{"1":"-70.19923","2":"187","3":"185","4":"0.1639495","5":"0.06901622","6":"NA","7":"NA","8":"91.00412","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"4.705771e-05","16":"27","17":"24","18":"9","19":"no","_rn_":"17581"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["deltaAICc"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[2],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["ModelBeta"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Std.Error"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ModelBetaQ"],"name":[6],"type":["lgl"],"align":["right"]},{"label":["ModelBetaC"],"name":[7],"type":["lgl"],"align":["right"]},{"label":["ModelInt"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Function"],"name":[9],"type":["chr"],"align":["left"]},{"label":["Furthest"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["Closest"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["Statistics"],"name":[12],"type":["chr"],"align":["left"]},{"label":["Type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["K"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["ModWeight"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["sample.size"],"name":[16],"type":["int"],"align":["right"]},{"label":["Reference.day"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["Reference.month"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["Randomised"],"name":[19],"type":["chr"],"align":["left"]}],"data":[{"1":"-2.440039","2":"429","3":"425","4":"-0.1602892","5":"0.06872262","6":"NA","7":"NA","8":"22.31653","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"6.793228e-05","16":"27","17":"24","18":"9","19":"no","_rn_":"92240"},{"1":"-2.191362","2":"430","3":"425","4":"-0.1576598","5":"0.06873100","6":"NA","7":"NA","8":"22.26486","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"5.998969e-05","16":"27","17":"24","18":"9","19":"no","_rn_":"92671"},{"1":"-2.190508","2":"500","3":"420","4":"-0.2750269","5":"0.06871959","6":"NA","7":"NA","8":"22.70229","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"5.996408e-05","16":"27","17":"24","18":"9","19":"no","_rn_":"125331"},{"1":"-2.152996","2":"501","3":"420","4":"-0.2763060","5":"0.06871973","6":"NA","7":"NA","8":"22.71249","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"5.884988e-05","16":"27","17":"24","18":"9","19":"no","_rn_":"125833"},{"1":"-2.127023","2":"499","3":"420","4":"-0.2717648","5":"0.06872013","6":"NA","7":"NA","8":"22.64009","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"5.809055e-05","16":"27","17":"24","18":"9","19":"no","_rn_":"124830"},{"1":"-2.067744","2":"500","3":"419","4":"-0.2745040","5":"0.06872078","6":"NA","7":"NA","8":"22.73522","9":"lin","10":"661","11":"0","12":"mean","13":"absolute","14":"0","15":"5.639404e-05","16":"27","17":"24","18":"9","19":"no","_rn_":"125332"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 
@@ -580,7 +919,7 @@ head(ch_mass_sw_2[[2]]$Dataset)
 
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["deltaAICc"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[2],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["ModelBeta"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Std.Error"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ModelBetaQ"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Std.ErrorQ"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ModelBetaC"],"name":[8],"type":["lgl"],"align":["right"]},{"label":["ModelInt"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Function"],"name":[10],"type":["chr"],"align":["left"]},{"label":["Furthest"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["Closest"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["Statistics"],"name":[13],"type":["chr"],"align":["left"]},{"label":["Type"],"name":[14],"type":["chr"],"align":["left"]},{"label":["K"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["ModWeight"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["sample.size"],"name":[17],"type":["int"],"align":["right"]},{"label":["Reference.day"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["Reference.month"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["Randomised"],"name":[20],"type":["chr"],"align":["left"]}],"data":[{"1":"-124.8694","2":"289","3":"281","4":"-1.0842886","5":"0.06870302","6":"0.1354079","7":"9.032224e-05","8":"NA","9":"91.41405","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.6650443388","17":"27","18":"24","19":"9","20":"no","_rn_":"41914"},{"1":"-122.6590","2":"288","3":"281","4":"-1.0313943","5":"0.06869810","6":"0.1332909","7":"9.034101e-05","8":"NA","9":"86.01063","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.2202194510","17":"27","18":"24","19":"9","20":"no","_rn_":"41624"},{"1":"-120.7174","2":"289","3":"282","4":"-0.9762963","5":"0.06871927","6":"0.1180527","7":"9.035058e-05","8":"NA","9":"87.42955","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0834145495","17":"27","18":"24","19":"9","20":"no","_rn_":"41913"},{"1":"-118.5510","2":"288","3":"282","4":"-0.9266975","5":"0.06871497","6":"0.1145024","7":"9.036880e-05","8":"NA","9":"81.17522","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0282365637","17":"27","18":"24","19":"9","20":"no","_rn_":"41623"},{"1":"-113.5161","2":"290","3":"281","4":"-1.1247784","5":"0.06879665","6":"0.1350995","7":"9.041110e-05","8":"NA","9":"98.80050","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0022777592","17":"27","18":"24","19":"9","20":"no","_rn_":"42205"},{"1":"-109.3424","2":"287","3":"281","4":"-0.9814564","5":"0.06877455","6":"0.1297272","7":"9.045080e-05","8":"NA","9":"87.53559","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"0.0002826105","17":"27","18":"24","19":"9","20":"no","_rn_":"41335"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["deltaAICc"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[2],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["ModelBeta"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Std.Error"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ModelBetaQ"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Std.ErrorQ"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ModelBetaC"],"name":[8],"type":["lgl"],"align":["right"]},{"label":["ModelInt"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Function"],"name":[10],"type":["chr"],"align":["left"]},{"label":["Furthest"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["Closest"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["Statistics"],"name":[13],"type":["chr"],"align":["left"]},{"label":["Type"],"name":[14],"type":["chr"],"align":["left"]},{"label":["K"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["ModWeight"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["sample.size"],"name":[17],"type":["int"],"align":["right"]},{"label":["Reference.day"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["Reference.month"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["Randomised"],"name":[20],"type":["chr"],"align":["left"]}],"data":[{"1":"-2.259739","2":"431","3":"31","4":"36.07549","5":"0.06870987","6":"-1.284621","7":"8.975727e-05","8":"NA","9":"-234.9888","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"8.670967e-05","17":"27","18":"24","19":"9","20":"no","_rn_":"93497"},{"1":"-2.238495","2":"431","3":"30","4":"35.94294","5":"0.06871001","6":"-1.278192","7":"8.975735e-05","8":"NA","9":"-234.4311","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"8.579352e-05","17":"27","18":"24","19":"9","20":"no","_rn_":"93498"},{"1":"-2.235189","2":"431","3":"32","4":"36.01423","5":"0.06870992","6":"-1.284109","7":"8.975749e-05","8":"NA","9":"-234.2071","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"8.565182e-05","17":"27","18":"24","19":"9","20":"no","_rn_":"93496"},{"1":"-2.218860","2":"431","3":"29","4":"35.74187","5":"0.06870999","6":"-1.269237","7":"8.975739e-05","8":"NA","9":"-233.3819","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"8.495537e-05","17":"27","18":"24","19":"9","20":"no","_rn_":"93499"},{"1":"-2.202582","2":"432","3":"31","4":"36.24940","5":"0.06871029","6":"-1.288904","7":"8.975763e-05","8":"NA","9":"-236.5981","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"8.426671e-05","17":"27","18":"24","19":"9","20":"no","_rn_":"93930"},{"1":"-2.186240","2":"431","3":"35","4":"34.81770","5":"0.06871006","6":"-1.246623","7":"8.975740e-05","8":"NA","9":"-224.7669","10":"quad","11":"661","12":"0","13":"mean","14":"absolute","15":"0","16":"8.358100e-05","17":"27","18":"24","19":"9","20":"no","_rn_":"93493"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 

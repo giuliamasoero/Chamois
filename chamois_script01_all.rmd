@@ -82,7 +82,8 @@ ch_biom15 <- ch_biom15 %>%
 
 boxplot(ch_biom15$weight ~ ch_biom15$year)
 
-ch_biom15$altitude_sc <- ch_biom15$altitude
+ch_biom15$altitude_sc <- scale(ch_biom15$altitude)
+ch_biom15$year_sc <- scale(ch_biom15$year)
 ```
 
 
@@ -100,17 +101,15 @@ data = ch_biom15
 )
 
 ch_basemod_yr <- lm(weight ~
-    sex + altitude_sc + year,
+    sex + altitude_sc + year_sc,
 data = ch_biom15
 )
 
 ch_basemod_lmer <- lme4::lmer(weight ~
-    sex + altitude_sc + (1 | year_f),
+    sex + altitude_sc + year_sc + (1 | year_f),
 control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
 data = ch_biom15
 )
-
-hist(ch_biom15$weight)
 ```
 
 
@@ -166,12 +165,7 @@ ch_mass_sw_lmer <- slidingwin(
     cinterval = "day"
 )
 save(ch_mass_sw_lmer, file = "output/ch_mass_sw_lmer.rda")
-
-beepr::beep("treasure")
 ```
-
-
-
 
 
 
@@ -185,6 +179,8 @@ I want to try to see with the model that is running now if there are other clima
 
 
 
+Coping with a changing climate: exploring bird responses using long-term studies
+The fast growth in human population and activities over the past century has led to fast changes in the global climate system. These global climatic changes are predicted to be even stronger during the 21st century and become one of the major threats to living organisms. Long-term studies in wild bird populations can help us investigate the effect of weather on population size and individual behaviour and morphology. 
 
 
 
@@ -252,9 +248,17 @@ ch_biom15$temp_503_449 <- ch_mass_sw[[2]]$BestModelData$climate
 
 ch_biom15$temp_93_78 <- ch_mass_sw_lmer[[1]]$BestModelData$climate
 
+ch_biom15$temp_93_78 <- ch_mass_sw_lmer[[2]]$BestModelData$climate
+
 
 as.Date("2022/09/24", format = "%Y/%m/%d") - 503
 as.Date("2022/09/24", format = "%Y/%m/%d") - 449
+
+as.Date("2022/09/24", format = "%Y/%m/%d") - 93
+as.Date("2022/09/24", format = "%Y/%m/%d") - 78
+
+as.Date("2022/09/24", format = "%Y/%m/%d") - 197
+as.Date("2022/09/24", format = "%Y/%m/%d") - 162
 ```
 
 Summary and figure for our updated model:
@@ -268,16 +272,79 @@ summary(ch_final)
 
 visreg::visreg(ch_final)
 
-ch_basemod_lmer <- lmer(weight ~
-    sex + altitude_sc + scale(year) +
+ch_climmod_lmer <- lmer(weight ~
+    sex + altitude_sc + year_sc +
     temp_93_78 +
     (1 | year_f),
 control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
 data = ch_biom15
 )
-summary(ch_basemod_lmer)
+summary(ch_climmod_lmer)
 
-visreg::visreg(ch_basemod_lmer)
+visreg::visreg(ch_climmod_lmer)
+```
+
+```{r eval = F}
+ch_mass_sw_lmer2 <- slidingwin(
+    baseline = lme4::lmer(weight ~
+        sex + altitude_sc + year_sc +
+        temp_93_78 +
+        (1 | year_f),
+    control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+    data = ch_biom15
+    ),
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw_lmer2, file = "output/ch_mass_sw_lmer2.rda")
+
+ch_mass_sw_lmer2$combos
+plotdelta(dataset = ch_mass_sw_lmer2[[1]]$Dataset)
+
+
+ch_mass_sw_lm2 <- slidingwin(
+    baseline = lm(weight ~
+        sex + altitude_sc +
+        temp_503_449,
+    data = ch_biom15
+    ),
+    xvar = list(Temp = clim$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw_lm2, file = "output/ch_mass_sw_lm2.rda")
+
+ch_mass_sw_lm2$combos
+plotdelta(dataset = ch_mass_sw_lm2[[2]]$Dataset)
+
+
+ch_biom15$temp_145_65 <- ch_mass_sw_lm2[[2]]$BestModelData$climate
+
+
+as.Date("2022/09/24", format = "%Y/%m/%d") - 145
+as.Date("2022/09/24", format = "%Y/%m/%d") - 65
+
+ch_final <- lm(weight ~
+    sex + altitude +
+    poly((temp_503_449), 2) + poly((temp_145_65), 2),
+data = ch_biom15
+)
+summary(ch_final)
 ```
 
 
@@ -299,7 +366,7 @@ sjPlot::tab_model(ch_final,
 
 Sex difference estimated by the model:
 ```{r}
-emmeans::emmeans(ch_final, "sex")
+emmeans::emmeans(ch_climmod_lmer, "sex")
 ```
 
 
@@ -310,18 +377,34 @@ ch_final <- lm(weight ~
 data = ch_biom15
 )
 
-eff_data <- data.frame(effects::effect("temp_93_78",
-    ch_basemod_lmer,
+ch_climmod_lmer <- lmer(weight ~
+    sex + altitude + year +
+    temp_93_78 +
+    (1 | year_f),
+control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+data = ch_biom15
+)
+
+ch_final <- lm(weight ~
+    sex + altitude +
+    poly(temp_503_449, 2) + poly(temp_145_65, 2),
+data = ch_biom15
+)
+summary(ch_final)
+
+
+eff_data <- data.frame(effects::effect("poly(temp_503_449, 2)",
+    ch_final,
     partial.residuals = T
 ))
 
-plot_temp <- ggplot(eff_data, aes(x = temp_93_78, y = fit)) +
+plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
     geom_line() +
     geom_ribbon(
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    xlab("Mean temperature (°C; May 9th - July 2nd)") +
+    # xlab("Mean temperature (°C; 23.6 - 8.7)") +
     #    scale_x_continuous(
     #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
     #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
@@ -336,16 +419,54 @@ plot_temp <- ggplot(eff_data, aes(x = temp_93_78, y = fit)) +
     ) +
     geom_point(
         data = ch_biom15,
-        aes(x = temp_93_78, y = weight),
+        aes(x = temp_503_449, y = weight),
         size = 1, shape = 16, alpha = 0.1
     ) +
     ylab("Body mass (kg)") +
-    scale_y_continuous(limits = c(4.6, 30), breaks = seq(0, 35, 5)) +
-    annotate("text", x = 17, y = 30, label = "(a)")
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(16.5, 22.5), breaks = seq(16.5, 22.5, 2)) +
+    annotate("text", x = 16.5, y = 27, label = "(a)")
 
+
+
+eff_data <- data.frame(effects::effect("poly(temp_145_65, 2)",
+    ch_final,
+    partial.residuals = T
+))
+
+plot_temp2 <- ggplot(eff_data, aes(x = temp_145_65, y = fit)) +
+    geom_line() +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = .4
+    ) +
+    # xlab("Mean temperature (°C; 23.6 - 8.7)") +
+    #    scale_x_continuous(
+    #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
+    #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
+    #        limits = c(year_sc$year_sc[1], year_sc$year_sc[23])
+    #    ) +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = temp_145_65, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    ylab("Body mass (kg)") +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(17.5, 22.5), breaks = seq(17.5, 22.5, 1)) +
+    annotate("text", x = 17.5, y = 27, label = "(b)")
+
+cor.test(ch_biom15$temp_503_449, ch_biom15$temp_145_65)
 
 eff_data <- data.frame(effects::effect("altitude",
-    ch_final,
+    ch_climmod_lmer,
     partial.residuals = T
 ))
 
@@ -357,7 +478,8 @@ plot_alt <- ggplot(eff_data, aes(x = altitude, y = fit)) +
     ) +
     xlab("Altitude (m a.s.l)") +
     ylab("") +
-    scale_x_continuous(limits = c(250, 2600), breaks = seq(250, 2750, 500)) +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(200, 2600), breaks = seq(200, 2600, 600)) +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -370,8 +492,37 @@ plot_alt <- ggplot(eff_data, aes(x = altitude, y = fit)) +
         aes(x = altitude, y = weight),
         size = 1, shape = 16, alpha = 0.1
     ) +
-    scale_y_continuous(limits = c(4.6, 30), breaks = seq(0, 35, 5)) +
-    annotate("text", x = 250, y = 30, label = "(b)")
+    annotate("text", x = 300, y = 27, label = "(b)")
+
+eff_data <- data.frame(effects::effect("year",
+    ch_climmod_lmer,
+    partial.residuals = TRUE
+))
+
+plot_yr <- ggplot(eff_data, aes(x = year, y = fit)) +
+    geom_line() +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = .4
+    ) +
+    xlab("Year") +
+    ylab("") +
+    scale_x_continuous(limits = c(1992, 2018), breaks = seq(1992, 2018, 6)) +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = year, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
+    annotate("text", x = 1993, y = 27, label = "(c)")
+
 
 eff_data <- data.frame(effects::effect("sex",
     ch_final,
@@ -392,21 +543,21 @@ plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
     ggbeeswarm::geom_quasirandom(
         data = ch_biom15,
         aes(x = sex, y = weight, colour = "black"),
-        size = 1, shape = 16, alpha = 0.1
+        size = 1, shape = 16, alpha = 0.07
     ) +
     ylab("") +
     scale_fill_manual(values = c(par_col_af, par_col_am)) +
     scale_color_manual(values = "black") +
-    scale_y_continuous(limits = c(4.6, 30), breaks = seq(0, 35, 5)) +
+    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
     scale_x_discrete(labels = c("F", "M")) +
-    annotate("text", x = 0.5, y = 30, label = "(c)") +
-    geom_boxplot(outlier.shape = NA, alpha = 0.1)
+    annotate("text", x = 0.6, y = 27, label = "(d)") +
+    geom_boxplot(outlier.shape = NA, alpha = 0.2)
 ```
 
 
-```{r Fig. 1, warning = F, dev = c("png","tiff"), fig.height = 5, fig.width = 10, fig.cap = "Fig. 1 SOMETHING"}
+```{r Fig. 1, warning = F, dev = c("png","tiff"), fig.height = 3, fig.width = 10, fig.cap = "Fig. 1 SOMETHING"}
 grid.arrange(
-    plot_temp, plot_alt, plot_sex,
+    plot_temp, plot_alt, plot_yr, plot_sex,
     nrow = 1
 )
 ```
