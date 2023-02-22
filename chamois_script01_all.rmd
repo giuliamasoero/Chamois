@@ -84,6 +84,69 @@ boxplot(ch_biom15$weight ~ ch_biom15$year)
 
 ch_biom15$altitude_sc <- scale(ch_biom15$altitude)
 ch_biom15$year_sc <- scale(ch_biom15$year)
+
+
+ch_basemod_yr <- lm(
+    weight ~
+        sex + altitude_sc + year,
+    data = ch_biom15
+)
+
+eff_data <- data.frame(effects::effect("year",
+    ch_basemod_yr,
+    partial.residuals = TRUE
+))
+ch_biom15_gr <- ch_biom15 %>%
+    group_by(year) %>%
+    mutate(
+        yvar_mean = mean(weight),
+        yvar_sd = sd(weight),
+        yvar_se = parameters::standard_error(weight)
+    )
+
+
+# creating the plot
+ggplot(eff_data, aes(x = year, y = fit)) +
+    geom_line(data = eff_data, aes(x = year, y = fit)) +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = .4
+    ) +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15_gr,
+        aes(
+            x = year,
+            y = yvar_mean
+        ),
+        size = 2,
+        shape = 21
+    ) +
+    geom_segment(
+        data = ch_biom15_gr,
+        aes(
+            x = year,
+            xend = year,
+            y = yvar_mean - yvar_se,
+            yend = yvar_mean + yvar_se
+        )
+    ) +
+    xlab(" Year") +
+    ylab("1.5yr old Chamois - Body mass (kg)") +
+    scale_x_continuous(
+        limits = c(1992, 2018),
+        breaks = seq(1990, 2020, 2)
+    ) +
+    scale_y_continuous(
+        limits = c(12, 17),
+        breaks = seq(12, 17, 1)
+    )
 ```
 
 
@@ -95,20 +158,23 @@ The overall approach for the climwin analysis is to compare the support by the d
 ## Selection of the base model
 
 ```{r basemod}
-ch_basemod <- lm(weight ~
-    sex + altitude_sc,
-data = ch_biom15
+ch_basemod <- lm(
+    weight ~
+        sex + altitude_sc,
+    data = ch_biom15
 )
 
-ch_basemod_yr <- lm(weight ~
-    sex + altitude_sc + year_sc,
-data = ch_biom15
+ch_basemod_yr <- lm(
+    weight ~
+        sex + altitude_sc + year_sc,
+    data = ch_biom15
 )
 
-ch_basemod_lmer <- lme4::lmer(weight ~
-    sex + altitude_sc + year_sc + (1 | year_f),
-control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
-data = ch_biom15
+ch_basemod_lmer <- lme4::lmer(
+    weight ~
+        sex + altitude_sc + year_sc + (1 | year_f),
+    control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+    data = ch_biom15
 )
 ```
 
@@ -225,7 +291,6 @@ head(ch_mass_sw_lmer[[2]]$Dataset, 10)
 
 The deltaAIC plot for linear and quadratic:
 ```{r}
-
 plotdelta(dataset = ch_mass_sw[[1]]$Dataset)
 plotdelta(dataset = ch_mass_sw[[2]]$Dataset)
 
@@ -263,21 +328,23 @@ as.Date("2022/09/24", format = "%Y/%m/%d") - 162
 
 Summary and figure for our updated model:
 ```{r all climmod2}
-ch_final <- lm(weight ~
-    sex + altitude + poly(temp_503_449, 2),
-data = ch_biom15
+ch_final <- lm(
+    weight ~
+        sex + altitude + poly(temp_503_449, 2),
+    data = ch_biom15
 )
 
 summary(ch_final)
 
 visreg::visreg(ch_final)
 
-ch_climmod_lmer <- lmer(weight ~
-    sex + altitude_sc + year_sc +
-    temp_93_78 +
-    (1 | year_f),
-control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
-data = ch_biom15
+ch_climmod_lmer <- lmer(
+    weight ~
+        sex + altitude_sc + year_sc +
+        temp_93_78 +
+        (1 | year_f),
+    control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+    data = ch_biom15
 )
 summary(ch_climmod_lmer)
 
@@ -286,12 +353,13 @@ visreg::visreg(ch_climmod_lmer)
 
 ```{r eval = F}
 ch_mass_sw_lmer2 <- slidingwin(
-    baseline = lme4::lmer(weight ~
-        sex + altitude_sc + year_sc +
-        temp_93_78 +
-        (1 | year_f),
-    control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
-    data = ch_biom15
+    baseline = lme4::lmer(
+        weight ~
+            sex + altitude_sc + year_sc +
+            temp_93_78 +
+            (1 | year_f),
+        control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+        data = ch_biom15
     ),
     xvar = list(Temp = clim$Temp),
     type = "absolute",
@@ -311,10 +379,11 @@ plotdelta(dataset = ch_mass_sw_lmer2[[1]]$Dataset)
 
 
 ch_mass_sw_lm2 <- slidingwin(
-    baseline = lm(weight ~
-        sex + altitude_sc +
-        temp_503_449,
-    data = ch_biom15
+    baseline = lm(
+        weight ~
+            sex + altitude_sc +
+            temp_503_449,
+        data = ch_biom15
     ),
     xvar = list(Temp = clim$Temp),
     type = "absolute",
@@ -339,10 +408,11 @@ ch_biom15$temp_145_65 <- ch_mass_sw_lm2[[2]]$BestModelData$climate
 as.Date("2022/09/24", format = "%Y/%m/%d") - 145
 as.Date("2022/09/24", format = "%Y/%m/%d") - 65
 
-ch_final <- lm(weight ~
-    sex + altitude +
-    poly((temp_503_449), 2) + poly((temp_145_65), 2),
-data = ch_biom15
+ch_final <- lm(
+    weight ~
+        sex + altitude +
+        poly((temp_503_449), 2) + poly((temp_145_65), 2),
+    data = ch_biom15
 )
 summary(ch_final)
 ```
@@ -371,24 +441,26 @@ emmeans::emmeans(ch_climmod_lmer, "sex")
 
 
 ```{r all climmod2 fig}
-
-ch_final <- lm(weight ~
-    sex + scale(altitude) + poly((temp_503_449), 2),
-data = ch_biom15
+ch_final <- lm(
+    weight ~
+        sex + scale(altitude) + poly((temp_503_449), 2),
+    data = ch_biom15
 )
 
-ch_climmod_lmer <- lmer(weight ~
-    sex + altitude + year +
-    temp_93_78 +
-    (1 | year_f),
-control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
-data = ch_biom15
+ch_climmod_lmer <- lmer(
+    weight ~
+        sex + altitude + year +
+        temp_93_78 +
+        (1 | year_f),
+    control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+    data = ch_biom15
 )
 
-ch_final <- lm(weight ~
-    sex + altitude +
-    poly(temp_503_449, 2) + poly(temp_145_65, 2),
-data = ch_biom15
+ch_final <- lm(
+    weight ~
+        sex + altitude +
+        poly(temp_503_449, 2) + poly(temp_145_65, 2),
+    data = ch_biom15
 )
 summary(ch_final)
 
@@ -610,12 +682,13 @@ We build a model based the same base model selected before but with the addition
 We are now able to look for other temporal windows that might be of importance for the chamois growth, but controlling for correlation with the temporal window already in the model.
 
 ```{r sw 2, eval = F}
-ch_basemod_lmer <- lme4::lmer(weight ~
-    sex + altitude_sc + scale(year) +
-    temp_93_78 +
-    (1 | year_f),
-control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
-data = ch_biom15
+ch_basemod_lmer <- lme4::lmer(
+    weight ~
+        sex + altitude_sc + scale(year) +
+        temp_93_78 +
+        (1 | year_f),
+    control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
+    data = ch_biom15
 )
 summary(ch_basemod_lmer)
 
@@ -644,7 +717,6 @@ beepr::beep("treasure")
 #### Investigating the models
 
 ```{r comparing}
-
 load(file = "output/ch_mass_sw_2.rda")
 
 ch_mass_sw_2$combos
