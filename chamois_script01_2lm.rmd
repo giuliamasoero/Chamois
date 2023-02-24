@@ -95,20 +95,10 @@ The overall approach for the climwin analysis is to compare the support by the d
 ## Selection of the base model
 
 ```{r basemod}
-ch_basemod <- lm(weight ~
-    sex + altitude_sc,
-data = ch_biom15
-)
-
-ch_basemod_yr <- lm(weight ~
-    sex + altitude_sc + year_sc,
-data = ch_biom15
-)
-
-ch_basemod_lmer <- lme4::lmer(weight ~
-    sex + altitude_sc + year_sc + (1 | year_f),
-control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
-data = ch_biom15
+ch_basemod <- lm(
+    weight ~
+        sex + altitude_sc,
+    data = ch_biom15
 )
 ```
 
@@ -135,36 +125,6 @@ ch_mass_sw <- slidingwin(
     cinterval = "day"
 )
 save(ch_mass_sw, file = "output/ch_mass_sw_sc.rda")
-
-ch_mass_sw_yr <- slidingwin(
-    baseline = ch_basemod_yr,
-    xvar = list(Temp = clim$Temp),
-    type = "absolute",
-    refday = c(24, 9),
-    range = c(661, 0),
-    stat = "mean",
-    cdate = clim$date_ymd,
-    bdate = ch_biom15$date_ymd,
-    func = c("lin", "quad"),
-    cmissing = FALSE,
-    cinterval = "day"
-)
-save(ch_mass_sw_yr, file = "output/ch_mass_sw_yr_sc.rda")
-
-ch_mass_sw_lmer <- slidingwin(
-    baseline = ch_basemod_lmer,
-    xvar = list(Temp = clim$Temp),
-    type = "absolute",
-    refday = c(24, 9),
-    range = c(661, 0),
-    stat = "mean",
-    cdate = clim$date_ymd,
-    bdate = ch_biom15$date_ymd,
-    func = c("lin", "quad"),
-    cmissing = FALSE,
-    cinterval = "day"
-)
-save(ch_mass_sw_lmer, file = "output/ch_mass_sw_lmer.rda")
 ```
 
 
@@ -172,8 +132,6 @@ save(ch_mass_sw_lmer, file = "output/ch_mass_sw_lmer.rda")
 
 ```{r comparing mo2}
 load(file = "output/ch_mass_sw.rda")
-load(file = "output/ch_mass_sw_yr_sc.rda")
-load(file = "output/ch_mass_sw_lmer.rda")
 ```
 __The best linear and quadratic windows__
 
@@ -181,17 +139,6 @@ For the sex + altitude model
 ```{r}
 ch_mass_sw$combos
 ```
-For the sex + altitude + year model 
-```{r}
-ch_mass_sw_yr$combos
-```
-For the sex + altitude model with year as random
-```{r}
-ch_mass_sw_lmer$combos
-```
-
-The window for the linear effect is the same for all models, whereas the window for the quadratic effect changes quite a lot!
-Windows are also in very different moments of the growth of young chamois!
 
 
 
@@ -202,18 +149,10 @@ head(ch_mass_sw[[1]]$Dataset, 10)
 
 
 
-The deltaAIC plot for linear and quadratic (same order as before):
+The deltaAIC plot for linear and quadratic:
 ```{r}
-
 plotdelta(dataset = ch_mass_sw[[1]]$Dataset)
 plotdelta(dataset = ch_mass_sw[[2]]$Dataset)
-
-
-plotdelta(dataset = ch_mass_sw_yr[[1]]$Dataset)
-plotdelta(dataset = ch_mass_sw_yr[[1]]$Dataset)
-
-plotdelta(dataset = ch_mass_sw_lmer[[1]]$Dataset)
-plotdelta(dataset = ch_mass_sw_lmer[[2]]$Dataset)
 ```
 
 __Choosing the simplest model__
@@ -238,12 +177,12 @@ We build a model based the same base model selected before but with the addition
 We are now able to look for other temporal windows that might be of importance for the chamois growth, but controlling for correlation with the temporal window already in the model.
 
 ```{r eval = F}
-
 ch_mass_sw_lm2 <- slidingwin(
-    baseline = lm(weight ~
-        sex + altitude_sc +
-        temp_503_449,
-    data = ch_biom15
+    baseline = lm(
+        weight ~
+            sex + altitude_sc +
+            temp_503_449,
+        data = ch_biom15
     ),
     xvar = list(Temp = clim$Temp),
     type = "absolute",
@@ -262,7 +201,7 @@ save(ch_mass_sw_lm2, file = "output/ch_mass_sw_lm2.rda")
 ## results of this second slidingwin 
 
 ```{r}
-
+load("output/ch_mass_sw_lm2.rda")
 ch_mass_sw_lm2$combos
 plotdelta(dataset = ch_mass_sw_lm2[[2]]$Dataset)
 
@@ -278,10 +217,11 @@ as.Date("2022/09/24", format = "%Y/%m/%d") - 65
 ## Summary of the model with 2 temperature windows
 
 ```{r}
-ch_final <- lm(weight ~
-    sex + altitude +
-    poly((temp_503_449), 2) + poly((temp_145_65), 2),
-data = ch_biom15
+ch_final <- lm(
+    weight ~
+        sex + altitude +
+        poly((temp_503_449), 2) + poly((temp_145_65), 2),
+    data = ch_biom15
 )
 summary(ch_final)
 ```
@@ -291,7 +231,7 @@ summary(ch_final)
 library(sjPlot)
 
 sjPlot::tab_model(ch_final,
-    file = "Tables/wicm_models.doc",
+    file = "Tables/Model_res.doc",
     string.est = "Estimate",
     string.se = "SE",
     show.ci = F,
@@ -302,16 +242,7 @@ sjPlot::tab_model(ch_final,
     digits.rsq = 2
 )
 ```
-Climatic model results
-```{r model}
 
-ch_final <- lm(weight ~
-    sex + altitude +
-    poly(temp_503_449, 2) + poly(temp_145_65, 2),
-data = ch_biom15
-)
-summary(ch_final)
-```
 
 Sex difference estimated by the model:
 ```{r}
@@ -320,13 +251,12 @@ emmeans::emmeans(ch_final, "sex")
 
 Are the two variables correlated?
 ```{r corr}
-cor.test(ch_biom15$temp_503_449, ch_biom15$temp_145_65)
+cor.test(ch_biom15$temp_503_449, ch_biom15$temp_145_65, method = "pearson")
 plot(ch_biom15$temp_503_449, ch_biom15$temp_145_65)
 ```
 
 Figure
 ```{r all climmod2 fig}
-
 eff_data <- data.frame(effects::effect("poly(temp_503_449, 2)",
     ch_final,
     partial.residuals = T
@@ -338,7 +268,7 @@ plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    # xlab("Mean temperature (°C; 23.6 - 8.7)") +
+    xlab("Temperature (°C; window: 503-449)") +
     #    scale_x_continuous(
     #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
     #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
@@ -358,8 +288,8 @@ plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
     ) +
     ylab("Body mass (kg)") +
     scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
-    scale_x_continuous(limits = c(16.5, 22.5), breaks = seq(16.5, 22.5, 2)) +
-    annotate("text", x = 16.5, y = 27, label = "(a)")
+    scale_x_continuous(limits = c(16.5, 22.5), breaks = seq(16.5, 22.5, 1)) +
+    annotate("text", x = 16.8, y = 27, label = "(a)")
 
 
 
@@ -374,7 +304,7 @@ plot_temp2 <- ggplot(eff_data, aes(x = temp_145_65, y = fit)) +
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    # xlab("Mean temperature (°C; 23.6 - 8.7)") +
+    xlab("Temperature (°C; window: 145-65)") +
     #    scale_x_continuous(
     #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
     #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
@@ -392,10 +322,10 @@ plot_temp2 <- ggplot(eff_data, aes(x = temp_145_65, y = fit)) +
         aes(x = temp_145_65, y = weight),
         size = 1, shape = 16, alpha = 0.1
     ) +
-    ylab("Body mass (kg)") +
+    ylab("") +
     scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
     scale_x_continuous(limits = c(17.5, 22.5), breaks = seq(17.5, 22.5, 1)) +
-    annotate("text", x = 17.5, y = 27, label = "(b)")
+    annotate("text", x = 17.8, y = 27, label = "(b)")
 
 
 eff_data <- data.frame(effects::effect("altitude",
@@ -459,9 +389,9 @@ plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
 ```
 
 
-```{r Fig. 1, warning = F, dev = c("png","tiff"), fig.height = 3, fig.width = 10, fig.cap = "Fig. 1 SOMETHING"}
+```{r Fig. 1, warning = F, dev = c("png","tiff"), fig.height = 3, fig.width = 10, fig.cap = "Fig. 1"}
 grid.arrange(
-    plot_temp, plot_temp2, plot_alt, plot_sex,
+    plot_temp, plot_temp2, plot_alt, # plot_sex,
     nrow = 1
 )
 ```
@@ -514,6 +444,10 @@ data_temp <- subset(ch_biom15, !duplicated(year))
 temp_lm <- lm(temp_503_449 ~ year, data_temp)
 temp2_lm <- lm(temp_145_65 ~ year, data_temp)
 weight_lm <- lm(weight ~ year, ch_biom15)
+
+
+cor.test(data_temp$temp_503_449, data_temp$temp_145_65, method = "pearson")
+plot(data_temp$temp_503_449, data_temp$temp_145_65)
 ```
 
 Decrease in weight (kg):
@@ -566,13 +500,12 @@ sjPlot::tab_model(weight_lm,
 ```
 
 ```{r}
-data_temp$year_temp <- data_temp$year - 1
-plot_yr_temp <- ggplot(data_temp, aes(x = year_temp, y = temp_503_449)) +
+plot_yr_temp <- ggplot(data_temp, aes(x = year, y = temp_145_65)) +
     geom_point(size = 1, shape = 16, alpha = 0.7) +
     geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
-    scale_x_continuous(limits = c(1991, 2019), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
+    scale_x_continuous(limits = c(1992, 2018), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
     xlab("") +
-    ylab("Mean temperature (°C; May 9th - July 2nd)") +
+    ylab("Mean temperature (°C; May 2nd - July 21st)") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -580,12 +513,13 @@ plot_yr_temp <- ggplot(data_temp, aes(x = year_temp, y = temp_503_449)) +
         panel.background = element_blank(),
         axis.line = element_line(colour = "black")
     ) +
-    annotate("text", x = 1991, y = 22.156, label = "(a)")
+    scale_y_continuous(limits = c(17.5, 22.5), breaks = seq(17.5, 22.5, 1)) +
+    annotate("text", x = 1992, y = 22.5, label = "(a)")
 
 plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
     geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
-    scale_x_continuous(limits = c(1991, 2019), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
+    scale_x_continuous(limits = c(1992, 2018), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
     xlab("Year") +
     ylab("Body mass of juvenile Alpine Chamois (kg)") +
     theme(
@@ -595,15 +529,48 @@ plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
         panel.background = element_blank(),
         axis.line = element_line(colour = "black")
     ) +
-    annotate("text", x = 1991, y = 30, label = "(b)")
+    scale_y_continuous(limits = c(5, 30), breaks = seq(5, 30, 5)) +
+    annotate("text", x = 1992, y = 30, label = "(b)")
 ```
 
 
 
-```{r Fig. 2, warning = F, dev = c("png","tiff"), fig.height = 8, fig.width = 4, fig.cap = "Fig. 2 - SOMETHING"}
+```{r Fig. 2, warning = F, dev = c("png","tiff"), fig.height = 7, fig.width = 4, fig.cap = "Fig. 2 - SOMETHING"}
 grid.arrange(
     plot_yr_temp, plot_yr_bm,
     nrow = 2
 )
 ```
 
+
+## Residuals
+Testing for detrended 
+
+```{r}
+data_temp$temp_503_449_resid <- temp_lm$resid
+data_temp$temp_145_65_resid <- temp2_lm$resid
+ch_biom15$weight_resid <- weight_lm$resid
+
+ch_biom152 <- merge(
+    ch_biom15,
+    data_temp[c(
+        "year",
+        "temp_503_449_resid",
+        "temp_145_65_resid"
+    )]
+)
+
+resid_lm <- lm(weight_resid ~ temp_503_449_resid, ch_biom152)
+summary(resid_lm)
+
+resid_lm <- lm(weight_resid ~ temp_145_65_resid, ch_biom152)
+summary(resid_lm)
+
+ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
+    geom_point(size = 1, shape = 16, alpha = 0.1) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black")
+
+ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
+    geom_point(size = 1, shape = 16, alpha = 0.1) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black")
+```

@@ -8,7 +8,7 @@ author:
             affiliation: 
           - name: Pierre Bize
             affiliation: Swiss Ornithological Institute, CH-6204 Sempach, Switzerland
-date: "Last compiled on 20 January 2023"
+date: "Last compiled on 24 February 2023"
 output:
   html_document:
     code_folding: hide
@@ -53,28 +53,34 @@ sessionInfo()
 ```
 ## R version 4.2.2 (2022-10-31)
 ## Platform: aarch64-apple-darwin20 (64-bit)
-## Running under: macOS Ventura 13.1
+## Running under: macOS Ventura 13.2.1
 ## 
 ## Matrix products: default
 ## LAPACK: /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] sjPlot_2.8.11    lmerTest_3.1-3   lme4_1.1-30      effects_4.2-2    carData_3.0-5    tidyr_1.2.1      climwin_1.2.3    Matrix_1.5-1     gridExtra_2.3    ggplot2_3.3.6    snakecase_0.11.0 dplyr_1.0.10    
+##  [1] sjPlot_2.8.12    lmerTest_3.1-3   lme4_1.1-31      effects_4.2-2    carData_3.0-5    tidyr_1.2.1      climwin_1.2.3    Matrix_1.5-3     gridExtra_2.3   
+## [10] ggplot2_3.4.0    snakecase_0.11.0 dplyr_1.0.10    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-160        visreg_2.7.0        lubridate_1.8.0     insight_0.18.8      evd_2.3-6.1         numDeriv_2016.8-1.1 tools_4.2.2         backports_1.4.1     bslib_0.4.0         utf8_1.2.2          R6_2.5.1            sjlabelled_1.2.0    DBI_1.1.3          
-## [14] colorspace_2.0-3    nnet_7.3-18         withr_2.5.0         tidyselect_1.2.0    emmeans_1.8.1-1     compiler_4.2.2      performance_0.10.0  cli_3.4.1           labeling_0.4.2      bayestestR_0.13.0   sass_0.4.2          scales_1.2.1        mvtnorm_1.1-3      
-## [27] systemfonts_1.0.4   stringr_1.5.0       httpgd_1.3.0        digest_0.6.29       minqa_1.2.4         rmarkdown_2.17      pkgconfig_2.0.3     htmltools_0.5.3     MuMIn_1.47.1        fastmap_1.1.0       highr_0.9           rlang_1.0.6         jquerylib_0.1.4    
-## [40] farver_2.1.1        generics_0.1.3      jsonlite_1.8.2      magrittr_2.0.3      parameters_0.19.0   Rcpp_1.0.9          munsell_0.5.0       fansi_1.0.3         lifecycle_1.0.3     stringi_1.7.8       yaml_2.3.5          MASS_7.3-58.1       plyr_1.8.7         
-## [53] grid_4.2.2          sjmisc_2.8.9        lattice_0.20-45     ggeffects_1.1.3     splines_4.2.2       sjstats_0.18.1      knitr_1.40          pillar_1.8.1        boot_1.3-28         estimability_1.4.1  effectsize_0.8.0    stats4_4.2.2        glue_1.6.2         
-## [66] evaluate_0.17       mitools_2.4         modelr_0.1.9        vctrs_0.4.2         nloptr_2.0.3        gtable_0.3.1        purrr_0.3.5         reshape_0.8.9       assertthat_0.2.1    datawizard_0.6.2    cachem_1.0.6        xfun_0.33           xtable_1.8-4       
-## [79] broom_1.0.1         survey_4.1-1        coda_0.19-4         later_1.3.0         survival_3.4-0      RcppRoll_0.3.0      tibble_3.1.8        ellipsis_0.3.2
+##  [1] nlme_3.1-161        lubridate_1.9.1     insight_0.18.8      evd_2.3-6.1         numDeriv_2016.8-1.1 tools_4.2.2         backports_1.4.1     bslib_0.4.2        
+##  [9] utf8_1.2.2          R6_2.5.1            sjlabelled_1.2.0    vipor_0.4.5         mgcv_1.8-41         DBI_1.1.3           colorspace_2.1-0    nnet_7.3-18        
+## [17] withr_2.5.0         tidyselect_1.2.0    emmeans_1.8.4-1     compiler_4.2.2      performance_0.10.2  cli_3.6.0           labeling_0.4.2      bayestestR_0.13.0  
+## [25] sass_0.4.5          scales_1.2.1        mvtnorm_1.1-3       systemfonts_1.0.4   stringr_1.5.0       httpgd_1.3.0        digest_0.6.31       minqa_1.2.5        
+## [33] rmarkdown_2.20      pkgconfig_2.0.3     htmltools_0.5.4     MuMIn_1.47.1        highr_0.10          fastmap_1.1.0       rlang_1.0.6         jquerylib_0.1.4    
+## [41] farver_2.1.1        generics_0.1.3      jsonlite_1.8.4      magrittr_2.0.3      parameters_0.20.1   ggbeeswarm_0.7.1    Rcpp_1.0.10         munsell_0.5.0      
+## [49] fansi_1.0.4         lifecycle_1.0.3     stringi_1.7.12      yaml_2.3.7          MASS_7.3-58.2       plyr_1.8.8          grid_4.2.2          sjmisc_2.8.9       
+## [57] lattice_0.20-45     ggeffects_1.1.4     splines_4.2.2       sjstats_0.18.2      knitr_1.41          pillar_1.8.1        boot_1.3-28.1       estimability_1.4.1 
+## [65] effectsize_0.8.2    stats4_4.2.2        glue_1.6.2          evaluate_0.20       mitools_2.4         modelr_0.1.10       vctrs_0.5.2         nloptr_2.0.3       
+## [73] gtable_0.3.1        purrr_1.0.1         reshape_0.8.9       assertthat_0.2.1    datawizard_0.6.5    cachem_1.0.6        xfun_0.36           xtable_1.8-4       
+## [81] broom_1.0.2         survey_4.1-1        coda_0.19-4         later_1.3.0         survival_3.5-0      RcppRoll_0.3.0      tibble_3.1.8        beeswarm_0.4.0     
+## [89] timechange_0.2.0    ellipsis_0.3.2
 ```
 
 ## The datasets
@@ -131,20 +137,10 @@ The overall approach for the climwin analysis is to compare the support by the d
 
 
 ```r
-ch_basemod <- lm(weight ~
-    sex + altitude_sc,
-data = ch_biom15
-)
-
-ch_basemod_yr <- lm(weight ~
-    sex + altitude_sc + year_sc,
-data = ch_biom15
-)
-
-ch_basemod_lmer <- lme4::lmer(weight ~
-    sex + altitude_sc + year_sc + (1 | year_f),
-control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+07)),
-data = ch_biom15
+ch_basemod <- lm(
+    weight ~
+        sex + altitude_sc,
+    data = ch_biom15
 )
 ```
 
@@ -172,36 +168,6 @@ ch_mass_sw <- slidingwin(
     cinterval = "day"
 )
 save(ch_mass_sw, file = "output/ch_mass_sw_sc.rda")
-
-ch_mass_sw_yr <- slidingwin(
-    baseline = ch_basemod_yr,
-    xvar = list(Temp = clim$Temp),
-    type = "absolute",
-    refday = c(24, 9),
-    range = c(661, 0),
-    stat = "mean",
-    cdate = clim$date_ymd,
-    bdate = ch_biom15$date_ymd,
-    func = c("lin", "quad"),
-    cmissing = FALSE,
-    cinterval = "day"
-)
-save(ch_mass_sw_yr, file = "output/ch_mass_sw_yr_sc.rda")
-
-ch_mass_sw_lmer <- slidingwin(
-    baseline = ch_basemod_lmer,
-    xvar = list(Temp = clim$Temp),
-    type = "absolute",
-    refday = c(24, 9),
-    range = c(661, 0),
-    stat = "mean",
-    cdate = clim$date_ymd,
-    bdate = ch_biom15$date_ymd,
-    func = c("lin", "quad"),
-    cmissing = FALSE,
-    cinterval = "day"
-)
-save(ch_mass_sw_lmer, file = "output/ch_mass_sw_lmer.rda")
 ```
 
 
@@ -210,8 +176,6 @@ save(ch_mass_sw_lmer, file = "output/ch_mass_sw_lmer.rda")
 
 ```r
 load(file = "output/ch_mass_sw.rda")
-load(file = "output/ch_mass_sw_yr_sc.rda")
-load(file = "output/ch_mass_sw_lmer.rda")
 ```
 __The best linear and quadratic windows__
 
@@ -226,31 +190,6 @@ ch_mass_sw$combos
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["response"],"name":[1],"type":["chr"],"align":["left"]},{"label":["climate"],"name":[2],"type":["fct"],"align":["left"]},{"label":["type"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stat"],"name":[4],"type":["fct"],"align":["left"]},{"label":["func"],"name":[5],"type":["fct"],"align":["left"]},{"label":["DeltaAICc"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[7],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"lin","6":"-262.02","7":"93","8":"78","_rn_":"1"},{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"quad","6":"-325.33","7":"503","8":"449","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-For the sex + altitude + year model 
-
-```r
-ch_mass_sw_yr$combos
-```
-
-<div data-pagedtable="false">
-  <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["response"],"name":[1],"type":["chr"],"align":["left"]},{"label":["climate"],"name":[2],"type":["fct"],"align":["left"]},{"label":["type"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stat"],"name":[4],"type":["fct"],"align":["left"]},{"label":["func"],"name":[5],"type":["fct"],"align":["left"]},{"label":["DeltaAICc"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[7],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"lin","6":"-95.53","7":"93","8":"78","_rn_":"1"},{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"quad","6":"-138.66","7":"202","8":"167","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-For the sex + altitude model with year as random
-
-```r
-ch_mass_sw_lmer$combos
-```
-
-<div data-pagedtable="false">
-  <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["response"],"name":[1],"type":["chr"],"align":["left"]},{"label":["climate"],"name":[2],"type":["fct"],"align":["left"]},{"label":["type"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stat"],"name":[4],"type":["fct"],"align":["left"]},{"label":["func"],"name":[5],"type":["fct"],"align":["left"]},{"label":["DeltaAICc"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WindowOpen"],"name":[7],"type":["int"],"align":["right"]},{"label":["WindowClose"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"lin","6":"-7.01","7":"93","8":"78","_rn_":"1"},{"1":"weight","2":"Temp","3":"absolute","4":"mean","5":"quad","6":"-4.16","7":"197","8":"162","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-
-The window for the linear effect is the same for all models, whereas the window for the quadratic effect changes quite a lot!
-Windows are also in very different moments of the growth of young chamois!
 
 
 
@@ -268,43 +207,19 @@ head(ch_mass_sw[[1]]$Dataset, 10)
 
 
 
-The deltaAIC plot for linear and quadratic (same order as before):
+The deltaAIC plot for linear and quadratic:
 
 ```r
 plotdelta(dataset = ch_mass_sw[[1]]$Dataset)
 ```
 
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 ```r
 plotdelta(dataset = ch_mass_sw[[2]]$Dataset)
 ```
 
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
-
-```r
-plotdelta(dataset = ch_mass_sw_yr[[1]]$Dataset)
-```
-
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-7-3.png)<!-- -->
-
-```r
-plotdelta(dataset = ch_mass_sw_yr[[1]]$Dataset)
-```
-
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-7-4.png)<!-- -->
-
-```r
-plotdelta(dataset = ch_mass_sw_lmer[[1]]$Dataset)
-```
-
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-7-5.png)<!-- -->
-
-```r
-plotdelta(dataset = ch_mass_sw_lmer[[2]]$Dataset)
-```
-
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-7-6.png)<!-- -->
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-5-2.png)<!-- -->
 
 __Choosing the simplest model__
 
@@ -343,10 +258,11 @@ We are now able to look for other temporal windows that might be of importance f
 
 ```r
 ch_mass_sw_lm2 <- slidingwin(
-    baseline = lm(weight ~
-        sex + altitude_sc +
-        temp_503_449,
-    data = ch_biom15
+    baseline = lm(
+        weight ~
+            sex + altitude_sc +
+            temp_503_449,
+        data = ch_biom15
     ),
     xvar = list(Temp = clim$Temp),
     type = "absolute",
@@ -366,6 +282,7 @@ save(ch_mass_sw_lm2, file = "output/ch_mass_sw_lm2.rda")
 
 
 ```r
+load("output/ch_mass_sw_lm2.rda")
 ch_mass_sw_lm2$combos
 ```
 
@@ -379,7 +296,7 @@ ch_mass_sw_lm2$combos
 plotdelta(dataset = ch_mass_sw_lm2[[2]]$Dataset)
 ```
 
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ```r
 ch_biom15$temp_145_65 <- ch_mass_sw_lm2[[2]]$BestModelData$climate
@@ -406,10 +323,11 @@ as.Date("2022/09/24", format = "%Y/%m/%d") - 65
 
 
 ```r
-ch_final <- lm(weight ~
-    sex + altitude +
-    poly((temp_503_449), 2) + poly((temp_145_65), 2),
-data = ch_biom15
+ch_final <- lm(
+    weight ~
+        sex + altitude +
+        poly((temp_503_449), 2) + poly((temp_145_65), 2),
+    data = ch_biom15
 )
 summary(ch_final)
 ```
@@ -447,7 +365,7 @@ summary(ch_final)
 library(sjPlot)
 
 sjPlot::tab_model(ch_final,
-    file = "Tables/wicm_models.doc",
+    file = "Tables/Model_res.doc",
     string.est = "Estimate",
     string.se = "SE",
     show.ci = F,
@@ -460,9 +378,6 @@ sjPlot::tab_model(ch_final,
 ```
 
 ```
-## Warning: Some model terms could not be found in model data.
-##   You probably need to load the data into the environment.
-
 ## Warning: Some model terms could not be found in model data.
 ##   You probably need to load the data into the environment.
 ```
@@ -538,43 +453,7 @@ sjPlot::tab_model(ch_final,
 </tr>
 
 </table>
-Climatic model results
 
-```r
-ch_final <- lm(weight ~
-    sex + altitude +
-    poly(temp_503_449, 2) + poly(temp_145_65, 2),
-data = ch_biom15
-)
-summary(ch_final)
-```
-
-```
-## 
-## Call:
-## lm(formula = weight ~ sex + altitude + poly(temp_503_449, 2) + 
-##     poly(temp_145_65, 2), data = ch_biom15)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -8.0251 -1.7845  0.0111  1.7251 12.3051 
-## 
-## Coefficients:
-##                          Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)             1.187e+01  1.526e-01  77.775  < 2e-16 ***
-## sexm                    4.958e-01  6.895e-02   7.191 7.27e-13 ***
-## altitude                1.296e-03  9.061e-05  14.307  < 2e-16 ***
-## poly(temp_503_449, 2)1 -3.195e+01  2.581e+00 -12.378  < 2e-16 ***
-## poly(temp_503_449, 2)2  1.429e+01  3.262e+00   4.382 1.20e-05 ***
-## poly(temp_145_65, 2)1  -2.215e+01  3.090e+00  -7.168 8.59e-13 ***
-## poly(temp_145_65, 2)2   2.182e+01  2.787e+00   7.829 5.86e-15 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 2.565 on 5628 degrees of freedom
-## Multiple R-squared:  0.1119,	Adjusted R-squared:  0.111 
-## F-statistic: 118.2 on 6 and 5628 DF,  p-value: < 2.2e-16
-```
 
 Sex difference estimated by the model:
 
@@ -593,7 +472,7 @@ emmeans::emmeans(ch_final, "sex")
 Are the two variables correlated?
 
 ```r
-cor.test(ch_biom15$temp_503_449, ch_biom15$temp_145_65)
+cor.test(ch_biom15$temp_503_449, ch_biom15$temp_145_65, method = "pearson")
 ```
 
 ```
@@ -623,14 +502,20 @@ eff_data <- data.frame(effects::effect("poly(temp_503_449, 2)",
     ch_final,
     partial.residuals = T
 ))
+```
 
+```
+## NOTE: poly(temp_503_449,2) does not appear in the model
+```
+
+```r
 plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
     geom_line() +
     geom_ribbon(
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    # xlab("Mean temperature (°C; 23.6 - 8.7)") +
+    xlab("Temperature (°C; window: 503-449)") +
     #    scale_x_continuous(
     #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
     #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
@@ -650,8 +535,8 @@ plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
     ) +
     ylab("Body mass (kg)") +
     scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
-    scale_x_continuous(limits = c(16.5, 22.5), breaks = seq(16.5, 22.5, 2)) +
-    annotate("text", x = 16.5, y = 27, label = "(a)")
+    scale_x_continuous(limits = c(16.5, 22.5), breaks = seq(16.5, 22.5, 1)) +
+    annotate("text", x = 16.8, y = 27, label = "(a)")
 
 
 
@@ -659,14 +544,20 @@ eff_data <- data.frame(effects::effect("poly(temp_145_65, 2)",
     ch_final,
     partial.residuals = T
 ))
+```
 
+```
+## NOTE: poly(temp_145_65,2) does not appear in the model
+```
+
+```r
 plot_temp2 <- ggplot(eff_data, aes(x = temp_145_65, y = fit)) +
     geom_line() +
     geom_ribbon(
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    # xlab("Mean temperature (°C; 23.6 - 8.7)") +
+    xlab("Temperature (°C; window: 145-65)") +
     #    scale_x_continuous(
     #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
     #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
@@ -684,10 +575,10 @@ plot_temp2 <- ggplot(eff_data, aes(x = temp_145_65, y = fit)) +
         aes(x = temp_145_65, y = weight),
         size = 1, shape = 16, alpha = 0.1
     ) +
-    ylab("Body mass (kg)") +
+    ylab("") +
     scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
     scale_x_continuous(limits = c(17.5, 22.5), breaks = seq(17.5, 22.5, 1)) +
-    annotate("text", x = 17.5, y = 27, label = "(b)")
+    annotate("text", x = 17.8, y = 27, label = "(b)")
 
 
 eff_data <- data.frame(effects::effect("altitude",
@@ -754,12 +645,12 @@ plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
 
 ```r
 grid.arrange(
-    plot_temp, plot_temp2, plot_alt, plot_sex,
+    plot_temp, plot_temp2, plot_alt, # plot_sex,
     nrow = 1
 )
 ```
 
-![Fig. 1 SOMETHING](chamois_script01_2lm_files/figure-html/Fig. 1-1.png)
+![Fig. 1](chamois_script01_2lm_files/figure-html/Fig. 1-1.png)
 
 
 ### Randwin
@@ -823,7 +714,30 @@ data_temp <- subset(ch_biom15, !duplicated(year))
 temp_lm <- lm(temp_503_449 ~ year, data_temp)
 temp2_lm <- lm(temp_145_65 ~ year, data_temp)
 weight_lm <- lm(weight ~ year, ch_biom15)
+
+
+cor.test(data_temp$temp_503_449, data_temp$temp_145_65, method = "pearson")
 ```
+
+```
+## 
+## 	Pearson's product-moment correlation
+## 
+## data:  data_temp$temp_503_449 and data_temp$temp_145_65
+## t = 1.2381, df = 25, p-value = 0.2272
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  -0.1536988  0.5684470
+## sample estimates:
+##       cor 
+## 0.2403537
+```
+
+```r
+plot(data_temp$temp_503_449, data_temp$temp_145_65)
+```
+
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 Decrease in weight (kg):
 
@@ -970,13 +884,12 @@ sjPlot::tab_model(weight_lm,
 
 
 ```r
-data_temp$year_temp <- data_temp$year - 1
-plot_yr_temp <- ggplot(data_temp, aes(x = year_temp, y = temp_503_449)) +
+plot_yr_temp <- ggplot(data_temp, aes(x = year, y = temp_145_65)) +
     geom_point(size = 1, shape = 16, alpha = 0.7) +
     geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
-    scale_x_continuous(limits = c(1991, 2019), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
+    scale_x_continuous(limits = c(1992, 2018), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
     xlab("") +
-    ylab("Mean temperature (°C; May 9th - July 2nd)") +
+    ylab("Mean temperature (°C; May 2nd - July 21st)") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -984,12 +897,13 @@ plot_yr_temp <- ggplot(data_temp, aes(x = year_temp, y = temp_503_449)) +
         panel.background = element_blank(),
         axis.line = element_line(colour = "black")
     ) +
-    annotate("text", x = 1991, y = 22.156, label = "(a)")
+    scale_y_continuous(limits = c(17.5, 22.5), breaks = seq(17.5, 22.5, 1)) +
+    annotate("text", x = 1992, y = 22.5, label = "(a)")
 
 plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
     geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
-    scale_x_continuous(limits = c(1991, 2019), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
+    scale_x_continuous(limits = c(1992, 2018), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
     xlab("Year") +
     ylab("Body mass of juvenile Alpine Chamois (kg)") +
     theme(
@@ -999,7 +913,8 @@ plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
         panel.background = element_blank(),
         axis.line = element_line(colour = "black")
     ) +
-    annotate("text", x = 1991, y = 30, label = "(b)")
+    scale_y_continuous(limits = c(5, 30), breaks = seq(5, 30, 5)) +
+    annotate("text", x = 1992, y = 30, label = "(b)")
 ```
 
 
@@ -1014,3 +929,88 @@ grid.arrange(
 
 ![Fig. 2 - SOMETHING](chamois_script01_2lm_files/figure-html/Fig. 2-1.png)
 
+
+## Residuals
+Testing for detrended 
+
+
+```r
+data_temp$temp_503_449_resid <- temp_lm$resid
+data_temp$temp_145_65_resid <- temp2_lm$resid
+ch_biom15$weight_resid <- weight_lm$resid
+
+ch_biom152 <- merge(
+    ch_biom15,
+    data_temp[c(
+        "year",
+        "temp_503_449_resid",
+        "temp_145_65_resid"
+    )]
+)
+
+resid_lm <- lm(weight_resid ~ temp_503_449_resid, ch_biom152)
+summary(resid_lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = weight_resid ~ temp_503_449_resid, data = ch_biom152)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.2960 -1.8488  0.0239  1.7286 12.2040 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)         0.08326    0.03704   2.248   0.0246 *  
+## temp_503_449_resid -0.22432    0.03183  -7.048 2.04e-12 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.635 on 5633 degrees of freedom
+## Multiple R-squared:  0.00874,	Adjusted R-squared:  0.008564 
+## F-statistic: 49.67 on 1 and 5633 DF,  p-value: 2.039e-12
+```
+
+```r
+resid_lm <- lm(weight_resid ~ temp_145_65_resid, ch_biom152)
+summary(resid_lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = weight_resid ~ temp_145_65_resid, data = ch_biom152)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.0095 -1.8463 -0.0095  1.8590 12.8806 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)        0.06628    0.03589   1.846   0.0649 .  
+## temp_145_65_resid -0.27446    0.03227  -8.504   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.63 on 5633 degrees of freedom
+## Multiple R-squared:  0.01268,	Adjusted R-squared:  0.0125 
+## F-statistic: 72.32 on 1 and 5633 DF,  p-value: < 2.2e-16
+```
+
+```r
+ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
+    geom_point(size = 1, shape = 16, alpha = 0.1) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black")
+```
+
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+
+```r
+ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
+    geom_point(size = 1, shape = 16, alpha = 0.1) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black")
+```
+
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-20-2.png)<!-- -->
