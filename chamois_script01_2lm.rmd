@@ -60,15 +60,11 @@ Overall, 34 017 animals were legally shot during the hunting period ranging from
 ch_biom <- read.csv("data/data.csv", stringsAsFactors = T, na = c("", "NA"))
 clim <- read.csv("data/swiss_weather.csv", stringsAsFactors = T, na = c("", "NA"))
 
-clim2 <- read.csv("data/swiss_weather_acquarossa.csv", stringsAsFactors = T, na = c("", "NA"))
-colnames(clim2) <- c("station", "meteosw", "Temp", "Temp2", "date", "year", "month")
-
 colnames(ch_biom) <- snakecase::to_snake_case(colnames(ch_biom))
 
 # fixing some variables
 ch_biom$date_ymd <- as.Date(paste(ch_biom$year, ch_biom$month, ch_biom$day), "%Y %m %d")
 clim$date_ymd <- as.Date(clim$date, "%Y/%m/%d")
-clim2$date_ymd <- as.Date(clim2$date, "%Y/%m/%d")
 ch_biom$year_f <- as.factor(ch_biom$year)
 ```
 
@@ -94,7 +90,7 @@ ch_biom15$year_sc <- scale(ch_biom15$year)
 # Statistical Analysis
 
 As the use of arbitrary climate periods do not always explain the biological response in the best way possible (van de Pol et al. 2016), we investigated the variation weight of 1.5-year-old individuals in relation to the variation of mean ambient temperature using the R package climwin, and the function slidingwin which detects the exact time window when a biological variable is most strongly affected by climate (Bailey and van de Pol 2016). 
-The overall approach for the climwin analysis is to compare the support by the data for competing hypotheses and to formalize them into regression models (van de Pol et al., 2016). Competing models are based upon a baseline model (without the addition of weather effects) and ranked using the ΔAICc, or the difference in terms of the Akaike Information Criterion values calculated for a small sample size between the baseline model and the model of interest. The model with the best support from the data has the lowest ΔAICc among competing models. The baseline model was a linear model with the body mass of the juvenile chamois in relation to sex and elevation. The function slidingwin creates a candidate set of competing models testing windows of different lengths for the weather variable of interest, in this study the mean daily ambient temperature (℃). Non-linear effects of temperature on body weight were taken into account by checking for both linear and quadratic trends. As most of the chamois was shot during a two-week period at the end of September we chose an absolute time window for the analyses instead of an individual specific time window. As reference day we chose the last date of the shooting period (September 24th) and we looked for windows between September 24th and 661 days before (December 1st of 2 years before) to include the three critical periods of a young chamois life: gestation, lactation and juvenile.  
+The overall approach for the climwin analysis is to compare the support by the data for competing hypotheses and to formalize them into regression models (van de Pol et al., 2016). Competing models are based upon a baseline model (without the addition of weather effects) and ranked using the ΔAICc, or the difference in terms of the Akaike Information Criterion values calculated for a small sample size between the baseline model and the model of interest. The model with the best support from the data has the lowest ΔAICc among competing models. The baseline model was a linear model with the body mass of the yearling chamois in relation to sex and elevation. The function slidingwin creates a candidate set of competing models testing windows of different lengths for the weather variable of interest, in this study the mean daily ambient temperature (℃). Non-linear effects of temperature on body weight were taken into account by checking for both linear and quadratic trends. As most of the chamois was shot during a two-week period at the end of September we chose an absolute time window for the analyses instead of an individual specific time window. As reference day we chose the last date of the shooting period (September 24th) and we looked for windows between September 24th and 661 days before (December 1st of 2 years before) to include the three critical periods of a young chamois life: gestation, lactation and yearling.  
 
 ## Selection of the base model
 
@@ -132,38 +128,16 @@ save(ch_mass_sw, file = "output/ch_mass_sw_sc.rda")
 ```
 
 
-```{r all climmod, eval = F}
-# create model with ABSOLUTE time window with temperature for ALWAYS period
-# for the period 1 Dec(-2) - 31May(-1)
-ch_mass_sw2 <- slidingwin(
-    baseline = ch_basemod,
-    xvar = list(Temp = clim2$Temp),
-    type = "absolute",
-    refday = c(24, 9),
-    range = c(661, 0),
-    stat = "mean",
-    cdate = clim2$date_ymd,
-    bdate = ch_biom15$date_ymd,
-    func = c("lin", "quad"),
-    cmissing = FALSE,
-    cinterval = "day"
-)
-save(ch_mass_sw2, file = "output/ch_mass_sw_sc_clim2.rda")
-```
-
-
 #### Investigating the models
 
 ```{r comparing mo2}
 load(file = "output/ch_mass_sw.rda")
-load(file = "output/ch_mass_sw_sc_clim2.rda")
 ```
 __The best linear and quadratic windows__
 
 For the sex + altitude model
 ```{r}
 ch_mass_sw$combos
-ch_mass_sw2$combos
 ```
 
 
@@ -171,14 +145,6 @@ ch_mass_sw2$combos
 The 10 best linear models sorted by deltaAICc:
 ```{r}
 head(ch_mass_sw[[1]]$Dataset, 10)
-head(ch_mass_sw2[[1]]$Dataset, 10)
-```
-
-
-The 10 best quadratic models sorted by deltaAICc:
-```{r}
-head(ch_mass_sw[[2]]$Dataset, 10)
-head(ch_mass_sw2[[2]]$Dataset, 10)
 ```
 
 
@@ -196,12 +162,9 @@ I can add the new variable to the dataset and obtain the dates for the window:
 # The best supported climate variable can be attached
 # to the original dataset for further analyses
 ch_biom15$temp_503_449 <- ch_mass_sw[[2]]$BestModelData$climate
-
-ch_biom15$temp_545_449 <- ch_mass_sw2[[2]]$BestModelData$climate
 ```
 Dates of this window
 ```{r}
-as.Date("2022/09/24", format = "%Y/%m/%d") - 545
 as.Date("2022/09/24", format = "%Y/%m/%d") - 503
 as.Date("2022/09/24", format = "%Y/%m/%d") - 449
 ```
@@ -235,37 +198,11 @@ ch_mass_sw_lm2 <- slidingwin(
 save(ch_mass_sw_lm2, file = "output/ch_mass_sw_lm2.rda")
 ```
 
-
-```{r eval = F}
-ch_mass_sw2_lm2 <- slidingwin(
-    baseline = lm(
-        weight ~
-            sex + altitude_sc +
-            temp_545_449,
-        data = ch_biom15
-    ),
-    xvar = list(Temp = clim2$Temp),
-    type = "absolute",
-    refday = c(24, 9),
-    range = c(661, 0),
-    stat = "mean",
-    cdate = clim2$date_ymd,
-    bdate = ch_biom15$date_ymd,
-    func = c("lin", "quad"),
-    cmissing = FALSE,
-    cinterval = "day"
-)
-save(ch_mass_sw2_lm2, file = "output/ch_mass_sw2_lm2.rda")
-```
-
 ## results of this second slidingwin 
 
 ```{r}
 load("output/ch_mass_sw_lm2.rda")
-load("output/ch_mass_sw2_lm2.rda")
 ch_mass_sw_lm2$combos
-ch_mass_sw2_lm2$combos
-
 plotdelta(dataset = ch_mass_sw_lm2[[2]]$Dataset)
 
 
@@ -283,8 +220,7 @@ as.Date("2022/09/24", format = "%Y/%m/%d") - 65
 ch_final <- lm(
     weight ~
         sex + altitude +
-        poly((temp_503_449), 2) #+ poly((temp_145_65), 2)
-    ,
+        poly(temp_503_449, 2) + poly(temp_145_65, 2),
     data = ch_biom15
 )
 summary(ch_final)
@@ -332,7 +268,7 @@ plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    xlab("Temperature (°C; window: 503-449)") +
+    xlab("Temperature (°C; 503-449)") +
     #    scale_x_continuous(
     #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
     #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
@@ -368,7 +304,7 @@ plot_temp2 <- ggplot(eff_data, aes(x = temp_145_65, y = fit)) +
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    xlab("Temperature (°C; window: 145-65)") +
+    xlab("Temperature (°C; 145-65)") +
     #    scale_x_continuous(
     #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
     #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
@@ -454,9 +390,9 @@ plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
 
 
 ```{r Fig. 1, warning = F, dev = c("png","tiff"), fig.height = 3, fig.width = 10, fig.cap = "Fig. 1"}
-grid.arrange(
+cowplot::plot_grid(
     plot_temp, plot_temp2, plot_alt, # plot_sex,
-    nrow = 1
+    nrow = 1, align = "v"
 )
 ```
 
@@ -569,7 +505,7 @@ plot_yr_temp <- ggplot(data_temp, aes(x = year, y = temp_145_65)) +
     geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
     scale_x_continuous(limits = c(1992, 2018), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
     xlab("") +
-    ylab("Mean temperature (°C; May 2nd - July 21st)") +
+    ylab("Temperature (°C; 145-65)") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -585,7 +521,7 @@ plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
     geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
     scale_x_continuous(limits = c(1992, 2018), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
     xlab("Year") +
-    ylab("Body mass of juvenile Alpine Chamois (kg)") +
+    ylab("Body mass of yearling Alpine chamois (kg)") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -618,32 +554,16 @@ ch_biom152 <- merge(
 )
 ```
 
-Temperature 503-449 linear
-```{r}
-resid_lm1 <- lm(weight_resid ~ temp_503_449_resid, ch_biom152)
-summary(resid_lm1)
-ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
-    geom_point(size = 1, shape = 16, alpha = 0.1) +
-    geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
-    xlab("Temperature (503-449) residuals") +
-    ylab("Body mass residuals") +
-    theme(
-        legend.position = "none",
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
-        axis.line = element_line(colour = "black")
-    )
-```
 
 Temperature 503-449 quadratic
 ```{r}
 resid_qlm1 <- lm(weight_resid ~ poly(temp_503_449_resid, 2), ch_biom152)
 summary(resid_qlm1)
-ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
+
+plot_resid_qlm1 <- ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
     geom_smooth(method = "lm", formula = "y ~ poly(x,2)", col = "black") +
-    xlab("Temperature (503-449) residuals") +
+    xlab("Temperature (°C; 503-449) residuals") +
     ylab("Body mass residuals") +
     theme(
         legend.position = "none",
@@ -651,51 +571,40 @@ ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
         axis.line = element_line(colour = "black")
-    )
+    ) +
+    scale_x_continuous(limits = c(-2, 3.5)) +
+    annotate("text", x = 1992, y = 30, label = "(c)")
 ```
 
-Temperature 145-65 linear
-```{r}
-resid_lm2 <- lm(weight_resid ~ temp_145_65_resid, ch_biom152)
-summary(resid_lm2)
-ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
-    geom_point(size = 1, shape = 16, alpha = 0.1) +
-    geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
-    xlab("Temperature (145-65) residuals") +
-    ylab("Body mass residuals") +
-    theme(
-        legend.position = "none",
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
-        axis.line = element_line(colour = "black")
-    )
-```
 
 Temperature 145-65 quadratic
 ```{r}
 resid_qlm2 <- lm(weight_resid ~ poly(temp_145_65_resid, 2), ch_biom152)
 summary(resid_qlm2)
+car::Anova(resid_qlm2)
 
-ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
+plot_resid_qlm2 <- ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
     geom_smooth(method = "lm", formula = "y ~ poly(x, 2)", col = "black") +
-    xlab("Temperature (145-65) residuals") +
-    ylab("Body mass residuals") +
+    xlab("Temperature (°C; 145-65) residuals") +
+    ylab("Body mass (kg) residuals") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
         axis.line = element_line(colour = "black")
-    )
+    ) +
+    scale_y_continuous(limits = c(-10, 15), breaks = seq(-10, 15, 5)) +
+    scale_x_continuous(limits = c(-1.5, 3.5), breaks = seq(-1.5, 3.5, 1)) +
+    annotate("text", x = -1.5, y = 15, label = "(c)")
 ```
 
 
 
 ```{r Fig. 2, warning = F, dev = c("png","tiff"), fig.height = 9, fig.width = 4, fig.cap = "Fig. 2 - SOMETHING"}
-grid.arrange(
-    plot_yr_temp, plot_yr_bm, resid_qlm1,
-    nrow = 3
+cowplot::plot_grid(
+    plot_yr_temp, plot_yr_bm, plot_resid_qlm2,
+    ncol = 1, align = "v"
 )
 ```
