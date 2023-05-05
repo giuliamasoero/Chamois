@@ -8,7 +8,7 @@ author:
             affiliation: 
           - name: Pierre Bize
             affiliation: Swiss Ornithological Institute, CH-6204 Sempach, Switzerland
-date: "Last compiled on 24 February 2023"
+date: "Last compiled on 27 February 2023"
 output:
   html_document:
     code_folding: hide
@@ -69,12 +69,12 @@ sessionInfo()
 ## [10] ggplot2_3.4.0    snakecase_0.11.0 dplyr_1.0.10    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-161        lubridate_1.9.1     insight_0.18.8      evd_2.3-6.1         numDeriv_2016.8-1.1 tools_4.2.2         backports_1.4.1     bslib_0.4.2        
-##  [9] utf8_1.2.2          R6_2.5.1            sjlabelled_1.2.0    vipor_0.4.5         mgcv_1.8-41         DBI_1.1.3           colorspace_2.1-0    nnet_7.3-18        
-## [17] withr_2.5.0         tidyselect_1.2.0    emmeans_1.8.4-1     compiler_4.2.2      performance_0.10.2  cli_3.6.0           labeling_0.4.2      bayestestR_0.13.0  
-## [25] sass_0.4.5          scales_1.2.1        mvtnorm_1.1-3       systemfonts_1.0.4   stringr_1.5.0       httpgd_1.3.0        digest_0.6.31       minqa_1.2.5        
+##  [1] nlme_3.1-161        lubridate_1.9.1     insight_0.18.8      evd_2.3-6.1         numDeriv_2016.8-1.1 bslib_0.4.2         tools_4.2.2         backports_1.4.1    
+##  [9] utf8_1.2.2          R6_2.5.1            sjlabelled_1.2.0    vipor_0.4.5         DBI_1.1.3           mgcv_1.8-41         colorspace_2.1-0    nnet_7.3-18        
+## [17] withr_2.5.0         tidyselect_1.2.0    emmeans_1.8.4-1     compiler_4.2.2      performance_0.10.2  cli_3.6.0           sass_0.4.5          labeling_0.4.2     
+## [25] bayestestR_0.13.0   scales_1.2.1        mvtnorm_1.1-3       systemfonts_1.0.4   stringr_1.5.0       httpgd_1.3.0        digest_0.6.31       minqa_1.2.5        
 ## [33] rmarkdown_2.20      pkgconfig_2.0.3     htmltools_0.5.4     MuMIn_1.47.1        highr_0.10          fastmap_1.1.0       rlang_1.0.6         jquerylib_0.1.4    
-## [41] farver_2.1.1        generics_0.1.3      jsonlite_1.8.4      magrittr_2.0.3      parameters_0.20.1   ggbeeswarm_0.7.1    Rcpp_1.0.10         munsell_0.5.0      
+## [41] farver_2.1.1        generics_0.1.3      jsonlite_1.8.4      magrittr_2.0.3      parameters_0.20.1   Rcpp_1.0.10         ggbeeswarm_0.7.1    munsell_0.5.0      
 ## [49] fansi_1.0.4         lifecycle_1.0.3     stringi_1.7.12      yaml_2.3.7          MASS_7.3-58.2       plyr_1.8.8          grid_4.2.2          sjmisc_2.8.9       
 ## [57] lattice_0.20-45     ggeffects_1.1.4     splines_4.2.2       sjstats_0.18.2      knitr_1.41          pillar_1.8.1        boot_1.3-28.1       estimability_1.4.1 
 ## [65] effectsize_0.8.2    stats4_4.2.2        glue_1.6.2          evaluate_0.20       mitools_2.4         modelr_0.1.10       vctrs_0.5.2         nloptr_2.0.3       
@@ -947,9 +947,13 @@ ch_biom152 <- merge(
         "temp_145_65_resid"
     )]
 )
+```
 
-resid_lm <- lm(weight_resid ~ temp_503_449_resid, ch_biom152)
-summary(resid_lm)
+Temperature 503-449 linear
+
+```r
+resid_lm1 <- lm(weight_resid ~ temp_503_449_resid, ch_biom152)
+summary(resid_lm1)
 ```
 
 ```
@@ -974,8 +978,73 @@ summary(resid_lm)
 ```
 
 ```r
-resid_lm <- lm(weight_resid ~ temp_145_65_resid, ch_biom152)
-summary(resid_lm)
+ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
+    geom_point(size = 1, shape = 16, alpha = 0.1) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
+    xlab("Temperature (503-449) residuals") +
+    ylab("Weight residuals") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    )
+```
+
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+
+Temperature 503-449 quadratic
+
+```r
+resid_qlm1 <- lm(weight_resid ~ poly(temp_503_449_resid, 2), ch_biom152)
+summary(resid_qlm1)
+```
+
+```
+## 
+## Call:
+## lm(formula = weight_resid ~ poly(temp_503_449_resid, 2), data = ch_biom152)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.5904 -1.8183 -0.0258  1.7628 12.3874 
+## 
+## Coefficients:
+##                                Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                  -2.560e-15  3.499e-02   0.000        1    
+## poly(temp_503_449_resid, 2)1 -1.857e+01  2.626e+00  -7.072 1.71e-12 ***
+## poly(temp_503_449_resid, 2)2  1.668e+01  2.626e+00   6.350 2.32e-10 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.626 on 5632 degrees of freedom
+## Multiple R-squared:  0.01579,	Adjusted R-squared:  0.01544 
+## F-statistic: 45.17 on 2 and 5632 DF,  p-value: < 2.2e-16
+```
+
+```r
+ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
+    geom_point(size = 1, shape = 16, alpha = 0.1) +
+    geom_smooth(method = "lm", formula = "y ~ poly(x,2)", col = "black") +
+    xlab("Temperature (503-449) residuals") +
+    ylab("Weight residuals") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    )
+```
+
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+
+Temperature 145-65 linear
+
+```r
+resid_lm2 <- lm(weight_resid ~ temp_145_65_resid, ch_biom152)
+summary(resid_lm2)
 ```
 
 ```
@@ -1000,17 +1069,64 @@ summary(resid_lm)
 ```
 
 ```r
-ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
+ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
-    geom_smooth(method = "lm", formula = "y ~ x", col = "black")
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
+    xlab("Temperature (145-65) residuals") +
+    ylab("Weight residuals") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    )
 ```
 
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+
+Temperature 145-65 quadratic
+
+```r
+resid_qlm2 <- lm(weight_resid ~ poly(temp_145_65_resid, 2), ch_biom152)
+summary(resid_qlm2)
+```
+
+```
+## 
+## Call:
+## lm(formula = weight_resid ~ poly(temp_145_65_resid, 2), data = ch_biom152)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.9778 -1.7994  0.0271  1.8155 12.7953 
+## 
+## Coefficients:
+##                               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                  9.230e-16  3.503e-02   0.000   1.0000    
+## poly(temp_145_65_resid, 2)1 -2.237e+01  2.630e+00  -8.506   <2e-16 ***
+## poly(temp_145_65_resid, 2)2  4.626e+00  2.630e+00   1.759   0.0786 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.63 on 5632 degrees of freedom
+## Multiple R-squared:  0.01322,	Adjusted R-squared:  0.01287 
+## F-statistic: 37.72 on 2 and 5632 DF,  p-value: < 2.2e-16
+```
 
 ```r
 ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
-    geom_smooth(method = "lm", formula = "y ~ x", col = "black")
+    geom_smooth(method = "lm", formula = "y ~ poly(x, 2)", col = "black") +
+    xlab("Temperature (145-65) residuals") +
+    ylab("Weight residuals") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    )
 ```
 
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-20-2.png)<!-- -->
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-24-1.png)<!-- -->

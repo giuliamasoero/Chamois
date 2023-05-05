@@ -60,11 +60,15 @@ Overall, 34 017 animals were legally shot during the hunting period ranging from
 ch_biom <- read.csv("data/data.csv", stringsAsFactors = T, na = c("", "NA"))
 clim <- read.csv("data/swiss_weather.csv", stringsAsFactors = T, na = c("", "NA"))
 
+clim2 <- read.csv("data/swiss_weather_acquarossa.csv", stringsAsFactors = T, na = c("", "NA"))
+colnames(clim2) <- c("station", "meteosw", "Temp", "Temp2", "date", "year", "month")
+
 colnames(ch_biom) <- snakecase::to_snake_case(colnames(ch_biom))
 
 # fixing some variables
 ch_biom$date_ymd <- as.Date(paste(ch_biom$year, ch_biom$month, ch_biom$day), "%Y %m %d")
 clim$date_ymd <- as.Date(clim$date, "%Y/%m/%d")
+clim2$date_ymd <- as.Date(clim2$date, "%Y/%m/%d")
 ch_biom$year_f <- as.factor(ch_biom$year)
 ```
 
@@ -128,16 +132,38 @@ save(ch_mass_sw, file = "output/ch_mass_sw_sc.rda")
 ```
 
 
+```{r all climmod, eval = F}
+# create model with ABSOLUTE time window with temperature for ALWAYS period
+# for the period 1 Dec(-2) - 31May(-1)
+ch_mass_sw2 <- slidingwin(
+    baseline = ch_basemod,
+    xvar = list(Temp = clim2$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim2$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw2, file = "output/ch_mass_sw_sc_clim2.rda")
+```
+
+
 #### Investigating the models
 
 ```{r comparing mo2}
 load(file = "output/ch_mass_sw.rda")
+load(file = "output/ch_mass_sw_sc_clim2.rda")
 ```
 __The best linear and quadratic windows__
 
 For the sex + altitude model
 ```{r}
 ch_mass_sw$combos
+ch_mass_sw2$combos
 ```
 
 
@@ -145,6 +171,14 @@ ch_mass_sw$combos
 The 10 best linear models sorted by deltaAICc:
 ```{r}
 head(ch_mass_sw[[1]]$Dataset, 10)
+head(ch_mass_sw2[[1]]$Dataset, 10)
+```
+
+
+The 10 best quadratic models sorted by deltaAICc:
+```{r}
+head(ch_mass_sw[[2]]$Dataset, 10)
+head(ch_mass_sw2[[2]]$Dataset, 10)
 ```
 
 
@@ -162,9 +196,12 @@ I can add the new variable to the dataset and obtain the dates for the window:
 # The best supported climate variable can be attached
 # to the original dataset for further analyses
 ch_biom15$temp_503_449 <- ch_mass_sw[[2]]$BestModelData$climate
+
+ch_biom15$temp_545_449 <- ch_mass_sw2[[2]]$BestModelData$climate
 ```
 Dates of this window
 ```{r}
+as.Date("2022/09/24", format = "%Y/%m/%d") - 545
 as.Date("2022/09/24", format = "%Y/%m/%d") - 503
 as.Date("2022/09/24", format = "%Y/%m/%d") - 449
 ```
@@ -198,11 +235,37 @@ ch_mass_sw_lm2 <- slidingwin(
 save(ch_mass_sw_lm2, file = "output/ch_mass_sw_lm2.rda")
 ```
 
+
+```{r eval = F}
+ch_mass_sw2_lm2 <- slidingwin(
+    baseline = lm(
+        weight ~
+            sex + altitude_sc +
+            temp_545_449,
+        data = ch_biom15
+    ),
+    xvar = list(Temp = clim2$Temp),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(661, 0),
+    stat = "mean",
+    cdate = clim2$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw2_lm2, file = "output/ch_mass_sw2_lm2.rda")
+```
+
 ## results of this second slidingwin 
 
 ```{r}
 load("output/ch_mass_sw_lm2.rda")
+load("output/ch_mass_sw2_lm2.rda")
 ch_mass_sw_lm2$combos
+ch_mass_sw2_lm2$combos
+
 plotdelta(dataset = ch_mass_sw_lm2[[2]]$Dataset)
 
 
@@ -220,7 +283,8 @@ as.Date("2022/09/24", format = "%Y/%m/%d") - 65
 ch_final <- lm(
     weight ~
         sex + altitude +
-        poly((temp_503_449), 2) + poly((temp_145_65), 2),
+        poly((temp_503_449), 2) #+ poly((temp_145_65), 2)
+    ,
     data = ch_biom15
 )
 summary(ch_final)
@@ -535,13 +599,6 @@ plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
 
 
 
-```{r Fig. 2, warning = F, dev = c("png","tiff"), fig.height = 7, fig.width = 4, fig.cap = "Fig. 2 - SOMETHING"}
-grid.arrange(
-    plot_yr_temp, plot_yr_bm,
-    nrow = 2
-)
-```
-
 
 ## Residuals
 Testing for detrended 
@@ -559,18 +616,86 @@ ch_biom152 <- merge(
         "temp_145_65_resid"
     )]
 )
+```
 
-resid_lm <- lm(weight_resid ~ temp_503_449_resid, ch_biom152)
-summary(resid_lm)
-
-resid_lm <- lm(weight_resid ~ temp_145_65_resid, ch_biom152)
-summary(resid_lm)
-
+Temperature 503-449 linear
+```{r}
+resid_lm1 <- lm(weight_resid ~ temp_503_449_resid, ch_biom152)
+summary(resid_lm1)
 ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
-    geom_smooth(method = "lm", formula = "y ~ x", col = "black")
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
+    xlab("Temperature (503-449) residuals") +
+    ylab("Body mass residuals") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    )
+```
+
+Temperature 503-449 quadratic
+```{r}
+resid_qlm1 <- lm(weight_resid ~ poly(temp_503_449_resid, 2), ch_biom152)
+summary(resid_qlm1)
+ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
+    geom_point(size = 1, shape = 16, alpha = 0.1) +
+    geom_smooth(method = "lm", formula = "y ~ poly(x,2)", col = "black") +
+    xlab("Temperature (503-449) residuals") +
+    ylab("Body mass residuals") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    )
+```
+
+Temperature 145-65 linear
+```{r}
+resid_lm2 <- lm(weight_resid ~ temp_145_65_resid, ch_biom152)
+summary(resid_lm2)
+ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
+    geom_point(size = 1, shape = 16, alpha = 0.1) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
+    xlab("Temperature (145-65) residuals") +
+    ylab("Body mass residuals") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    )
+```
+
+Temperature 145-65 quadratic
+```{r}
+resid_qlm2 <- lm(weight_resid ~ poly(temp_145_65_resid, 2), ch_biom152)
+summary(resid_qlm2)
 
 ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
-    geom_smooth(method = "lm", formula = "y ~ x", col = "black")
+    geom_smooth(method = "lm", formula = "y ~ poly(x, 2)", col = "black") +
+    xlab("Temperature (145-65) residuals") +
+    ylab("Body mass residuals") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    )
+```
+
+
+
+```{r Fig. 2, warning = F, dev = c("png","tiff"), fig.height = 9, fig.width = 4, fig.cap = "Fig. 2 - SOMETHING"}
+grid.arrange(
+    plot_yr_temp, plot_yr_bm, resid_qlm1,
+    nrow = 3
+)
 ```

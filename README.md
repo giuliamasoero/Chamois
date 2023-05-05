@@ -1,23 +1,6 @@
 # Chamois
 
----> ho appena cambiato il file aggiungendo YEAR alle cose, detrending
-
-- organizzare analisi
-- vedere per correlazione tra i tre periodi di tempo
-  - gestation n.s. in entrambi i casi. Gli altri due periodi di tempo sembrano correlati.
-  - come sono correlati? + o -? se capisco bene sono a circa 1 anno di distanza o 10 mesi circa, c'è temporal correlation tra questi due periodi? potrebbe influenzare i risultati.
-- intro almost written:
-  - da finire perchè questo articolo è nuovo e figo
-- matmet, molto da fare
-  - study system quasi finito
-  - stats to finish when analyses are done.
-- results -> to finish when analyses are done.
-- discussion...
-
-UPDATE before costa Rica
-Pierre is dealing with using year or no in the analyses
-I tried without year in the model (simplest model) to look also for other windows that are not correlated and it founds another window in a period that is quite interesting!!
-Most recent email regarding the ms:
+I am updating the models with the new weather station from Acquarossa / Comprovasco
 
 Hello Pierre,
 
@@ -35,4 +18,4 @@ I think, should you be interested to see if the effects are driven by climatic e
 
 If the relationship is not anymore present, it’s difficult to conclude whether the change in mass may or may not be caused by a change in temperature
 
-“ A significant relationship between year-detrended climate and phenology variables (i.e., the residuals) indicates that year is not confounding the original climate–phenology relationship. In contrast, if there is no relationship between year-detrended climate and phenology variables, then the effects of year and climate on phenology cannot be disentangled given the available observational data from [[https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690)](%5B<https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690%5D(https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690))> “
+“ A significant relationship between year-detrended climate and phenology variables (i.e., the residuals) indicates that year is not confounding the original climate–phenology relationship. In contrast, if there is no relationship between year-detrended climate and phenology variables, then the effects of year and climate on phenology cannot be disentangled given the available observational data from [[https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690)](%5B[https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690%5D(https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690))](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690%5D(https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.1690))) “
