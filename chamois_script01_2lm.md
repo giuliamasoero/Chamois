@@ -8,7 +8,7 @@ author:
             affiliation: 
           - name: Pierre Bize
             affiliation: Swiss Ornithological Institute, CH-6204 Sempach, Switzerland
-date: "Last compiled on 05 May 2023"
+date: "Last compiled on 23 May 2023"
 output:
   html_document:
     code_folding: hide
@@ -35,13 +35,111 @@ Supplementary materials and codes for the manuscript.
 ```r
 # load the packages
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(snakecase)
 library(climwin)
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```
+## Loading required package: gridExtra
+```
+
+```
+## 
+## Attaching package: 'gridExtra'
+```
+
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
+```
+
+```
+## Loading required package: Matrix
+```
+
+```
+## To learn how to use climwin see our vignette. 
+## See help documentation and release notes for details on changes.
+```
+
+```r
 library(tidyr)
+```
+
+```
+## 
+## Attaching package: 'tidyr'
+```
+
+```
+## The following objects are masked from 'package:Matrix':
+## 
+##     expand, pack, unpack
+```
+
+```r
 library(ggplot2)
 library(effects)
+```
+
+```
+## Loading required package: carData
+```
+
+```
+## lattice theme set by effectsTheme()
+## See ?effectsTheme for details.
+```
+
+```r
 library(lme4)
 library(lmerTest)
+```
+
+```
+## 
+## Attaching package: 'lmerTest'
+```
+
+```
+## The following object is masked from 'package:lme4':
+## 
+##     lmer
+```
+
+```
+## The following object is masked from 'package:stats':
+## 
+##     step
+```
+
+```r
+library(stringr)
 ```
 
 R session information is printed here for repeatability.
@@ -51,78 +149,60 @@ sessionInfo()
 ```
 
 ```
-## R version 4.2.2 (2022-10-31)
+## R version 4.3.0 (2023-04-21)
 ## Platform: aarch64-apple-darwin20 (64-bit)
 ## Running under: macOS Ventura 13.3.1
 ## 
 ## Matrix products: default
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRlapack.dylib
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: Europe/Zurich
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] sjPlot_2.8.12    lmerTest_3.1-3   lme4_1.1-31      effects_4.2-2   
-##  [5] carData_3.0-5    tidyr_1.2.1      climwin_1.2.3    Matrix_1.5-3    
-##  [9] gridExtra_2.3    ggplot2_3.4.0    snakecase_0.11.0 dplyr_1.0.10    
+##  [1] stringr_1.5.0    lmerTest_3.1-3   lme4_1.1-33      effects_4.2-2    carData_3.0-5    tidyr_1.3.0      climwin_1.2.3    Matrix_1.5-4     gridExtra_2.3   
+## [10] ggplot2_3.4.2    snakecase_0.11.0 dplyr_1.1.2     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-161        lubridate_1.9.1     insight_0.18.8     
-##  [4] evd_2.3-6.1         numDeriv_2016.8-1.1 bslib_0.4.2        
-##  [7] tools_4.2.2         backports_1.4.1     utf8_1.2.2         
-## [10] R6_2.5.1            sjlabelled_1.2.0    vipor_0.4.5        
-## [13] DBI_1.1.3           mgcv_1.8-41         colorspace_2.1-0   
-## [16] nnet_7.3-18         withr_2.5.0         tidyselect_1.2.0   
-## [19] emmeans_1.8.4-1     compiler_4.2.2      performance_0.10.2 
-## [22] cli_3.6.0           sass_0.4.5          labeling_0.4.2     
-## [25] bayestestR_0.13.0   scales_1.2.1        mvtnorm_1.1-3      
-## [28] systemfonts_1.0.4   stringr_1.5.0       httpgd_1.3.0       
-## [31] digest_0.6.31       minqa_1.2.5         rmarkdown_2.20     
-## [34] pkgconfig_2.0.3     htmltools_0.5.4     MuMIn_1.47.1       
-## [37] highr_0.10          fastmap_1.1.0       rlang_1.0.6        
-## [40] jquerylib_0.1.4     farver_2.1.1        generics_0.1.3     
-## [43] jsonlite_1.8.4      magrittr_2.0.3      parameters_0.20.1  
-## [46] Rcpp_1.0.10         ggbeeswarm_0.7.1    munsell_0.5.0      
-## [49] fansi_1.0.4         lifecycle_1.0.3     stringi_1.7.12     
-## [52] yaml_2.3.7          MASS_7.3-58.2       plyr_1.8.8         
-## [55] grid_4.2.2          sjmisc_2.8.9        lattice_0.20-45    
-## [58] cowplot_1.1.1       ggeffects_1.1.4     splines_4.2.2      
-## [61] sjstats_0.18.2      knitr_1.41          pillar_1.8.1       
-## [64] boot_1.3-28.1       estimability_1.4.1  effectsize_0.8.2   
-## [67] stats4_4.2.2        glue_1.6.2          evaluate_0.20      
-## [70] mitools_2.4         modelr_0.1.10       vctrs_0.5.2        
-## [73] nloptr_2.0.3        gtable_0.3.1        purrr_1.0.1        
-## [76] reshape_0.8.9       assertthat_0.2.1    datawizard_0.6.5   
-## [79] cachem_1.0.6        xfun_0.36           xtable_1.8-4       
-## [82] broom_1.0.2         survey_4.1-1        coda_0.19-4        
-## [85] later_1.3.0         survival_3.5-0      RcppRoll_0.3.0     
-## [88] tibble_3.1.8        beeswarm_0.4.0      timechange_0.2.0   
-## [91] ellipsis_0.3.2
+##  [1] sass_0.4.6          utf8_1.2.3          generics_0.1.3      stringi_1.7.12      lattice_0.21-8      digest_0.6.31       magrittr_2.0.3     
+##  [8] timechange_0.2.0    evaluate_0.21       grid_4.3.0          fastmap_1.1.1       plyr_1.8.8          jsonlite_1.8.4      nnet_7.3-18        
+## [15] DBI_1.1.3           reshape_0.8.9       survival_3.5-5      purrr_1.0.1         fansi_1.0.4         scales_1.2.1        numDeriv_2016.8-1.1
+## [22] jquerylib_0.1.4     cli_3.6.1           mitools_2.4         rlang_1.1.1         munsell_0.5.0       splines_4.3.0       withr_2.5.0        
+## [29] cachem_1.0.8        yaml_2.3.7          tools_4.3.0         nloptr_2.0.3        minqa_1.2.5         colorspace_2.1-0    MuMIn_1.47.5       
+## [36] boot_1.3-28.1       vctrs_0.6.2         R6_2.5.1            lubridate_1.9.2     stats4_4.3.0        lifecycle_1.0.3     MASS_7.3-58.4      
+## [43] insight_0.19.1      pkgconfig_2.0.3     pillar_1.9.0        bslib_0.4.2         gtable_0.3.3        RcppRoll_0.3.0      glue_1.6.2         
+## [50] Rcpp_1.0.10         xfun_0.39           tibble_3.2.1        tidyselect_1.2.0    knitr_1.42          survey_4.2-1        htmltools_0.5.5    
+## [57] nlme_3.1-162        rmarkdown_2.21      compiler_4.3.0      evd_2.3-6.1
 ```
 
 ## The datasets
 The data analysed in this study are the records of the Ticino hunting bags from 1992 to 2018. In Ticino, hunting starts at the beginning of September and the harvest plan is mostly completed within three weeks.
 
-Data were collected from the Alps in Ticino, the southernmost canton of Switzerland, over an area of 2700 km2 with an altitude varying from 250 to 2700 m asl. The climate in the mountain range is Alpine, with temperatures varying from mean temperatures of -12℃ in winter to mean temperatures of 15.5 ℃ in summer. The hottest and the sunniest month of the year is July with an average maximum temperature of 25℃, measured in the biggest city in the canton Lugano (World Weather & Climate Information, 2021). 
+Data were collected from the Alps in Ticino, the southernmost canton of Switzerland, over an area of 2700 km2 with an elevation varying from 250 to 2700 m asl. The climate in the mountain range is Alpine, with temperatures varying from mean temperatures of -12℃ in winter to mean temperatures of 15.5 ℃ in summer. The hottest and the sunniest month of the year is July with an average maximum temperature of 25℃, measured in the biggest city in the canton Lugano (World Weather & Climate Information, 2021). 
 
 Overall, 34 017 animals were legally shot during the hunting period ranging from an age of 0.5 to 22.5 years old. All animals were sexed, aged and weighted (eviscerated). Both males and females have horns all year-round, even though female ones tend to be shorter. For the estimation of the age of the shot chamois, measurement of the teeth and the growth rings of their horns were used (Schroder and Elsner-Schack 1985).
 
 
 ```r
 # load the data
-ch_biom <- read.csv("data/data.csv", stringsAsFactors = T, na = c("", "NA"))
-clim <- read.csv("data/swiss_weather.csv", stringsAsFactors = T, na = c("", "NA"))
+ch_biom <- read.csv("data/data.csv", stringsAsFactors = TRUE, na = c("", "NA"))
+clim <- read.csv("data/swiss_weather.csv", stringsAsFactors = TRUE, na = c("", "NA", "-"))
 
 colnames(ch_biom) <- snakecase::to_snake_case(colnames(ch_biom))
 
 # fixing some variables
 ch_biom$date_ymd <- as.Date(paste(ch_biom$year, ch_biom$month, ch_biom$day), "%Y %m %d")
-clim$date_ymd <- as.Date(clim$date, "%Y/%m/%d")
+clim$date_ymd <- as.Date(clim$date, "%d/%m/%y")
 ch_biom$year_f <- as.factor(ch_biom$year)
 ```
+
 
 ### Subset
 
@@ -148,12 +228,78 @@ ch_biom15$year_sc <- scale(ch_biom15$year)
 ```
 
 
-# Statistical Analysis
+# Supplementary Material 1
+
+## Weather correlations
+
+Daily mean ambient temperature (℃) from 1990 until 2018 (all the years needed for the analysis) was obtained from a Swiss meteorological station in the city of Lugano (273 m asl), within the harvesting area. 
+
+As this weather station is at a lower elevation compared to the harvesting area of the Chamois, we tested here for correlations with 2 higher elevation stations, both located close to the town of Acquarossa. 
+
+The first one is located in Comprovasco (Coordinates: 714984/146451, Elevation: 575m a.s.l). 
+
+
+```r
+cor.test(clim$Temp, clim$Temp_Comprovasco, method = "pearson", na.action = "omit")
+```
+
+```
+## 
+## 	Pearson's product-moment correlation
+## 
+## data:  clim$Temp and clim$Temp_Comprovasco
+## t = 478.83, df = 7653, p-value < 2.2e-16
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.9829776 0.9844254
+## sample estimates:
+##       cor 
+## 0.9837175
+```
+
+```r
+plot(clim$Temp, clim$Temp_Comprovasco)
+```
+
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+The second one is located on the Cima del Simano (Coordinates: 717775/146825, Elevation: 2580m a.s.l). 
+
+
+```r
+cor.test(clim$Temp, clim$Temp_Simano, method = "pearson", na.action = "omit")
+```
+
+```
+## 
+## 	Pearson's product-moment correlation
+## 
+## data:  clim$Temp and clim$Temp_Simano
+## t = 151.3, df = 8283, p-value < 2.2e-16
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.8510851 0.8625318
+## sample estimates:
+##      cor 
+## 0.856914
+```
+
+```r
+plot(clim$Temp, clim$Temp_Simano)
+```
+
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+As both weather station present high correlation values with the station of Lugano, we decided to use this last weather station in the models as it includes all the years necessary for the analyses
+
+
+
+# Supplementary Material 2
 
 As the use of arbitrary climate periods do not always explain the biological response in the best way possible (van de Pol et al. 2016), we investigated the variation weight of 1.5-year-old individuals in relation to the variation of mean ambient temperature using the R package climwin, and the function slidingwin which detects the exact time window when a biological variable is most strongly affected by climate (Bailey and van de Pol 2016). 
-The overall approach for the climwin analysis is to compare the support by the data for competing hypotheses and to formalize them into regression models (van de Pol et al., 2016). Competing models are based upon a baseline model (without the addition of weather effects) and ranked using the ΔAICc, or the difference in terms of the Akaike Information Criterion values calculated for a small sample size between the baseline model and the model of interest. The model with the best support from the data has the lowest ΔAICc among competing models. The baseline model was a linear model with the body mass of the yearling chamois in relation to sex and elevation. The function slidingwin creates a candidate set of competing models testing windows of different lengths for the weather variable of interest, in this study the mean daily ambient temperature (℃). Non-linear effects of temperature on body weight were taken into account by checking for both linear and quadratic trends. As most of the chamois was shot during a two-week period at the end of September we chose an absolute time window for the analyses instead of an individual specific time window. As reference day we chose the last date of the shooting period (September 24th) and we looked for windows between September 24th and 661 days before (December 1st of 2 years before) to include the three critical periods of a young chamois life: gestation, lactation and yearling.  
+The overall approach for the climwin analysis is to compare the support by the data for competing hypotheses and to formalize them into regression models (van de Pol et al., 2016). Competing models are based upon a baseline model (without the addition of weather effects) and ranked using the ΔAICc, or the difference in terms of the Akaike Information Criterion values calculated for a small sample size between the baseline model and the model of interest. The model with the best support from the data has the lowest ΔAICc among competing models. The baseline model was a linear model with the body mass of the yearling chamois in relation to sex and elevation. The function slidingwin creates a candidate set of competing models testing windows of different lengths for the weather variable of interest, in this study the mean daily ambient temperature (°C). Non-linear effects of temperature on body weight were taken into account by checking for both linear and quadratic trends. As most of the chamois was shot during a two-week period at the end of September we chose an absolute time window for the analyses instead of an individual specific time window. As reference day we chose the last date of the shooting period (September 24th) and we looked for windows between September 24th and 661 days before (December 1st of 2 years before) to include the three critical periods of a young chamois life: gestation, lactation and yearling.  
 
-## Selection of the base model
+## Base model
 
 
 ```r
@@ -199,7 +345,7 @@ load(file = "output/ch_mass_sw.rda")
 ```
 __The best linear and quadratic windows__
 
-For the sex + altitude model
+For the sex + elevation model
 
 ```r
 ch_mass_sw$combos
@@ -233,13 +379,13 @@ The deltaAIC plot for linear and quadratic:
 plotdelta(dataset = ch_mass_sw[[1]]$Dataset)
 ```
 
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 ```r
 plotdelta(dataset = ch_mass_sw[[2]]$Dataset)
 ```
 
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-5-2.png)<!-- -->
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
 
 __Choosing the simplest model__
 
@@ -250,6 +396,7 @@ I can add the new variable to the dataset and obtain the dates for the window:
 # to the original dataset for further analyses
 ch_biom15$temp_503_449 <- ch_mass_sw[[2]]$BestModelData$climate
 ```
+
 Dates of this window
 
 ```r
@@ -316,7 +463,7 @@ ch_mass_sw_lm2$combos
 plotdelta(dataset = ch_mass_sw_lm2[[2]]$Dataset)
 ```
 
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 ```r
 ch_biom15$temp_145_65 <- ch_mass_sw_lm2[[2]]$BestModelData$climate
@@ -383,15 +530,21 @@ summary(ch_final)
 
 ```r
 library(sjPlot)
+```
 
+```
+## Learn more about sjPlot with 'browseVignettes("sjPlot")'.
+```
+
+```r
 sjPlot::tab_model(ch_final,
     file = "Tables/Model_res.doc",
     string.est = "Estimate",
     string.se = "SE",
-    show.ci = F,
-    show.se = T,
-    show.stat = T,
-    show.df = F,
+    show.ci = FALSE,
+    show.se = TRUE,
+    show.stat = TRUE,
+    show.df = FALSE,
     digits = 3,
     digits.rsq = 2
 )
@@ -510,7 +663,7 @@ plot(ch_biom15$temp_503_449, ch_biom15$temp_145_65)
 
 ![](chamois_script01_2lm_files/figure-html/corr-1.png)<!-- -->
 
-Figure
+### Figure
 
 ```r
 eff_data <- data.frame(effects::effect("poly(temp_503_449, 2)",
@@ -524,12 +677,7 @@ plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    xlab("Temperature (°C; 503-449)") +
-    #    scale_x_continuous(
-    #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
-    #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
-    #        limits = c(year_sc$year_sc[1], year_sc$year_sc[23])
-    #    ) +
+    xlab("Temperature (°C) \n May 9 - July 2, birth year") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -560,12 +708,7 @@ plot_temp2 <- ggplot(eff_data, aes(x = temp_145_65, y = fit)) +
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    xlab("Temperature (°C; 145-65)") +
-    #    scale_x_continuous(
-    #        breaks = c(year_sc$year_sc[c(seq(1, 23, 4))]),
-    #        labels = c(year_sc$year[c(seq(1, 23, 4))]),
-    #        limits = c(year_sc$year_sc[1], year_sc$year_sc[23])
-    #    ) +
+    xlab("Temperature (°C) \n May 2 - July 21, harvest year") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -595,7 +738,7 @@ plot_alt <- ggplot(eff_data, aes(x = altitude, y = fit)) +
         data = eff_data, aes(ymin = lower, ymax = upper),
         linetype = 0, alpha = .4
     ) +
-    xlab("Altitude (m a.s.l)") +
+    xlab("Elevation (m a.s.l)") +
     ylab("") +
     scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
     scale_x_continuous(limits = c(200, 2600), breaks = seq(200, 2600, 600)) +
@@ -612,43 +755,13 @@ plot_alt <- ggplot(eff_data, aes(x = altitude, y = fit)) +
         size = 1, shape = 16, alpha = 0.1
     ) +
     annotate("text", x = 300, y = 27, label = "(c)")
-
-
-eff_data <- data.frame(effects::effect("sex",
-    ch_final,
-    partial.residuals = T
-))
-par_col_af <- "darkorange3"
-par_col_am <- "steelblue"
-plot_sex <- ggplot(ch_biom15, aes(x = sex, y = weight, fill = sex)) +
-    geom_boxplot(outlier.shape = NA, alpha = 0.5) +
-    xlab("Sex") +
-    theme(
-        legend.position = "none",
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
-        axis.line = element_line(colour = "black")
-    ) +
-    ggbeeswarm::geom_quasirandom(
-        data = ch_biom15,
-        aes(x = sex, y = weight, colour = "black"),
-        size = 1, shape = 16, alpha = 0.07
-    ) +
-    ylab("") +
-    scale_fill_manual(values = c(par_col_af, par_col_am)) +
-    scale_color_manual(values = "black") +
-    scale_y_continuous(limits = c(6, 27), breaks = seq(0, 35, 3)) +
-    scale_x_discrete(labels = c("F", "M")) +
-    annotate("text", x = 0.6, y = 27, label = "(d)") +
-    geom_boxplot(outlier.shape = NA, alpha = 0.2)
 ```
 
 
 
 ```r
 cowplot::plot_grid(
-    plot_temp, plot_temp2, plot_alt, # plot_sex,
+    plot_temp, plot_temp2, plot_alt,
     nrow = 1, align = "v"
 )
 ```
@@ -709,7 +822,7 @@ pvalue(
 ```
 
 
-## Long term trends
+## Long term changes
 
 
 ```r
@@ -717,8 +830,11 @@ data_temp <- subset(ch_biom15, !duplicated(year))
 temp_lm <- lm(temp_503_449 ~ year, data_temp)
 temp2_lm <- lm(temp_145_65 ~ year, data_temp)
 weight_lm <- lm(weight ~ year, ch_biom15)
+```
 
+Correlation between the two weather variables
 
+```r
 cor.test(data_temp$temp_503_449, data_temp$temp_145_65, method = "pearson")
 ```
 
@@ -740,7 +856,7 @@ cor.test(data_temp$temp_503_449, data_temp$temp_145_65, method = "pearson")
 plot(data_temp$temp_503_449, data_temp$temp_145_65)
 ```
 
-![](chamois_script01_2lm_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](chamois_script01_2lm_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 
 Decrease in weight (kg):
 
@@ -753,7 +869,7 @@ Decrease in weight (kg):
 ##   -2.919858
 ```
 
-Increase in temperature (°C):
+Increase in temperature (°C) for the period May 9 - July 2:
 
 ```r
 (temp_lm$coeff[1] + 2018 * temp_lm$coeff[2]) - (temp_lm$coeff[1] + 1992 * temp_lm$coeff[2])
@@ -764,7 +880,7 @@ Increase in temperature (°C):
 ##     1.61847
 ```
 
-Increase in temperature (°C):
+Increase in temperature (°C) for the period May 2 - July 21:
 
 ```r
 (temp2_lm$coeff[1] + 2018 * temp2_lm$coeff[2]) - (temp2_lm$coeff[1] + 1992 * temp2_lm$coeff[2])
@@ -784,10 +900,10 @@ sjPlot::tab_model(temp_lm,
     file = "Tables/model_temp_503_449s.doc",
     string.est = "Estimate",
     string.se = "SE",
-    show.ci = F,
-    show.se = T,
-    show.stat = T,
-    show.df = F,
+    show.ci = FALSE,
+    show.se = TRUE,
+    show.stat = TRUE,
+    show.df = FALSE,
     digits = 4,
     digits.rsq = 4
 )
@@ -839,10 +955,10 @@ sjPlot::tab_model(weight_lm,
     file = "Tables/model_weight.doc",
     string.est = "Estimate",
     string.se = "SE",
-    show.ci = F,
-    show.se = T,
-    show.stat = T,
-    show.df = F,
+    show.ci = FALSE,
+    show.se = TRUE,
+    show.stat = TRUE,
+    show.df = FALSE,
     digits = 4,
     digits.rsq = 4
 )
@@ -892,7 +1008,7 @@ plot_yr_temp <- ggplot(data_temp, aes(x = year, y = temp_145_65)) +
     geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
     scale_x_continuous(limits = c(1992, 2018), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
     xlab("") +
-    ylab("Temperature (°C; 145-65)") +
+    ylab("Temperature (°C) \n May 2 - July 21") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -908,7 +1024,7 @@ plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
     geom_smooth(method = "lm", formula = "y ~ x", col = "black") +
     scale_x_continuous(limits = c(1992, 2018), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
     xlab("Year") +
-    ylab("Body mass of yearling Alpine chamois (kg)") +
+    ylab("Body mass (kg)") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -924,7 +1040,6 @@ plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
 
 
 ## Residuals
-Testing for detrended 
 
 
 ```r
@@ -943,7 +1058,8 @@ ch_biom152 <- merge(
 ```
 
 
-Temperature 503-449 quadratic
+__Temperature between May 9 - July 2__
+
 
 ```r
 resid_qlm1 <- lm(weight_resid ~ poly(temp_503_449_resid, 2), ch_biom152)
@@ -961,7 +1077,7 @@ summary(resid_qlm1)
 ## 
 ## Coefficients:
 ##                                Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                  -2.560e-15  3.499e-02   0.000        1    
+## (Intercept)                  -2.012e-15  3.499e-02   0.000        1    
 ## poly(temp_503_449_resid, 2)1 -1.857e+01  2.626e+00  -7.072 1.71e-12 ***
 ## poly(temp_503_449_resid, 2)2  1.668e+01  2.626e+00   6.350 2.32e-10 ***
 ## ---
@@ -976,8 +1092,8 @@ summary(resid_qlm1)
 plot_resid_qlm1 <- ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_resid)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
     geom_smooth(method = "lm", formula = "y ~ poly(x,2)", col = "black") +
-    xlab("Temperature (°C; 503-449) residuals") +
-    ylab("Body mass residuals") +
+    xlab("Temperature (°C) residuals \n May 9 - July 2") +
+    ylab("Body mass (kg) residuals") +
     theme(
         legend.position = "none",
         panel.grid.major = element_blank(),
@@ -987,10 +1103,18 @@ plot_resid_qlm1 <- ggplot(ch_biom152, aes(x = temp_503_449_resid, y = weight_res
     ) +
     scale_x_continuous(limits = c(-2, 3.5)) +
     annotate("text", x = 1992, y = 30, label = "(c)")
+
+plot_resid_qlm1
 ```
 
+```
+## Warning: Removed 1 rows containing missing values (`geom_text()`).
+```
 
-Temperature 145-65 quadratic
+![Fig. Detrended values in (c) are residuals from linear models in Fig. 2 (a) and (b). Each dot is one observation; fitted lines are shown with 95% confidence intervals (shaded areas).](chamois_script01_2lm_files/figure-html/unnamed-chunk-24-1.png)
+
+
+__Temperature between May 2 - July 21__
 
 ```r
 resid_qlm2 <- lm(weight_resid ~ poly(temp_145_65_resid, 2), ch_biom152)
@@ -1008,7 +1132,7 @@ summary(resid_qlm2)
 ## 
 ## Coefficients:
 ##                               Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                  9.230e-16  3.503e-02   0.000   1.0000    
+## (Intercept)                  1.358e-15  3.503e-02   0.000   1.0000    
 ## poly(temp_145_65_resid, 2)1 -2.237e+01  2.630e+00  -8.506   <2e-16 ***
 ## poly(temp_145_65_resid, 2)2  4.626e+00  2.630e+00   1.759   0.0786 .  
 ## ---
@@ -1020,10 +1144,20 @@ summary(resid_qlm2)
 ```
 
 ```r
+car::Anova(resid_qlm2)
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sum Sq"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Df"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["F value"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"521.7049","2":"2","3":"37.71999","4":"5.335345e-17","_rn_":"poly(temp_145_65_resid, 2)"},{"1":"38948.0805","2":"5632","3":"NA","4":"NA","_rn_":"Residuals"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+```r
 plot_resid_qlm2 <- ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resid)) +
     geom_point(size = 1, shape = 16, alpha = 0.1) +
     geom_smooth(method = "lm", formula = "y ~ poly(x, 2)", col = "black") +
-    xlab("Temperature (°C; 145-65) residuals") +
+    xlab("Temperature (°C) residuals \n May 2 - July 21") +
     ylab("Body mass (kg) residuals") +
     theme(
         legend.position = "none",
@@ -1035,9 +1169,14 @@ plot_resid_qlm2 <- ggplot(ch_biom152, aes(x = temp_145_65_resid, y = weight_resi
     scale_y_continuous(limits = c(-10, 15), breaks = seq(-10, 15, 5)) +
     scale_x_continuous(limits = c(-1.5, 3.5), breaks = seq(-1.5, 3.5, 1)) +
     annotate("text", x = -1.5, y = 15, label = "(c)")
+
+plot_resid_qlm2
 ```
 
+![Fig. Detrended values in (c) are residuals from linear models in Fig. 2 (a) and (b). Each dot is one observation; fitted lines are shown with 95% confidence intervals (shaded areas).](chamois_script01_2lm_files/figure-html/unnamed-chunk-25-1.png)
 
+
+__Figure for the manuscript__
 
 
 ```r
@@ -1047,4 +1186,4 @@ cowplot::plot_grid(
 )
 ```
 
-![Fig. 2 - SOMETHING](chamois_script01_2lm_files/figure-html/Fig. 2-1.png)
+![Fig. 2 - Annual trend of (a) average temperature between May 2 and July 21 and (b) body mass of harvested 1.5-year-old Alpine chamois between 1992 and 2018, and (c) year-detrended relationship between body mass and temperature. Detrended values in (c) are residuals from linear models in (a) and (b). Each dot is one observation (darker dots representing a higher number of observations in (b)); fitted lines are shown with 95% confidence intervals (shaded areas).](chamois_script01_2lm_files/figure-html/Fig. 2-1.png)
