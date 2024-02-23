@@ -1,0 +1,849 @@
+---
+title: "Shrinking Alpine chamois: Higher spring temperatures over the last 27 years in Southern Switzerland are linked to a 3 kg reduction in body mass of yearling chamois"
+subtitle: "Supplementary materials and codes for the manuscript"
+
+date: "Last compiled on `r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+    number_sections: yes
+    df_print: paged
+    theme: cerulean
+    collapsed: no
+    keep_md: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '4'
+    latex_engine: xelatex
+editor_options: 
+  chunk_output_type: console
+---
+
+
+# Authors' list and affiliations
+
+Giulia Masoero^1,2*, Kristina Georgieva Gencheva^3, Noémie Ioset^4, Louis-Félix Bersier^4, Federico Tettamanti^5,6, Pierre Bize^2,3
+
+^1 Department of Biology, University of Ottawa, Canada
+
+^2 Swiss Ornithological Institute, Seerose 1, 6204 Sempach, Switzerland 
+
+^3 School of Biological Sciences, University of Aberdeen, United Kingdom
+
+^4 Department of Biology, University of Fribourg, Chemin du Musée 10, Fribourg, Switzerland
+
+^5 Studio alpino Tettamanti, La Campagna d Zora 15, 6678 Lodano, Switzerland
+
+^6 Ufficio della Caccia e della Pesca del Cantone Ticino, Bellinzona, Switzerland (old address)
+
+__*Corresponding author__: giulia.masoero@gmail.com
+
+
+## ORCIDs
+
+__GM__: 0000-0003-4429-7726
+
+__LFB__: 0000-0001-9552-8032
+
+__PB__: 0000-0002-6759-4371
+
+
+# Abstract and keywords
+
+
+__Abstract__: Although climate change is considered to be partly responsible for the size change observed in numerous species, the relevance of this hypothesis for the ungulates remains debated. We used body mass measurements of 5635 yearlings (i.e. 1.5 years old) Alpine chamois (_Rupicapra rupicapra_) harvested in September in the Swiss Alps (Ticino canton) from 1992 to 2018. In our study area, during this period, yearlings shrank by ca. 3 kg while temperatures between May and July rose by 1.7°C. We identified that warmer temperatures during birth and the early suckling period (May 9 to July 2 in the year of birth) had the strongest impact on yearling mass. Further analyses of year-detrended mass and temperature data indicate that this result was not simply due to changes in both variables over years, but that increases in temperature during this particularly sensitive time window for development and growth are responsible for the decrease in body mass of yearling chamois. Altogether, our results suggest that rising temperatures in the Alpine regions could significantly affect the ecology and evolution of this wild ungulate.
+
+
+__Keywords__: climate change, climwin, ungulates, life stages, temperature, elevation
+
+__Journal__: Royal Society Open Science
+
+
+
+
+
+
+# Libraries and datasets
+
+## Libraries
+```{r lib_data}
+knitr::opts_chunk$set(
+    fig.path = "figures/",
+    dev = c("png", "tiff", "postscript", "pdf"), # for papers ("png", "tiff")
+    dpi = 300
+)
+
+# load the packages
+library(dplyr)
+library(snakecase)
+library(climwin)
+library(tidyr)
+library(ggplot2)
+library(effects)
+library(lme4)
+library(lmerTest)
+library(stringr)
+library(MuMIn)
+```
+
+## Session information
+R session information is printed here for repeatability.
+```{r session information}
+sessionInfo()
+```
+
+## The datasets
+The data analysed in this study are the records of the Ticino hunting bags from 1992 to 2018. In Ticino, hunting starts at the beginning of September and the harvest plan is mostly completed within three weeks.
+
+Data were collected from the Alps in Ticino, the southernmost canton of Switzerland, over an area of 2700 km2 with an elevation varying from 250 to 2700 m asl. The climate in the mountain range is Alpine, with temperatures varying from mean temperatures of -12°C in winter to mean temperatures of 15.5°C in summer. The hottest and the sunniest month of the year is July with an average maximum temperature of 25°C, measured in the biggest city in the canton Lugano (World Weather & Climate Information, 2021). 
+
+Overall, 34 017 animals were legally shot during the hunting period ranging from an age of 0.5 to 22.5 years old. All animals were sexed, aged and weighted (eviscerated). Both males and females have horns all year-round, even though female ones tend to be shorter. For the estimation of the age of the shot chamois, measurement of the teeth and the growth rings of their horns were used (Schroder and Elsner-Schack 1985).
+
+```{r}
+# load the data
+ch_biom <- read.csv("data_chamois_yearlings.csv", stringsAsFactors = TRUE, na = c("", "NA"))
+clim <- read.csv("data_swiss_weather.csv", stringsAsFactors = TRUE, na = c("", "NA", "-"))
+
+colnames(ch_biom) <- snakecase::to_snake_case(colnames(ch_biom))
+
+# fixing some variables
+ch_biom$date_ymd <- as.Date(paste(ch_biom$year, ch_biom$month, ch_biom$day), "%Y %m %d")
+clim$date_ymd <- as.Date(clim$date, "%d/%m/%y")
+ch_biom$year_f <- as.factor(ch_biom$year)
+```
+
+
+### Subset
+
+ Due to the nature of the dataset, only information on individuals shot in September was available, so for the purpose of this study, only a 1.5-year-old animals were considered (7127 individuals, 3257 females and 3870 males). As chamois are usually weaned at 3 to 6 months of age (Scornavacca et al. 2018), a 1.5-year-old individual has been feeding on their own for nearly a year, is fully grown but still very vulnerable to external abiotic and biotic threats due to the decrease in maternal care and increase in active grazing behaviour. 
+
+```{r, out.width="50%"}
+ch_biom15 <- ch_biom[, c("year", "year_f", "date_ymd", "elevation", "age", "sex", "weight")] %>%
+    drop_na()
+
+boxplot(ch_biom15$weight ~ ch_biom15$year)
+
+# standardising elevation
+ch_biom15$elevation_sc <- (ch_biom15$elevation - mean(ch_biom15$elevation, na.rm = TRUE)) /
+    sd(ch_biom15$elevation, na.rm = TRUE)
+```
+
+
+# Supplementary Material 1
+
+## Weather correlations
+
+Daily mean ambient temperature (°C) from 1990 until 2018 (all the years needed for the analysis) was obtained from a Swiss meteorological station in the city of Lugano (273 m asl), within the harvesting area. 
+
+As this weather station is at a lower elevation compared to the harvesting area of the Chamois, we tested here for correlations with 2 higher elevation stations, both located close to the town of Acquarossa. 
+
+The first one is located in Comprovasco (Coordinates: 714984/146451, Elevation: 575m a.s.l). 
+
+```{r, out.width="50%"}
+cor.test(clim$temp_mean_lugano, clim$temp_mean_comprovasco, method = "pearson", na.action = "omit")
+plot(clim$temp_mean_lugano, clim$temp_mean_comprovasco)
+```
+
+The second one is located on the Cima del Simano (Coordinates: 717775/146825, Elevation: 2580m a.s.l). 
+
+```{r, out.width="50%"}
+cor.test(clim$temp_mean_lugano, clim$temp_mean_simano, method = "pearson", na.action = "omit")
+plot(clim$temp_mean_lugano, clim$temp_mean_simano)
+```
+
+As both weather station present high correlation values with the station of Lugano, we decided to use this last weather station in the models as it includes all the years necessary for the analyses
+
+```{r, out.width="50%"}
+cor.test(clim$temp_mean_lugano, clim$temp_max_lugano, method = "pearson", na.action = "omit")
+plot(clim$temp_mean_lugano, clim$temp_max_lugano)
+```
+
+```{r, out.width="50%"}
+cor.test(clim$temp_mean_lugano, clim$temp_min_lugano, method = "pearson", na.action = "omit")
+plot(clim$temp_mean_lugano, clim$temp_min_lugano)
+```
+
+# Supplementary Material 2
+
+As the use of arbitrary climate periods do not always explain the biological response in the best way possible (van de Pol et al. 2016), we investigated the variation weight of yearling individuals in relation to the variation of mean ambient temperature using the R package climwin, and the function slidingwin which detects the exact time window when a biological variable is most strongly affected by climate (Bailey and van de Pol 2016). 
+
+The overall approach for the climwin analysis is to compare the support by the data for competing hypotheses and to formalize them into regression models (van de Pol et al., 2016). 
+
+Competing models are based upon a baseline model (called also null model, a model without weather effects) and ranked using the deltaAICc, or the difference in terms of the Akaike Information Criterion values calculated for a small sample size between the candidate model and baseline model. 
+
+Climwin presents the models using the deltaAICc value relative to the baseline model (AICc of the candidate model - AICc of the baseline model). Therefore, a model that is more supported than the baseline model will have a negative deltaAICc value. On the same hand the model with the best support from the data, usually with lowest AICc, will be shown as the model with lowest deltaAICc in the climwin output. 
+
+The baseline model was a linear model with the body mass of the yearling chamois in relation to sex and elevation. The function slidingwin creates a candidate set of competing models testing windows of different lengths for the weather variable of interest, in this study the mean daily ambient temperature (°C).  
+ 
+Non-linear effects of temperature on body weight were taken into account by checking for both linear and quadratic trends. This is mentioned in the climwin output as func = lin (only linear term) func = quad (linear and quadratic terms).
+
+As most of the chamois was shot during a two-week period at the end of September we chose an absolute time window for the analyses instead of an individual specific time window. As reference day we chose the last date of the shooting period (September 24th) and we looked for windows between September 24th and 662 days before (December 1st of 2 years before) to include the three critical periods of a young chamois life: gestation, lactation and yearling.  
+
+## Base model
+
+According to (van de Pol et al. 2016), we built a base model that includes variables that can affect the body size, i.e. elevation and sex.
+
+```{r basemod}
+ch_basemod <- lm(
+    weight ~
+        sex + elevation_sc,
+    data = ch_biom15
+)
+
+summary(ch_basemod)
+```
+
+
+## Climwin analysis
+
+### Finding the best window
+Using the function slidingwin allows to search for the best climatic window 
+
+```{r all climmod, eval = F}
+ch_mass_sw <- slidingwin(
+    baseline = ch_basemod,
+    xvar = list(
+        temp_mean = clim$temp_mean_lugano
+    ),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(662, 0),
+    stat = c("mean"),
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw, file = "climwin_mass_01.rda")
+```
+
+
+### Investigating the models
+
+```{r comparing mod1}
+load(file = "climwin_mass_01.rda")
+```
+
+### The best linear and quadratic windows
+
+The linear+quadratic term better explains the variation in the data (deltaAICc has the lowest value), sorted by deltaAICc such that the best supported model is on top. 
+
+To investigate any other tested hypothesis we can simply replace the number in the double square brackets with the corresponding list number.
+
+```{r}
+ch_mass_sw$combos %>% arrange(DeltaAICc)
+```
+
+AICc of the Best model with the linear+quadratic term
+```{r}
+MuMIn::AICc(ch_mass_sw[[2]]$BestModel)
+```
+
+AICc of the Best model with the linear term
+```{r}
+MuMIn::AICc(ch_mass_sw[[1]]$BestModel)
+```
+
+AICc of the baseline model (no climatic factor), used by the function _slidingwin_ as a reference to obtain the deltaAICc values plotted above:
+```{r}
+MuMIn::AICc(ch_basemod)
+```
+
+Difference in terms of AICc between the Best model and the baseline model
+```{r}
+MuMIn::AICc(ch_mass_sw[[2]]$BestModel) - MuMIn::AICc(ch_basemod)
+```
+
+DeltaAICc as obtained using the function _slidingwin_ in the climwin package
+```{r}
+ch_mass_sw[[2]]$Dataset$deltaAICc[1]
+```
+They are the same!
+
+### The 30 best quadratic models
+
+The 30 best windows for the linear+quadratic models sorted by deltaAICc. All models with the lowest AICc (delta AICc between -325.3275 and -320.4684) present very comparable windows:
+- WindowOpen and WindowClose similar (+- 3 days) to the one of the top model.
+
+```{r}
+head(ch_mass_sw[[2]]$Dataset, 30)
+```
+
+#### Windows plot
+
+It's possible to extract the time windows of all the best supported models (i.e. multi-model inference). This panel shows the opening and closing points of the time windows that were best supported by the data, here those models that made up 95% model confidence set. 
+```{r, out.width="50%"}
+plotwin(ch_mass_sw[[2]]$Dataset)
+```
+
+
+
+#### Delta plot
+The variation in deltaAICc between time windows can be better investigated using the following plot:
+
+```{r, out.width="50%"}
+plotdelta(dataset = ch_mass_sw[[2]]$Dataset, arrow = TRUE)
+```
+
+Warmer areas shows values with the lowest deltaAICc (i.e. "best models"). As explained by van de Pol et al., 2016, these deltaAICc landscapes of the different time windows shows multiple peaks (red areas) instead of a clear single peak. This can indicate the presence of multiple (e.g. possibly both long- and short-lag) weather signals within the same weather variable, but it can also occur due to collinearity or chance. 
+
+The evidence for multiple signals can be therefore investigated by adding the best supported of the weather windows to the baseline model, and re-fitting all the different time windows again: this tests whether there is still strong model support for the second best (e.g. short-lag) weather window once the other best supported (e.g. long-lag) weather window has been accounted for in the baseline model (here in the Step 2).
+
+
+
+#### Beta plot
+This panel shows the model support (deltaAICc) for all fitted time windows tried, shown for each combination of Window open (y-axis) and Window close (x-axis). Models with the lowest deltaAICc (red) are the best supported (colours show the deltaAICc levels compared to the null model, see legend). Strongly supported windows will often be grouped together. 
+```{r, out.width="50%"}
+plotbetas(ch_mass_sw[[2]]$Dataset, arrow = TRUE)
+```
+
+
+#### Autocollinearity
+
+Correlation between the mean temperature during the best supported time window and the mean temperature over all other time windows.
+
+```{r, eval = F}
+autocoll <- autowin(
+    reference = ch_mass_sw[[2]],
+    baseline = ch_basemod,
+    xvar = list(
+        temp_mean = clim$temp_mean_lugano
+    ),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(662, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = "quad",
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(autocoll, file = "climwin_autocall_tmean.rda")
+```
+
+```{r, out.width="50%"}
+load(file = "climwin_autocall_tmean.rda")
+plotcor(autocoll, type = "A", arrow = TRUE)
+```
+
+## Main results
+### The best window
+Dates of the best window (as if compared to year of harvest 2018)
+```{r}
+as.Date("2018/09/24", format = "%Y/%m/%d") - ch_mass_sw$combos$WindowOpen[[2]]
+as.Date("2018/09/24", format = "%Y/%m/%d") - ch_mass_sw$combos$WindowClose[[2]]
+```
+
+### The model
+
+I can add the new temperature variable for the extracted time window to the original dataset:
+```{r temp variable}
+# The best supported climate variable can be attached
+# to the original dataset for further analyses
+
+ch_biom15$temp_503_449 <- ch_mass_sw[[2]]$BestModelData$climate
+```
+
+```{r}
+ch_final <- lm(
+    weight ~
+        sex + elevation_sc +
+        temp_503_449 + I(temp_503_449^2),
+    data = ch_biom15
+)
+
+knitr::kable(car::Anova(ch_final),
+    caption =
+        "ANOVA Chi-square table", digits = 4
+)
+```
+
+
+Sex difference estimated by the model:
+```{r}
+emmeans::emmeans(ch_final, "sex")
+```
+
+#### Figure
+```{r all climmod2 fig}
+ch_final2 <- lm(
+    weight ~
+        sex + elevation +
+        temp_503_449 + I(temp_503_449^2),
+    data = ch_biom15
+)
+
+eff_data <- data.frame(effects::effect("temp_503_449",
+    ch_final2,
+    partial.residuals = TRUE
+))
+
+plot_temp <- ggplot(eff_data, aes(x = temp_503_449, y = fit)) +
+    geom_line(linewidth = 0.3) +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = 0.3
+    ) +
+    xlab("Temperature (°C) \n May 9 - July 2, birth year") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = temp_503_449, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    ylab("Body mass (kg)") +
+    scale_y_continuous(limits = c(6, 28), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(16.5, 22.5), breaks = seq(16.5, 22.5, 1)) +
+    annotate("text", x = 16.5, y = 28, label = "(a)")
+
+
+eff_data <- data.frame(effects::effect("elevation",
+    ch_final2,
+    partial.residuals = T
+))
+
+plot_alt <- ggplot(eff_data, aes(x = elevation, y = fit)) +
+    geom_line(linewidth = 0.3) +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = 0.3
+    ) +
+    xlab("Elevation (m a.s.l)") +
+    ylab("") +
+    scale_y_continuous(limits = c(6, 28), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(200, 2600), breaks = seq(200, 2600, 600)) +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = elevation, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    annotate("text", x = 200, y = 28, label = "(b)")
+```
+
+
+```{r Fig. 2, warning = FALSE, fig.height = 4, fig.width = 8, fig.cap = "Relationship between body mass of harvested 1.5-year-old Alpine chamois and (a) the average temperature between May 9 and July 2 of the birth year (suckling period), and (b) elevation (m a.s.l.). Each dot is one observation (darker dots represent a higher number of observations); fitted lines in (a) and (b) are shown with 95 % confidence intervals (shaded areas)."}
+cowplot::plot_grid(
+    plot_temp, plot_alt,
+    nrow = 1, align = "h"
+)
+```
+
+Note that the quadratic model is heuristic and does not imply that the relationship is parabolic over the whole range of temperatures.
+
+### Last step: Randwin
+
+Using randwin to randomize the identity of the chamois we are able to check if the window that was found before is actually important, or the relationship was just random.
+
+```{r alls random, eval = F}
+# Performing randamization to identify
+# likelyhood of of dignals occuring by chance
+
+ch_mass_rand100 <- randwin(
+    repeats = 100,
+    baseline = ch_basemod,
+    xvar = list(Temp = clim$temp_mean_lugano),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(662, 0),
+    stat = "mean",
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day",
+    window = "sliding"
+)
+save(ch_mass_rand100, file = "climwin_mass_randomization.rda")
+```
+
+```{r alls random p}
+load("climwin_mass_randomization.rda")
+
+pvalue(
+    datasetrand = ch_mass_rand100[[1]],
+    dataset = ch_mass_sw[[1]]$Dataset, metric = "C", sample.size = 27
+)
+pvalue(
+    datasetrand = ch_mass_rand100[[2]],
+    dataset = ch_mass_sw[[2]]$Dataset, metric = "C", sample.size = 50
+)
+```
+
+The randomization process shows that the window is actually important.
+
+## Long term changes
+
+```{r}
+data_temp <- subset(ch_biom15, !duplicated(year))
+temp_lm <- lm(temp_503_449 ~ year, data_temp)
+weight_lm <- lm(weight ~ year, ch_biom15)
+```
+
+```{r}
+knitr::kable(car::Anova(temp_lm),
+    caption =
+        "ANOVA Chi-square table", digits = 4
+)
+
+knitr::kable(car::Anova(weight_lm),
+    caption =
+        "ANOVA Chi-square table", digits = 4
+)
+```
+
+
+Decrease in weight (kg):
+```{r}
+(weight_lm$coeff[1] + 2018 * weight_lm$coeff[2]) - (weight_lm$coeff[1] + 1992 * weight_lm$coeff[2])
+```
+
+Increase in temperature (°C) for the period May 9 - July 2:
+```{r}
+(temp_lm$coeff[1] + 2018 * temp_lm$coeff[2]) - (temp_lm$coeff[1] + 1992 * temp_lm$coeff[2])
+```
+
+
+```{r}
+plot_yr_temp <- ggplot(data_temp, aes(x = year, y = temp_503_449)) +
+    geom_point(size = 1, shape = 16, alpha = 0.7) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black", linewidth = 0.3) +
+    scale_x_continuous(
+        limits = c(1992, 2018),
+        breaks = c(1992, 1997, 2002, 2007, 2013, 2018),
+        labels = c(1992, 1997, 2002, 2007, 2013, 2018) - 1
+    ) +
+    xlab("") +
+    ylab("Temperature (°C) \n May 9 - July 2, birth year") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    scale_y_continuous(limits = c(16.5, 22.5), breaks = seq(16.5, 22.5, 1)) +
+    annotate("text", x = 1992, y = 22.5, label = "(a)")
+
+plot_yr_bm <- ggplot(ch_biom15, aes(x = year, y = weight)) +
+    geom_point(size = 1, shape = 16, alpha = 0.08) +
+    geom_smooth(method = "lm", formula = "y ~ x", col = "black", linewidth = 0.3) +
+    scale_x_continuous(limits = c(1992, 2018), breaks = c(1992, 1997, 2002, 2007, 2013, 2018)) +
+    xlab("Year") +
+    ylab("Body mass (kg)") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    scale_y_continuous(limits = c(6, 28), breaks = seq(0, 30, 3)) +
+    annotate("text", x = 1992, y = 30, label = "(b)")
+```
+
+
+
+
+## Detrended changes
+
+Here we ran year-detrended analyses to demonstrate that year is not confounding the relationship between body mass and temperature. We extracted the residuals of linear regressions between mass and year and between temperature and year, and then ran a linear model with the residuals of body mass in relation to the residuals of temperature. 
+
+```{r}
+data_temp$temp_503_449_resid <- temp_lm$resid
+ch_biom15$weight_resid <- weight_lm$resid
+
+ch_biom152 <- merge(
+    ch_biom15,
+    data_temp[c(
+        "year",
+        "temp_503_449_resid"
+    )]
+)
+```
+
+
+
+```{r}
+resid_qlm1 <- lm(
+    weight_resid ~ temp_503_449_resid + I(temp_503_449_resid^2),
+    ch_biom152
+)
+knitr::kable(car::Anova(resid_qlm1),
+    caption =
+        "ANOVA Chi-square table", digits = 4
+)
+
+
+eff_data <- data.frame(effects::effect("temp_503_449_resid",
+    resid_qlm1,
+    partial.residuals = TRUE
+))
+
+
+plot_resid_qlm1 <- ggplot(eff_data, aes(x = temp_503_449_resid, y = fit)) +
+    geom_line(linewidth = 0.3) +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = 0.3
+    ) +
+    xlab("Temperature (°C) residuals \n May 9 - July 2, birth year") +
+    ylab("Body mass (kg) residuals") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(data = ch_biom152, aes(x = temp_503_449_resid, y = weight_resid), size = 1, shape = 16, alpha = 0.1) +
+    scale_y_continuous(limits = c(-10, 15), breaks = seq(-10, 15, 5)) +
+    scale_x_continuous(limits = c(-2, 3.5)) +
+    annotate("text", x = -2, y = 15, label = "(c)")
+```
+
+
+
+__Figure__
+
+```{r Fig. 3, warning = FALSE, fig.height = 9, fig.width = 4, out.width="50%", fig.cap = "Annual trend of (a) average temperature between May 9 and July 2 and (b) body mass of harvested 1.5-year-old Alpine chamois between 1992 and 2018, and (c) year-detrended relationship between body mass and temperature. Detrended values in (c) are residuals from linear models in (a) and (b). Each dot is one observation (darker dots representing a higher number of observations in (b)); fitted lines are shown with 95% confidence intervals (shaded areas)."}
+cowplot::plot_grid(
+    plot_yr_temp, plot_yr_bm, plot_resid_qlm1,
+    ncol = 1, align = "v"
+)
+```
+
+
+
+# Supplementary Material 3
+
+Analyses with the minimum and maximum temperature, same base model as in Supplementary Material 2
+
+## Climwin analysis
+
+### Finding the best windows
+Using the function slidingwin allows to search for the best climatic window 
+
+```{r minmax climmod, eval = F}
+ch_mass_sw <- slidingwin(
+    baseline = ch_basemod,
+    xvar = list(
+        temp_mean = clim$temp_mean_lugano,
+        temp_max = clim$temp_max_lugano,
+        temp_min = clim$temp_min_lugano
+    ),
+    type = "absolute",
+    refday = c(24, 9),
+    range = c(662, 0),
+    stat = c("mean"),
+    cdate = clim$date_ymd,
+    bdate = ch_biom15$date_ymd,
+    func = c("lin", "quad"),
+    cmissing = FALSE,
+    cinterval = "day"
+)
+save(ch_mass_sw, file = "climwin_mass_01b_r1.rda")
+```
+
+
+### Investigating the models
+
+```{r}
+load(file = "climwin_mass_01b_r1.rda")
+```
+
+
+
+### Results: overall best models
+
+
+When considering mean, minimum or maximum temperature, the linear+quadratic term better explains the variation in the data (deltaAICc has the lowest value), sorted by deltaAICc such that the best supported model is on top. 
+
+To investigate any other tested hypothesis we can simply replace the number in the double square brackets with the corresponding list number.
+
+```{r}
+ch_mass_sw$combos %>% arrange(DeltaAICc)
+```
+
+
+
+### Maximum temperature
+
+Dates of this window (as if compared to year of harvest 2018)
+```{r}
+as.Date("2018/09/24", format = "%Y/%m/%d") - ch_mass_sw$combos$WindowOpen[[5]]
+as.Date("2018/09/24", format = "%Y/%m/%d") - ch_mass_sw$combos$WindowClose[[5]]
+```
+
+The maximum temperature has a wider window (earlier Open date and later Close date) compared to the mean temperature, but the window overlaps.
+
+__windows plot__
+
+It's possible to extract the time windows of all the best supported models (i.e. multi-model inference). This panel shows the opening and closing points of the time windows that were best supported by the data, here those models that made up 95% model confidence set. 
+```{r, out.width="50%"}
+plotwin(ch_mass_sw[[5]]$Dataset)
+```
+
+__delta plot__
+```{r, out.width="50%"}
+plotdelta(dataset = ch_mass_sw[[5]]$Dataset, arrow = TRUE)
+```
+
+__Interpretation__: Warmer areas shows values with the lowest deltaAICc (i.e. "best models"). As explained by van de Pol et al., 2016, these deltaAICc landscapes of the different time windows shows multiple peaks (red areas) instead of a clear single peak. This can indicate the presence of multiple (e.g. possibly both long- and short-lag) weather signals within the same weather variable, but it can also occur due to collinearity or chance. 
+
+The evidence for multiple signals can be therefore investigated by adding the best supported of the weather windows to the baseline model, and re-fitting all the different time windows again: this tests whether there is still strong model support for the second best (e.g. short-lag) weather window once the other best supported (e.g. long-lag) weather window has been accounted for in the baseline model (here in the Step 2).
+
+
+__Best model summary__
+
+summary of the best model:
+```{r}
+summary(ch_mass_sw[[5]]$BestModel)
+```
+
+plot
+```{r, out.width="50%"}
+ch_biom15$clim_temporary <- ch_mass_sw[[5]]$BestModelData$climate
+
+ch_mod_temporary <- lm(
+    weight ~
+        sex + elevation_sc + clim_temporary + I(clim_temporary^2),
+    data = ch_biom15
+)
+
+
+eff_data <- data.frame(effects::effect("clim_temporary",
+    ch_mod_temporary,
+    partial.residuals = T
+))
+
+ggplot(eff_data, aes(x = clim_temporary, y = fit)) +
+    geom_line(linewidth = 0.3) +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = 0.3
+    ) +
+    xlab("Maximum temperature (°C) \n April 20 - July 11, birth year") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = clim_temporary, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    ylab("Body mass (kg)") +
+    scale_y_continuous(limits = c(5, 28), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(20.5, 26.5), breaks = seq(16.5, 28.5, 1))
+```
+
+### Minimum temperature
+
+Dates of this window (as if compared to year of harvest 2018)
+```{r}
+as.Date("2018/09/24", format = "%Y/%m/%d") - ch_mass_sw$combos$WindowOpen[[6]]
+as.Date("2018/09/24", format = "%Y/%m/%d") - ch_mass_sw$combos$WindowClose[[6]]
+```
+
+The maximum temperature has a narrower window (laterer Open date and earlier Close date) compared to the mean temperature, but the window overlaps.
+
+__windows plot__
+
+It's possible to extract the time windows of all the best supported models (i.e. multi-model inference). This panel shows the opening and closing points of the time windows that were best supported by the data, here those models that made up 95% model confidence set. 
+```{r, out.width="50%"}
+plotwin(ch_mass_sw[[6]]$Dataset)
+```
+
+__delta plot__
+```{r, out.width="50%"}
+plotdelta(dataset = ch_mass_sw[[6]]$Dataset, arrow = TRUE)
+```
+
+__Interpretation__: Warmer areas shows values with the lowest deltaAICc (i.e. "best models"). As explained by van de Pol et al., 2016, these deltaAICc landscapes of the different time windows shows multiple peaks (red areas) instead of a clear single peak. This can indicate the presence of multiple (e.g. possibly both long- and short-lag) weather signals within the same weather variable, but it can also occur due to collinearity or chance. 
+
+The evidence for multiple signals can be therefore investigated by adding the best supported of the weather windows to the baseline model, and re-fitting all the different time windows again: this tests whether there is still strong model support for the second best (e.g. short-lag) weather window once the other best supported (e.g. long-lag) weather window has been accounted for in the baseline model (here in the Step 2).
+
+
+__Best model summary__
+
+summary of the best model:
+```{r}
+summary(ch_mass_sw[[6]]$BestModel)
+```
+
+plot
+```{r, out.width="50%"}
+ch_biom15$clim_temporary <- ch_mass_sw[[6]]$BestModelData$climate
+
+ch_mod_temporary <- lm(
+    weight ~
+        sex + elevation_sc + clim_temporary + I(clim_temporary^2),
+    data = ch_biom15
+)
+
+
+eff_data <- data.frame(effects::effect("clim_temporary",
+    ch_mod_temporary,
+    partial.residuals = T
+))
+
+ggplot(eff_data, aes(x = clim_temporary, y = fit)) +
+    geom_line(linewidth = 0.3) +
+    geom_ribbon(
+        data = eff_data, aes(ymin = lower, ymax = upper),
+        linetype = 0, alpha = 0.3
+    ) +
+    xlab("Minimum temperature (°C) \n May 19 - June 30, birth year") +
+    theme(
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black")
+    ) +
+    geom_point(
+        data = ch_biom15,
+        aes(x = clim_temporary, y = weight),
+        size = 1, shape = 16, alpha = 0.1
+    ) +
+    ylab("Body mass (kg)") +
+    scale_y_continuous(limits = c(5, 28), breaks = seq(0, 35, 3)) +
+    scale_x_continuous(limits = c(13.5, 19.5), breaks = seq(13.5, 28.5, 1))
+```
+
+# Acknowledgements
+We thank the managers of the hunting and fishing cantonal office of Ticino, Switzerland, and the Swiss federal office of meteorology and climatology (MeteoSchweiz) for collecting the data and making them available to us. 
+
+# Funding
+This project has received funding from the European Union’s Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie grant agreement No 101025938 to GM.
+
+# Data accessibility
+All data and code used for statistical analysis and plots are provided via the Open Science Framework at https://osf.io/p9c4m/ and were shared with editor and reviewers at first submission.
+
+# Authors' contributions
+G.M. and P.B. conceived the study. F.T. compiled the data, and L.F.B and N.I curated the data. G.M. and K.G.G. performed the statistical analyses with the help of P.B. G.M. and K.G.G. drafted the manuscript, and all authors provided inputs at all stages. All authors approved the final version of this manuscript, and all authors agree to be held accountable for the work performed therein.
+
+# Competing interests
+We declare we have no competing interests.
+
