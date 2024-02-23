@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.rda
+*.RData
+.Rdata
+.httr-oauth
+.DS_Store
+.tiff
+*.tiff
